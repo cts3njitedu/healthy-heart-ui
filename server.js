@@ -8,7 +8,7 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 
 app.get('/api/login', (req, res) => {
 
-    request('http://stackabuse.com', function (error, response, body) {
+    request('https://healthful-heart-app.herokuapp.com/login', function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         console.log('body:', body);
