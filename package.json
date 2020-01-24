@@ -1,0 +1,24 @@
+{
+  "name": "healthy-heart-ui",
+  "version": "1.0.0",
+  "description": "Repository for ui code for healthy heart application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cts3njitedu/healthy-heart-ui.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cts3njitedu/healthy-heart-ui/issues"
+  },
+  "homepage": "https://github.com/cts3njitedu/healthy-heart-ui#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
