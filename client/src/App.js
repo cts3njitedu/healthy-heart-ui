@@ -16,6 +16,7 @@ class App extends Component {
     const{datas} = this.state;
     return (
       <div>
+        <div>Hello, how are you doing</div>
         <ui>
           {datas.map((data, index) => 
             <li key={index}>
