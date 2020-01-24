@@ -2,17 +2,27 @@ const express = require('express');
 const path = require('path');
 const request = require("request")
 const app = express();
+require('dotenv').config()
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.get('/api/login', (req, res) => {
+app.get('/api/*', (req, res) => {
 
-    request('https://healthful-heart-app.herokuapp.com/login', function (error, response, body) {
+    let newUrl = req.url.replace(/^(\/api)/, "");
+    console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
+    const options = {
+        url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
+        method: 'GET',
+        headers: req.headers
+
+    }
+    request(options, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        console.log('body:', body);
-        res.json(["sugar", "honey", "ice", "tea"])
+        console.log('headers:', response.headers)
+        
+        res.json(JSON.parse(body))
     })
 
    
@@ -33,4 +43,4 @@ if (process.env.NODE_ENV === 'production') {
 const port = process.env.PORT || 5000;
 app.listen(port);
 
-console.log(`Password generator listening on ${port}`);
+console.log(`Healthy heart app listerning on ${port}`);

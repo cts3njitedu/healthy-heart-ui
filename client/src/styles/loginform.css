@@ -1,0 +1,16 @@
+.loginFormDiv {
+    margin-left: 33%;
+    margin-top: 20%;
+
+}
+
+.loginText {
+    border: 1px solid;
+    margin-left: 1%;
+    height: 50px;
+    width: 200px;
+}
+
+.loginSubmitButton {
+    margin-left: 1%
+}
