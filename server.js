@@ -12,7 +12,7 @@ app.get('/api/*', (req, res) => {
     let newUrl = req.url.replace(/^(\/api)/, "");
     console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
     const options = {
-        url: "http://google.com",
+        url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
         method: 'GET',
         headers: req.headers
 
@@ -22,11 +22,33 @@ app.get('/api/*', (req, res) => {
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
         console.log('headers:', response.headers)
         
-        // res.json(JSON.parse(body))
+        res.json(JSON.parse(body))
     })
 
    
 })
+
+app.get('/login', (req, res) => {
+
+    let newUrl = req.url.replace(/^(\/api)/, "");
+    console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
+    const options = {
+        url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
+        method: 'GET',
+        headers: req.headers
+
+    }
+    request(options, function (error, response, body) {
+        console.log('error:', error); // Print the error if one occurred
+        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('headers:', response.headers)
+        
+        res.json(JSON.parse(body))
+    })
+
+   
+})
+
 
 // The "catchall" handler: for any request that doesn't
 // match one above, send back React's index.html file.
