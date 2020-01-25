@@ -24,7 +24,7 @@ app.get('/api/*', (req, res) => {
         if(value){
             refresh_token = "refresh_token="+value;
         }
-        
+        console.log("This is the refresh token:",refresh_token)
         const options = {
             url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
             method: 'GET',
