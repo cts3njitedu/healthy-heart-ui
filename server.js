@@ -12,8 +12,9 @@ app.get('/api/*', (req, res) => {
 
     let newUrl = req.url.replace(/^(\/api)/, "");
     console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
+    console.log(req.headers);
     const options = {
-        url: "http://healthful-heart-app.herokuapp.com" + newUrl,
+        url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
         method: 'GET',
         headers: {
             'Content-Type': "application/json"
@@ -30,10 +31,6 @@ app.get('/api/*', (req, res) => {
     })
 
    
-})
-
-app.get('/login', (req, res) => {
-    res.send("ping")
 })
 
 
