@@ -4,8 +4,10 @@ const request = require("request")
 const app = express();
 require('dotenv').config()
 
-// Serve static files from the React app
+const bodyParser = require('body-parser');
 
+// Serve static files from the React app
+app.use(bodyParser.json());
 
 
 app.get('/api/*', (req, res) => {
@@ -28,6 +30,32 @@ app.get('/api/*', (req, res) => {
         console.log('headers:', response.headers)
         
         res.json(JSON.parse(body))
+    })
+
+   
+})
+
+app.post('/api/*', (req, res) => {
+
+    console.log("In post method")
+    let newUrl = req.url.replace(/^(\/api)/, "");
+    console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
+    const options = {
+        url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
+        method: 'POST',
+        headers: {
+            'Content-Type': "application/json"
+        },
+        body: JSON.stringify(req.body)
+
+    }
+
+    request.post(options, function (error, response, body) {
+        console.log('error:', error); // Print the error if one occurred
+        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('headers:', response.headers)
+        res.setHeader('token', response.headers.token);
+        res.status(response.statusCode).json(JSON.parse(body))
     })
 
    
