@@ -7,6 +7,7 @@ require('dotenv').config()
 // Serve static files from the React app
 
 
+
 app.get('/api/*', (req, res) => {
 
     let newUrl = req.url.replace(/^(\/api)/, "");
@@ -17,6 +18,8 @@ app.get('/api/*', (req, res) => {
         headers: req.headers
 
     }
+
+    res.header("Access-Control-Allow-Origin", "*");
     request(options, function (error, response, body) {
         console.log('error:', error); // Print the error if one occurred
         console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
