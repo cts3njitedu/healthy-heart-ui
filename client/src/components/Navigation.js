@@ -5,32 +5,32 @@ import "../styles/header.css"
 import { connect } from 'react-redux'
 function Navigation(props) {
   return (
-    <div>
-      <div>
-        <Navbar fluid={true} inverse collapseOnSelect>
+  
+      <div style={{width:"100%", border: "3px solid black", padding: "1%", backgroundColor: "lightblue"}}>
+        <Navbar fluid={true} inverse collapseOnSelect style={{height:"100%", backgroundColor:"azure"}}>
 
           <Navbar.Brand>
-            <NavLink to="/">Healthful Heart</NavLink>
+            <NavLink to="/"><p className="heartIcon">Healthful Heart</p></NavLink>
           </Navbar.Brand>
 
           <Nav>
             <NavItem componentClass='span'>
-              <Link to="/" >Home</Link>
+              <Link to="/" ><p className="heartLinks">Home</p></Link>
             </NavItem>
             {props.isAccessTokenEnabled?
             <NavItem componentClass='span'>
-              <Link to="/about" >About Page</Link>
+              <Link to="/about" ><p className="heartLinks">About Page</p></Link>
             </NavItem> : null}
             {props.isAccessTokenEnabled ?<NavItem componentClass='span'>
-              <Link to="/dashboard" >Dashboard</Link>
+              <Link to="/dashboard" ><p className="heartLinks">Dashboard</p></Link>
             </NavItem>: null}
           </Nav>
           {!props.isAccessTokenEnabled ? <Nav pullRight>
             <NavItem componentClass='span'>
-              <Link to="/login">Login</Link>
+              <Link to="/login"><p className="heartLinks">Login</p></Link>
             </NavItem>
             <NavItem componentClass='span'>
-              <Link to="/signup">Signup</Link>
+              <Link to="/signup"><p className="heartLinks">Signup</p></Link>
             </NavItem>
           </Nav> : <Nav pullRight>
               <NavItem componentClass='span'>
@@ -40,7 +40,7 @@ function Navigation(props) {
         </Navbar>
       </div>
 
-    </div>
+  
 
   )
 

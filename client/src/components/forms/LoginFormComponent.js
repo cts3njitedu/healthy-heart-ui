@@ -23,7 +23,7 @@ class LoginFormComponent extends Component {
                     <FormGroup><Textbox field={this.props.fields.lastname} handleChange={this.props.handleChange} handleBlur={this.props.handleBlur} /></FormGroup>
                     <FormGroup><Textbox field={this.props.fields.email} handleChange={this.props.handleChange} handleBlur={this.props.handleBlur} /></FormGroup>
                     {this.props.pageErrors && this.props.pageErrors.map((error) => <p key={error}>{error}</p>)}
-                    <Button type="submit" disabled={this.props.submitting}>Submit</Button>
+                    <button type="submit" className="btn btn-default" disabled={this.props.submitting}>Submit</button>
                 </div>
             </Form>
         )

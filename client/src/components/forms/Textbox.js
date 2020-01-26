@@ -1,9 +1,9 @@
 import React from 'react'
-
+import fromStyles from '../../styles/form.module.css'
 function Textbox(props) {
     return (
         <div hidden={props.field.isHidden}>
-            <label htmlFor={props.field.name}>{props.field.title}: </label> <span></span>
+            <label className={fromStyles.loginText} htmlFor={props.field.name}>{props.field.title}: </label> <span></span>
             <input type={props.field.type}
                 id={props.field.id} 
                 name={props.field.name} 

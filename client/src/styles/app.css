@@ -1,4 +1,32 @@
-body {
-    background-color:azure;
-    height:100%;
+html, body {
+    background-color: rgb(136, 28, 28);
+}
+
+.landingPageLayout {
+    width: 99%;
+    border: 5px solid darkblue;
+    height: 750px;
+    margin-left: 1%;
+    margin-top: 5%
+}
+
+.colStyle {
+    border: 1px solid black;
+    width: 25%;
+    height: 40%;
+    margin-top: 2%;
+    background-color: rgb(42, 86, 143);
+}
+
+p {
+    font-size: larger;
+}
+
+.leftPanel {
+    height: 50%;
+    width: 100%;
+    border: 1px solid black;
+    font-size: xx-large;
+    text-align: center;
+    padding: 20%
 }
