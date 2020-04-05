@@ -7,10 +7,14 @@ class WorkoutDay extends Component {
     }
 
     render() {
+        
         return (
             <td>
                 <div className="monthDay">
-                   <p>{this.props.date}</p> 
+                   <div>{this.props.date}</div> 
+                   {this.props.workout &&
+                        <div className="monthMeta">{this.props.workout.location.zipCode} - {this.props.workout.location.gymName}</div>
+                    }
                 </div>
             </td>
         )
