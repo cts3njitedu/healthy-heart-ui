@@ -16,8 +16,8 @@ app.use(cookieParser());
 app.get('/api/*', (req, res) => {
 
     let newUrl = req.url.replace(/^(\/api)/, "");
-    console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
-    console.log(req.headers);
+    // console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
+    // console.log(req.headers);
   
     cache.get("refresh_token").then(function(value) {
         let refresh_token = null;
@@ -39,6 +39,7 @@ app.get('/api/*', (req, res) => {
             if (response.headers.token) {
                 res.setHeader('token', response.headers.token);
             }
+            // console.log("Body:", body)
             res.status(response.statusCode).json(JSON.parse(body))
         })
         

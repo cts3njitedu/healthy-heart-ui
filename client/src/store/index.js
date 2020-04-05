@@ -5,6 +5,7 @@ import restructurePageMiddleware from '../middleware/restructurePageMiddleware';
 import validateForm from '../middleware/formValidationMiddleware';
 import {buildRequest} from '../middleware/requestBuilderMiddleware';
 import { handleToken } from '../middleware/handleTokenMiddleware';
+import calendarMiddleWare from '../middleware/calendarMiddleware'
 
 const store = createStore(rootReducer, 
     applyMiddleware(
@@ -12,6 +13,7 @@ const store = createStore(rootReducer,
         buildRequest,
         apiMiddleWare, 
         handleToken,
+        calendarMiddleWare,
     restructurePageMiddleware
     ));
 

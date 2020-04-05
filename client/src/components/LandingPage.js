@@ -1,40 +1,24 @@
 import React from 'react'
-import { Grid, Row, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
 
 function LandingPage() {
     return (
-
-        <Grid fluid={true}>
-
-            <Row className="landingPageLayout">
-                <Col style={{ height: "100%", border: "1px solid black" }} md={2}>
-                    <Link to="/locations">
-                        <div className="leftPanel">
-                            View Locations
-                               </div>
-                    </Link>
-                    <Link to="/workouts">
-                        <div className="leftPanel">
-                            Workouts
-                        </div>
-
-                    </Link>
-
-                </Col>
-                <Col style={{ height: "100%", border: "8px solid black" }} md={8}>
-
-                </Col>
-                <Col style={{ height: "100%", border: "1px solid black" }} md={2}>
-
-                </Col>
-            </Row>
-
-
-        </Grid>
-
-
+        <div className="landingPageContainer"> 
+            <div className="landingPageItem">
+                <div className="leftPanelItem">
+                    <Link to="/locations">View Locations</Link>
+                </div>
+                <div className="leftPanelItem">
+                    Workouts
+                </div>
+            </div>
+            <div className="landingPageItem">
+                <div className="viewCalendarItem">
+                    <Link to="/calendar">View Calendar</Link>
+                </div>
+            </div>
+        </div>
     )
 }
 

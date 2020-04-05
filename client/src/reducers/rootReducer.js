@@ -3,6 +3,7 @@ import {reducer as formReducer} from 'redux-form'
 import loginForm from './loginReducer'
 import user from './userReducer'
 import about from './aboutReducer'
+import calendar from './calendarReducer'
 
 
 export default combineReducers(
@@ -10,8 +11,8 @@ export default combineReducers(
         loginForm,
         form: formReducer,
         user,
-        about
-        
+        about,
+        calendar  
     }
 )
 

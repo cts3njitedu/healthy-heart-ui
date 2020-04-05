@@ -1,11 +1,13 @@
 import { API_GET_LOGIN_PAGE, API_POST_LOGIN_PAGE, API_POST_LOGOUT_PAGE } from "../actions/loginAction";
 import Axios from "axios";
 import { API_GET_ABOUT_PAGE } from "../actions/aboutAction";
+import { API_GET_CALENDAR } from "../actions/calendarAction";
 
 const apiMiddleware = ({dispatch}) => next => action => {
 
     if (action.type === API_GET_LOGIN_PAGE || action.type === API_POST_LOGIN_PAGE || 
-        action.type === API_GET_ABOUT_PAGE || action.type === API_POST_LOGOUT_PAGE) {
+        action.type === API_GET_ABOUT_PAGE || action.type === API_POST_LOGOUT_PAGE
+        || action.type === API_GET_CALENDAR) {
         const {
             url,
             method,
@@ -18,7 +20,7 @@ const apiMiddleware = ({dispatch}) => next => action => {
     
         let accessToken = null;
       
-        if (action.type === API_GET_ABOUT_PAGE) {
+        if (action.type === API_GET_ABOUT_PAGE || action.type === API_GET_CALENDAR) {
             accessToken = localStorage.getItem("accessToken");
         }
         
@@ -30,7 +32,7 @@ const apiMiddleware = ({dispatch}) => next => action => {
         Axios.defaults.withCredentials = true
         Axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
         next(onStart());
-    
+        console.log("Action Payload", action.payload)
         Axios.request({
             url,
             method,
@@ -41,7 +43,7 @@ const apiMiddleware = ({dispatch}) => next => action => {
             next(onSuccess(res.data, res.headers));
         }).catch(error => {
             let response = error.response
-            console.log("What action is here: ", response)
+            console.log("What action is here: ", error)
             dispatch(onFailure(response, response.data.page))
         });
     } else {

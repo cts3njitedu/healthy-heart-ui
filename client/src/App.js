@@ -10,6 +10,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Dashboard from './components/Dashboard'
 import PublicRoute from './components/PublicRoute'
 import Locations from './components/Locations'
+import Calendar from './components/Calendar'
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     <PrivateRoute component={About} path="/about" exact />
                     <PrivateRoute component={Locations} path="/locations" exact />
                     <PrivateRoute component={Dashboard} path="/dashboard" exact />
+                    <PrivateRoute component={Calendar} path="/calendar" exact />
                     <PublicRoute key="login-user" path="/login" restricted={true} component={LoginFormContainer} exact/>
                     <PublicRoute key="signup-user" path="/signup" restricted={true} component={LoginFormContainer} exact />
                     <Route path="/logout" component={LoginFormContainer} />
