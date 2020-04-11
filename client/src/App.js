@@ -11,12 +11,8 @@ import Dashboard from './components/Dashboard'
 import PublicRoute from './components/PublicRoute'
 import Locations from './components/Locations'
 import Calendar from './components/Calendar'
-import WorkoutDayForm from './components/forms/WorkoutDayForm'
-import WorkoutDayPage from './components/workout_components/WorkoutDaysPage'
 import WorkoutDaysPage from './components/workout_components/WorkoutDaysPage'
-import { createBrowserHistory } from "history";
 
-const customHistory = createBrowserHistory();
 function App() {
     return (
 

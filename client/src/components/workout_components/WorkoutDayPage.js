@@ -4,16 +4,19 @@ import { Component } from 'react'
 import {getWorkoutDay} from '../../actions/workoutAction'
 import { Redirect } from 'react-router-dom'
 import Loading from '../Loading'
+import WorkoutDayHeader from './WorkoutDayHeader'
+import { PAGE } from '../../constants/page_constants'
+import WorkoutDayBody from './WorkoutDayBody'
 
 
 
 class WorkoutDayPage extends Component {
     constructor (props) {
-        super(props)
+        super(props);
     }
 
     componentDidMount() {
-        console.log(this.props.match.url)
+        console.log(this.props.match)
         this.props.getWorkoutDay(this.props.match.url);
     }
 
@@ -35,7 +38,8 @@ class WorkoutDayPage extends Component {
             return (
                 <div className="dateContainer">
                     <div className="dateView">
-
+                        <WorkoutDayHeader section={sections[PAGE.WORKOUT_DAY_PAGE.HEADER_SECTION]}/>
+                        <WorkoutDayBody locationSections={sections[PAGE.WORKOUT_DAY_PAGE.LOCATION_SECTION]} />
                     </div>
                 </div>
 

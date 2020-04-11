@@ -1,4 +1,4 @@
-import { API_GET_WORKOUTDAY, API_GET_WORKOUTDAY_SUCCESS, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE } from "../actions/workoutAction";
 
 const initialState = {
     sections : {},

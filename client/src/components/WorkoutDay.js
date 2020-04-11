@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import moment from 'moment'
-import { Link, Route } from 'react-router-dom'
-import WorkoutDayForm from './forms/WorkoutDayForm'
 
 class WorkoutDay extends Component {
     constructor(props) {
@@ -18,7 +15,7 @@ class WorkoutDay extends Component {
         return (
 
             <td>
-                <a href="#">
+                <a href="# ">
                     <div className="monthDay" onClick={this.props.handlePickDay}>
 
                         <div onClick={this.handleChildClick}>{this.props.date}</div>

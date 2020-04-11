@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import _ from 'lodash'
 import WorkoutDay from './WorkoutDay';
 
 class WorkoutWeek extends Component {
