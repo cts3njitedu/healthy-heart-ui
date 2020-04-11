@@ -2,12 +2,25 @@ import { API_GET_LOGIN_PAGE, API_POST_LOGIN_PAGE, API_POST_LOGOUT_PAGE } from ".
 import Axios from "axios";
 import { API_GET_ABOUT_PAGE } from "../actions/aboutAction";
 import { API_GET_CALENDAR } from "../actions/calendarAction";
+import { API_GET_WORKOUTDAY } from "../actions/workoutAction";
 
+const accessTokenActions = [ 
+    API_GET_ABOUT_PAGE, 
+    API_GET_CALENDAR, 
+    API_GET_WORKOUTDAY
+];
+
+const middleWareActions = [
+    API_GET_LOGIN_PAGE,
+    API_POST_LOGIN_PAGE,
+    API_GET_ABOUT_PAGE,
+    API_POST_LOGOUT_PAGE,
+    API_GET_CALENDAR,
+    API_GET_WORKOUTDAY
+]
 const apiMiddleware = ({dispatch}) => next => action => {
 
-    if (action.type === API_GET_LOGIN_PAGE || action.type === API_POST_LOGIN_PAGE || 
-        action.type === API_GET_ABOUT_PAGE || action.type === API_POST_LOGOUT_PAGE
-        || action.type === API_GET_CALENDAR) {
+    if (middleWareActions.includes(action.type)) {
         const {
             url,
             method,
@@ -20,7 +33,7 @@ const apiMiddleware = ({dispatch}) => next => action => {
     
         let accessToken = null;
       
-        if (action.type === API_GET_ABOUT_PAGE || action.type === API_GET_CALENDAR) {
+        if (accessTokenActions.includes(action.type)) {
             accessToken = localStorage.getItem("accessToken");
         }
         

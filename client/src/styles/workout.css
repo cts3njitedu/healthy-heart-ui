@@ -1,0 +1,18 @@
+.dateContainer {
+    display: flex;
+    background-color:rgb(136, 28, 28);
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.dateView {
+    display: flex;
+    border : 5px dashed blue;
+    height: 70vh;
+    width: 80%;
+    background-color: whitesmoke;
+    margin-top: 5%
+}

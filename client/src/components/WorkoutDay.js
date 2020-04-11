@@ -1,22 +1,38 @@
 import React, { Component } from 'react'
-
+import moment from 'moment'
+import { Link, Route } from 'react-router-dom'
+import WorkoutDayForm from './forms/WorkoutDayForm'
 
 class WorkoutDay extends Component {
-    constructor(props){
+    constructor(props) {
         super(props)
+        this.handleChildClick = this.handleChildClick.bind(this)
+    }
+
+    handleChildClick(e) {
+        e.stopPropagation()
+        console.log("child click")
     }
 
     render() {
-        
         return (
+
             <td>
-                <div className="monthDay">
-                   <div>{this.props.date}</div> 
-                   {this.props.workout &&
-                        <div className="monthMeta">{this.props.workout.location.zipCode} - {this.props.workout.location.gymName}</div>
-                    }
-                </div>
+                <a href="#">
+                    <div className="monthDay" onClick={this.props.handlePickDay}>
+
+                        <div onClick={this.handleChildClick}>{this.props.date}</div>
+                        {this.props.workout &&
+                            <div className="monthMeta" onClick={this.handleChildClick}>{this.props.workout.location.zipCode} - {this.props.workout.location.gymName}</div>
+                        }
+
+                    </div>
+                </a>
+
             </td>
+
+
+
         )
     }
 }

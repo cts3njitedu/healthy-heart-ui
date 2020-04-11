@@ -4,6 +4,7 @@ import loginForm from './loginReducer'
 import user from './userReducer'
 import about from './aboutReducer'
 import calendar from './calendarReducer'
+import workoutDay from './workoutDayReducer'
 
 
 export default combineReducers(
@@ -12,7 +13,8 @@ export default combineReducers(
         form: formReducer,
         user,
         about,
-        calendar  
+        calendar,
+        workoutDay  
     }
 )
 

@@ -21,7 +21,7 @@ class WorkoutWeek extends Component {
             if (day >= firstDayId && day <= lastDayId) {
                 if (days) {
                     let workoutDay = days[currDate];
-                    workoutDays.push(<WorkoutDay key= {day} date ={currDate} workout={workoutDay} />)
+                    workoutDays.push(<WorkoutDay key= {day} date ={currDate} workout={workoutDay} handlePickDay={this.props.handlePickDay}/>)
                 } else {
                     workoutDays.push(<WorkoutDay key= {day} date ={currDate} />)
                 }    

@@ -3,6 +3,7 @@ import moment from 'moment'
 import WorkoutWeek from './WorkoutWeek';
 import _ from 'lodash';
 import '../styles/calendar.css'
+import { withRouter } from 'react-router-dom';
 
 class WorkoutMonth extends Component {
     constructor(props) {
@@ -15,6 +16,16 @@ class WorkoutMonth extends Component {
             year : date.getFullYear()
         };
         this.handleChangeMonth = this.handleChangeMonth.bind(this)
+        this.handlePickDay = this.handlePickDay.bind(this)
+    }
+
+    handlePickDay (event) {
+        event.preventDefault()
+        // console.log(event.target)
+        let day = event.target.querySelector(":first-child").innerHTML;
+        let dateId = "".concat(this.state.year,"-",this.state.month,"-",day);
+        let dateIdFormatted = moment(dateId, 'YYYY-M-D').format("YYYYMMDD");
+        this.props.history.push('/workoutDays/' + dateIdFormatted) 
     }
 
     handleChangeMonth(event) {
@@ -71,7 +82,7 @@ class WorkoutMonth extends Component {
                 lastDay : lastDayOfWeek,
                 lastDayId : firstDate.getDay() + (lastDayOfWeek-firstDayOfWeek)
             }
-            weeks.push(<WorkoutWeek key= {firstDayOfWeek} week={week} days={workoutDays}/>)
+            weeks.push(<WorkoutWeek key= {firstDayOfWeek} week={week} days={workoutDays} handlePickDay={this.handlePickDay}/>)
             firstDayOfWeek = lastDayOfWeek + 1;
         }
         console.log("Weeks:",weeks)
@@ -111,4 +122,4 @@ class WorkoutMonth extends Component {
 
 }
 
-export default WorkoutMonth;
+export default withRouter(WorkoutMonth);

@@ -1,7 +1,8 @@
 .navbar-nav span[role=button] {
     padding: 5px;
     line-height: 50px;
-    display:inline-block
+    display:inline-block;
+    
 }
 
 .heartIcon {
@@ -10,5 +11,6 @@
 }
 
 .heartLinks {
-    color: darkblue
+    color: darkblue;
+    
 }
