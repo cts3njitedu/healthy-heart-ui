@@ -55,48 +55,61 @@ app.post('/api/*', (req, res) => {
     let newUrl = req.url.replace(/^(\/api)/, "");
     console.log(process.env.REACT_APP_HEALTHFUL_HEART_URL);
     console.log(req.body)
-   
+    console.log("Url:", newUrl)
 
-    const options = {
-        url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
-        method: 'POST',
-        headers: {
-            'Content-Type': req.headers["content-type"],
-            'Authorization': req.headers.authorization
-        },
-        body: JSON.stringify(req.body)
-
-    }
-
-    request.post(options, function (error, response, body) {
-        console.log('error:', error); // Print the error if one occurred
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        let cookies = response.headers['set-cookie']
-        //Sat, 25 Jan 2020 17:15:21
+    cache.get("refresh_token").then(function(value) {
+        let refresh_token = null;
+        if(value){
+            refresh_token = "refresh_token="+value;
+        }
+        const options = {
+            url: process.env.REACT_APP_HEALTHFUL_HEART_URL + newUrl,
+            method: 'POST',
+            headers: {
+                'Content-Type': req.headers["content-type"],
+                'Authorization': req.headers.authorization
+            },
+            body: JSON.stringify(req.body)
+    
+        }
         if (newUrl === "/login" || newUrl === "/signup") {
-            let promises = [];
-            cookies.forEach(cookie => {
-                promises.push(new Promise(function(resolve) {
-                    let splitCookie = cookie.split(";");
-                    let token = splitCookie[0]
-                    let key = token.substr(0, token.indexOf("="));
-                    let value = token.substr(token.indexOf("=")+1);
-                    cache.set(key,value).then(function(r){
-                        console.log(r)
-                        resolve()
-                    });
-                    
-                }))
+            request.post(options, function (error, response, body) {
+                console.log('error:', error); // Print the error if one occurred
+                console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+                let cookies = response.headers['set-cookie']
+                let promises = [];
+                cookies.forEach(cookie => {
+                    promises.push(new Promise(function(resolve) {
+                        let splitCookie = cookie.split(";");
+                        let token = splitCookie[0]
+                        let key = token.substr(0, token.indexOf("="));
+                        let value = token.substr(token.indexOf("=")+1);
+                        cache.set(key,value).then(function(r){
+                            console.log(r)
+                            resolve()
+                        });
+                        
+                    }))
+                })
+                Promise.all(promises).then(function(){
+                    res.setHeader('token', response.headers.token);
+                    res.status(response.statusCode).json(JSON.parse(body))
+                })
             })
-            Promise.all(promises).then(function(){
-                res.setHeader('token', response.headers.token);
+
+        } else {
+            options.headers['Cookie'] = refresh_token || null 
+            console.log("Options:", options)
+            request.post(options, function(error, response, body) {
+                console.log('errors:', error)
+                console.log('headers:', response.headers)
+                if (response.headers.token) {
+                    res.setHeader('token', response.headers.token);
+                }
+                console.log("Body:", body)
                 res.status(response.statusCode).json(JSON.parse(body))
             })
-        } else {
-            res.setHeader('token', response.headers.token);
-            res.status(response.statusCode).json(JSON.parse(body))
-        }
-        
+        } 
     })
 
    

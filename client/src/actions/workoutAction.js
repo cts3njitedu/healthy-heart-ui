@@ -6,11 +6,12 @@ export const API_GET_WORKOUTDAY_SUCCESS = "API_GET_WORKOUTDAY_SUCCESS"
 export const API_RESTRUCTURE_WORKOUTDAY = "API_RESTRUCTURE_WORKOUTDAY"
 export const API_GET_WORKOUTDAY_FAILURE = "API_GET_WORKOUTDAY_FAILURE"
 
-export function getWorkoutDay(page_url) {
+export function getWorkoutDay(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTDAY,
         url: "/api" + page_url,
-        method: "GET",
+        method: "POST",
+        data: data,
         onStart: getWorkoutDayStart,
         onSuccess: getWorkoutDaySuccess,
         onFailure: getWorkoutDayFailure

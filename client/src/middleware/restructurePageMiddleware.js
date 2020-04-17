@@ -27,6 +27,8 @@ export function restructureWorkoutPage(page) {
             return {
                 metaDataId: si.sectionMetaData.id,
                 id : si.section.id,
+                pageNumber : si.sectionMetaData.page,
+                tableHeader: si.sectionMetaData.tableHeaders,
                 parentId : si.section.parentId,
                 sectionId : si.section.sectionId,
                 fields : _.keyBy(si.section.fields, function(f){

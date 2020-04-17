@@ -24,7 +24,7 @@ export default function workoutDayReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 sections: action.payload.page.sections,
-                newSections: action.payload.page.defaultSections
+                newSections: action.payload.page.newSections
 
             }
         }

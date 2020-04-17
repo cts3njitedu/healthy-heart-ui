@@ -1,10 +1,18 @@
-import React from 'react'
+import React, { Component } from 'react'
 
 
-function WorkoutDayForm() {
-    return (
-        <div>I love chicken</div>
-    )
+class WorkoutDayForm extends Component {
+    constructor(props){
+        super(props)
+    }
+    render(){
+        return (
+            <div>
+                I love chicken
+            </div>
+        )
+    }
+    
 }
 
 export default WorkoutDayForm

@@ -20,9 +20,14 @@
 .workoutHeader {
     flex : 2 100px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding-left: 1%;
-    padding-top: 2%
+    padding-top: 2%;
+    width: 100%
+}
+
+.workoutDate > * {
+    margin-right: 1%;
 }
 
 .workoutDate {
@@ -30,17 +35,20 @@
     text-align: left;
     display: flex;
     font-size: xx-large;
-    color: white;
+    color: blue;
+    flex: 1 200px;
    
 }
-
+.workoutDate > button {
+    height: 50px;
+}
 .workoutBody {
     flex: 5 500px;
     display: flex;
     width: 100%;
     flex-direction: column;
 }
-.workoutBody > div {
+.workoutBody > * {
     flex-direction: row;
     align-items: flex-start;
     display: flex;
@@ -56,11 +64,17 @@
     height: 100%;
 }
 
-.workoutBody > div > div {
-    width: 400px;
+.locationActivity {
+    width: 100%;
     margin-left: 1%;
+  
 }
-
+.locationActivity > * {
+    margin-right: 1%;
+    background-color: darkblue;
+    color: red;
+    height: 50px;
+}
 .locationBody {
     display: flex;
     width: 100%;
@@ -99,5 +113,10 @@
     color: red;
     font-size: x-large;
     height: 100px;
+}
+.datePicker{
+    color:red;
+    width: 80%;
+    background-color: darkblue;
 }
 
