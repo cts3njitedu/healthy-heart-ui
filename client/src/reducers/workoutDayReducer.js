@@ -1,5 +1,5 @@
-import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION } from "../actions/workoutAction";
-
+import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START } from "../actions/workoutAction";
+import {PAGE, SECTION} from '../constants/page_constants'
 const initialState = {
     sections : {},
     newSections: {},
@@ -43,9 +43,37 @@ export default function workoutDayReducer(state = initialState, action) {
             }
         }
         case ACTION_CHANGE_WORKOUT_DATE: {
+            let headerSectionId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION;
+            let cancel = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CANCEL;
+            let change = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CHANGE_DATE;
+            let workout = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.WORKOUT_DATE;
             return {
                 ...state,
-                tempSelectedDate: action.payload.date
+                tempSelectedDate: action.payload.date,
+                sections: {
+                    ...state.sections,
+                    [headerSectionId] : state.sections[headerSectionId].map((item, index) => {
+                        if (index == 0) {
+                            let section = {
+                                ...item,
+                                fields: {
+                                    ...item.fields,
+                                    [cancel] : {
+                                        ...item.fields[cancel],
+                                        isDisabled: (action.payload.date.length == 0) || (action.payload.date===item.fields[workout].value)
+                                    },
+                                    [change] : {
+                                        ...item.fields[change],
+                                        isDisabled: (action.payload.date.length == 0) || (action.payload.date===item.fields[workout].value)
+                                    }
+
+                                }
+                            }
+                            return section;
+                        }
+                        return item
+                    })
+                }
 
             }
         }
@@ -56,10 +84,38 @@ export default function workoutDayReducer(state = initialState, action) {
             }
         }
         case ACTION_CANCEL_CHANGE_WORKOUT_DATE: {
+            let headerSectionId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION;
+            let cancel = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CANCEL;
+            let change = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CHANGE_DATE;
             return {
                 ...state,
                 isSubmitDate: false,
-                tempSelectedDate: ""
+                tempSelectedDate: "",
+                sections: {
+                    ...state.sections,
+                    [headerSectionId] : state.sections[headerSectionId].map((item, index) => {
+                        if (index == 0) {
+                            let section = {
+                                ...item,
+                                fields: {
+                                    ...item.fields,
+                                    [cancel] : {
+                                        ...item.fields[cancel],
+                                        isDisabled: true
+                                    },
+                                    [change] : {
+                                        ...item.fields[change],
+                                        isDisabled: true
+                                    }
+
+                                }
+                            }
+                            return section;
+                        }
+                        return item
+                    })
+                }
+
             }
         }
         case ACTION_GO_BACK_TO_CALENDER: {
@@ -84,10 +140,16 @@ export default function workoutDayReducer(state = initialState, action) {
 
             }
         }
+        case ACTION_SELECT_LOCATION_START : {
+            return {
+                ...state
+            }
+        }
         case ACTION_SELECT_LOCATION: {
             let isChecked = action.payload.newLocation.isChecked;
             let location = action.payload.newLocation;
-            let activityId = action.payload.metaData;
+            let activityId = action.payload.activityId;
+            let activityFields = action.payload.activityFields
             return {
                 ...state,
                 isLocationSelected: isChecked,
@@ -110,15 +172,7 @@ export default function workoutDayReducer(state = initialState, action) {
                             if (index==0) {
                                 return{
                                     ...item,
-                                    fields: Object.keys(item.fields).reduce(function(result,key){
-                            
-                                            result[key] = {
-                                                ...item.fields[key],
-                                                isDisabled: !isChecked
-                                            }
-                                      
-                                        return result
-                                    }, {})
+                                    fields: activityFields
                                 }
     
                             } else {

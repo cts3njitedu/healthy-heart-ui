@@ -11,7 +11,9 @@ export const SECTION = {
     WORKOUT_DAY_LOCATIONS_PAGE : {
         HEADER_SECTION : {
             WORKOUT_DATE : "workoutDate",
-            LOCATIONS : "locations"
+            LOCATIONS : "locations",
+            CANCEL: "cancel",
+            CHANGE_DATE: "changeDate"
         },
         LOCATION_SECTION: {
             
@@ -21,12 +23,19 @@ export const SECTION = {
             CANCEL : "cancel",
             DELETE_LOCATION: "deleteLocation",
             VIEW_OTHER_LOCATIONS: "viewOtherLocations",
-            VIEW_WORKOUTS : "viewWorkouts"
+            VIEW_WORKOUTS : "viewWorkouts",
+            VIEW_WORKOUTDAY_LOCATIONS: "viewWorkoutDayLocations"
         }
 
     }
 }
 
 export const ACTION = {
-    VIEW_WORKOUTDATE_LOCATIONS : "VIEW_WORKOUTDATE_LOCATIONS"
+    VIEW_WORKOUTDATE_LOCATIONS : "VIEW_WORKOUTDATE_LOCATIONS",
+    VIEW_NON_WORKOUTDATE_LOCATIONS: "VIEW_NON_WORKOUTDATE_LOCATIONS"
+}
+
+export const ACTIVITY = {
+    DEFAULT: "DEFAULT_ACTIVITY",
+    LOCATION_SELECTED: "LOCATION_SELECTED"
 }

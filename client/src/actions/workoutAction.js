@@ -10,7 +10,11 @@ export const ACTION_CHANGE_WORKOUT_DATE = "ACTION_CHANGE_WORKOUT_DATE"
 export const ACTION_SUBMIT_WORKOUT_DATE = "ACTION_SUBMIT_WORKOUT_DATE"
 export const ACTION_CANCEL_CHANGE_WORKOUT_DATE = "ACTION_CANCEL_CHANGE_WORKOUT_DATE"
 export const ACTION_GO_BACK_TO_CALENDER = "ACTION_GO_BACK_TO_CALENDER"
+export const ACTION_SELECT_LOCATION_START = "ACTION_SELECT_LOCATION_START"
 export const ACTION_SELECT_LOCATION = "ACTION_SELECT_LOCATION"
+export const API_GET_OTHER_WORKOUTDAY_LOCATIONS = "API_GET_OTHER_WORKOUTDAY_LOCATIONS"
+export const API_GET_OTHER_WORKOUTDAY_LOCATIONS_START = "API_GET_OTHER_WORKOUTDAY_LOCATIONS_START"
+export const API_GET_OTHER_WORKOUTDAY_LOCATIONS_SUCCESS = "API_GET_OTHER_WORKOUTDAY_LOCATIONS_SUCCESS"
 
 export function getWorkoutDay(page_url, data) {
     return apiAction({
@@ -68,6 +72,11 @@ export const goBackToCalendar = (cancelField) => ({
 })
 
 export const selectLocation = (newLocation, metaData) => ({
-    type: ACTION_SELECT_LOCATION,
+    type: ACTION_SELECT_LOCATION_START,
     payload: {newLocation, metaData}
+})
+
+export const selectLocationEnd = (newLocation, activityId, activityFields) => ({
+    type: ACTION_SELECT_LOCATION,
+    payload: {newLocation, activityId, activityFields}
 })

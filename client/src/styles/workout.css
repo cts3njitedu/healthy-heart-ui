@@ -147,14 +147,16 @@
     background-color: purple;
 }
 
-.filterSection{
-    flex: 1 100px;
-    width: 100%;
-    align-items: stretch;
-    border: 1px solid yellow
+.filterSection > th {
+    font-weight: bold;
+    border: 1px solid black;
+    background-color: gray;
+    color: black;
+    padding : 8px;
+    text-align: center;
 }
 
-.locationTable > table > thead > tr > th {
+.locationHeaderSection >  th {
     font-weight: bold;
     border: 1px solid black;
     background-color: darkblue;

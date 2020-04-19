@@ -7,6 +7,7 @@ import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 import { connect } from 'react-redux';
 import {changeWorkoutDate, submitWorkoutDate, cancelWorkoutDateChange} from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
+import WorkoutButton from '../forms/WorkoutButton';
 class WorkoutDayHeader extends Component {
 
     constructor(props) {
@@ -50,16 +51,19 @@ class WorkoutDayHeader extends Component {
         const {sections, tempSelectedDate} = this.props;
         let workoutHeader = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION][0];
         let workoutDate = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.WORKOUT_DATE];
-        let isDisabled = (tempSelectedDate.length == 0);
+        let cancelButton = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CANCEL];
+        let changeDate = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CHANGE_DATE];
         let dateString = (tempSelectedDate.length != 0) ? tempSelectedDate : workoutDate.value
         let date = parse(dateString,'yyyy-MM-dd', new Date());
+        console.log("Header Change:",changeDate);
         return (
             <div className="workoutHeader">
                 <div className="workoutDate">
                     <div>{workoutDate.title}:</div>
-                    <div><DatePicker className="datePicker" selected={date} dateFormat="yyyy-MM-dd" onChange={this.handleDateChange}/></div>
-                    <button disabled={isDisabled} onClick={this.handleCancelDateChange}>Cancel</button>
-                    <button disabled={isDisabled} onClick={this.handleSubmitDate}>Submit</button>
+                    <div>{!workoutDate.isHidden ? <DatePicker className="datePicker" selected={date} 
+                        dateFormat="yyyy-MM-dd" onChange={this.handleDateChange}/> : dateString}</div>
+                    <WorkoutButton field={cancelButton} handleActivity={this.handleCancelDateChange} />
+                    <WorkoutButton field={changeDate} handleActivity={this.handleSubmitDate} />
                 </div>
                 
             </div>

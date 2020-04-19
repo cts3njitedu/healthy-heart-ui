@@ -52,9 +52,10 @@ export function restructureWorkoutPage(page) {
             }
         })
 
-        newSections = _.keyBy(newSections, function(s){
+        newSections = _.groupBy(newSections, function(s){
             return s.id;
         })
+        console.log("Restructure:", sections)
         resolve({
             newSections,
             sections

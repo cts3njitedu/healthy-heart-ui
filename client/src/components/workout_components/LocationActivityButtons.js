@@ -1,25 +1,38 @@
 import React, { Component } from 'react'
 import WorkoutButton from '../forms/WorkoutButton';
-import { PAGE, SECTION } from '../../constants/page_constants';
+import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
-import {goBackToCalendar} from '../../actions/workoutAction'
+import {goBackToCalendar, getWorkoutDay} from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
 
 class LocationActivityButtons extends Component {
     constructor(props) {
         super(props)
-        this.handleGoBackToCalendar = this.handleGoBackToCalendar.bind(this)
+        this.handleActivity = this.handleActivity.bind(this)
     }
 
-    handleGoBackToCalendar(event) {
+    handleActivity(event) {
         event.preventDefault()
-        let cancelField = {
-            disabled: true,
-            name: event.target.name,
-            sectionId: PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION
+        if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.CANCEL === event.target.name) {
+            let cancelField = {
+                disabled: true,
+                name: event.target.name,
+                sectionId: PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION
+            }
+            this.props.goBackToCalendar(cancelField)
+        } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_OTHER_LOCATIONS === event.target.name) {
+            console.log("View Other Locations", this.props.match)
+            this.props.getWorkoutDay(this.props.match.url, {
+                actionType: ACTION.VIEW_NON_WORKOUTDATE_LOCATIONS
+            })
+        } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTDAY_LOCATIONS === event.target.name) {
+            console.log("View Workout Locations", this.props.match)
+            this.props.getWorkoutDay(this.props.match.url, {
+                actionType: ACTION.VIEW_WORKOUTDATE_LOCATIONS
+            })
         }
-        this.props.goBackToCalendar(cancelField)
+        
 
     }
 
@@ -44,11 +57,12 @@ class LocationActivityButtons extends Component {
             console.log("Location Activity:", activitySections)
             return (
                 <div className="locationActivity">
-                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.ADD_WORKOUTDATE_LOCATION]} handleGoBackToCalendar={this.handleGoBackToCalendar} />
-                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_OTHER_LOCATIONS]} />
+                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTDAY_LOCATIONS]} handleActivity={this.handleActivity} />
+                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.ADD_WORKOUTDATE_LOCATION]} handleActivity={this.handleActivity} />
+                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_OTHER_LOCATIONS]} handleActivity={this.handleActivity} />
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTS]} />
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION]} />
-                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.CANCEL]} handleGoBackToCalendar={this.handleGoBackToCalendar}/>
+                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.CANCEL]} handleActivity={this.handleActivity}/>
                 </div>
             )
         }
@@ -72,7 +86,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
 
-    goBackToCalendar
+    goBackToCalendar,
+    getWorkoutDay
 
 }
 

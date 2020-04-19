@@ -24,32 +24,32 @@ class Locations extends Component {
     
     render() {
         const {sections,selectedLocation } = this.props;
-        let locationSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_SECTION];
+        let locationSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_SECTION]||[];
         let filterSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION][0]
-        
         let headers = [...filterSections.tableHeaders]
         headers.unshift("_")
-        console.log("Table columns: ",headers)
+        console.log("Table columns: ",filterSections)
         return (
             <div className="locationsView">
                 <div className="locationTable">
                     <table>
                         <thead>
-                            <tr>
-                            <th><input type="checkbox"></input></th>    
+                            <tr className="locationHeaderSection">
+                            <th></th>    
                             {
                                 filterSections.tableHeaders.map((value,index) => {
                                     return <th key={value}>{value}</th>
                                 })
                             }
                             </tr>
-                            <tr>
+                            <tr className="filterSection">
                                 <th></th>
                                 {
                                     filterSections.tableHeaders.map((value, index) => {
                                         let fieldName = value.charAt(0).toLowerCase() + value.slice(1)
                                         let field = filterSections.fields[fieldName];
-                                        return <th key={value}><input type="text" /></th>
+                                        console.log("Field is", field.name)
+                                        return <th key={value}><input type="text" value={field.name} /></th>
                                     })
                                     
                                 }

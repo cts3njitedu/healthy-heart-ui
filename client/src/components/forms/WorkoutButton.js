@@ -15,7 +15,7 @@ function WorkoutButton(props) {
                 disabled={field.isDisabled} 
                 hidden={field.isHidden}
                 name= {field.name}
-                onClick={props.handleGoBackToCalendar}>
+                onClick={props.handleActivity}>
             {field.value}
         </button>
     )
