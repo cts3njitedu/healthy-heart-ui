@@ -67,18 +67,11 @@ class WorkoutDayPage extends Component {
                 <div>Error getting page...</div>
             )
         } else {
-            let bodySections = {
-                locationSections: sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_SECTION],
-                activitySections: sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION],
-                filterSections: sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION],
-                newSections: newSections
-            }
-            console.log("Body Sections:", bodySections)
             return (
                 <div className="dateContainer">
                     <div className="dateView">
-                        <WorkoutDayHeader section={sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION]} handleDateChange={this.handleDateChange}/>
-                        <WorkoutDayBody bodySections={bodySections} handleAddLocation={this.handleAddLocation} />
+                        <WorkoutDayHeader />
+                        <WorkoutDayBody />
                     </div>
                 </div>
 

@@ -2,8 +2,20 @@ import React from 'react'
 
 function WorkoutButton(props) {
     let field = props.field;
+    let style = {};
+    if (field.isDisabled) {
+        style = {
+            backgroundColor: "gray",
+            color: "white"
+        }
+    }
     return (
-        <button type="button" value={field.value} disabled={field.isDisabled} hidden={field.isHidden}>
+        <button style={style} type="button" 
+                value={field.value} 
+                disabled={field.isDisabled} 
+                hidden={field.isHidden}
+                name= {field.name}
+                onClick={props.handleGoBackToCalendar}>
             {field.value}
         </button>
     )

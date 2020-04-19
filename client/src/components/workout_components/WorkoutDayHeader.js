@@ -1,33 +1,67 @@
 import React, { Component } from 'react'
-import { SECTION } from '../../constants/page_constants';
+import { SECTION, PAGE } from '../../constants/page_constants';
 import DatePicker from 'react-datepicker'
-import {format, parse} from 'date-fns'
+import {format, parse, getYear, getMonth, getDate} from 'date-fns'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.css'
-
+import { connect } from 'react-redux';
+import {changeWorkoutDate, submitWorkoutDate, cancelWorkoutDateChange} from '../../actions/workoutAction'
+import { withRouter } from 'react-router-dom';
 class WorkoutDayHeader extends Component {
 
     constructor(props) {
         super(props);
-        let workoutDate = props.section[0].fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.WORKOUT_DATE]
-        console.log(workoutDate.value)
-        let dateView = parse(workoutDate.value,'yyyy-MM-dd', new Date())
-    
-        this.state = {
-            workoutDate: workoutDate,
-            dateView: dateView
+        // let workoutDate = props.section[0].fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.WORKOUT_DATE]
+        // console.log(workoutDate.value)
+        // let dateView = parse(workoutDate.value,'yyyy-MM-dd', new Date();
+        this.handleDateChange = this.handleDateChange.bind(this)
+        this.handleSubmitDate = this.handleSubmitDate.bind(this)
+        this.handleCancelDateChange = this.handleCancelDateChange.bind(this)
+    }
+
+    handleDateChange(value) {
+        console.log("Date change: ",value)
+        this.props.changeWorkoutDate(value)
+    }
+
+    handleSubmitDate(event){
+        event.preventDefault()
+        console.log("Submitting...")
+        this.props.submitWorkoutDate()
+    }
+
+    handleCancelDateChange(event) {
+        event.preventDefault()
+        console.log("Cancelling...")
+        this.props.cancelWorkoutDateChange()
+    }
+    componentDidUpdate(prevProps){
+        if (prevProps.isSubmitDate != this.props.isSubmitDate) {
+            let dateIdFormatted = parse(prevProps.tempSelectedDate, "yyyy-MM-dd", new Date())
+            let year = getYear(dateIdFormatted);
+            let month = getMonth(dateIdFormatted)
+            let day = getDate(dateIdFormatted)
+            let newDate = format(new Date(year, month, day),'yyyyMMdd')
+            this.props.history.push('/workoutDays/' + newDate) 
         }
     }
 
-
     render() {
-        console.log("sugar:",this.state.dateView)
+        const {sections, tempSelectedDate} = this.props;
+        let workoutHeader = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION][0];
+        let workoutDate = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.WORKOUT_DATE];
+        let isDisabled = (tempSelectedDate.length == 0);
+        let dateString = (tempSelectedDate.length != 0) ? tempSelectedDate : workoutDate.value
+        let date = parse(dateString,'yyyy-MM-dd', new Date());
         return (
             <div className="workoutHeader">
                 <div className="workoutDate">
-                    <div>{this.state.workoutDate.title}:</div> 
-                    <div><DatePicker className="datePicker" selected={this.state.dateView} dateFormat="yyyy-MM-dd" onChange={this.props.handleDateChange}/></div>
+                    <div>{workoutDate.title}:</div>
+                    <div><DatePicker className="datePicker" selected={date} dateFormat="yyyy-MM-dd" onChange={this.handleDateChange}/></div>
+                    <button disabled={isDisabled} onClick={this.handleCancelDateChange}>Cancel</button>
+                    <button disabled={isDisabled} onClick={this.handleSubmitDate}>Submit</button>
                 </div>
+                
             </div>
 
         )
@@ -35,5 +69,26 @@ class WorkoutDayHeader extends Component {
 }
 
 
+function mapStateToProps(state) {
+    return {
+        isAccessTokenEnabled: state.user.isAccessTokenEnabled,
+        sections: state.workoutDay.sections, 
+        newSections: state.workoutDay.newSections,
+        error: state.workoutDay.error,
+        loading: state.workoutDay.loading,
+        tempSelectedDate: state.workoutDay.tempSelectedDate,
+        isSubmitDate: state.workoutDay.isSubmitDate
+    }
+        
+}
 
-export default WorkoutDayHeader;
+const mapDispatchToProps = {
+
+    changeWorkoutDate,
+    submitWorkoutDate,
+    cancelWorkoutDateChange
+
+
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WorkoutDayHeader));

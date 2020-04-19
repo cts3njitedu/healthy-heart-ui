@@ -11,9 +11,9 @@ class WorkoutMonth extends Component {
         console.log("Month:", props);
         let date = new Date();
         this.state = {
-            month : date.getMonth() + 1,
-            monthName: date.toLocaleString('default', {month: 'long'}),
-            year : date.getFullYear()
+            month : props.date.month,
+            monthName: props.date.monthName,
+            year : props.date.year
         };
         this.handleChangeMonth = this.handleChangeMonth.bind(this)
         this.handlePickDay = this.handlePickDay.bind(this)

@@ -106,7 +106,7 @@ app.post('/api/*', (req, res) => {
                 if (response.headers.token) {
                     res.setHeader('token', response.headers.token);
                 }
-                console.log("Body:", body)
+                // console.log("Body:", body)
                 res.status(response.statusCode).json(JSON.parse(body))
             })
         } 

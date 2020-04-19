@@ -26,9 +26,11 @@ export function restructureWorkoutPage(page) {
         let sections = sectionInfos.map(function(si){
             return {
                 metaDataId: si.sectionMetaData.id,
+                isChecked: false,
+                isDisabled: false,
                 id : si.section.id,
                 pageNumber : si.sectionMetaData.page,
-                tableHeader: si.sectionMetaData.tableHeaders,
+                tableHeaders: si.sectionMetaData.tableHeaders,
                 parentId : si.section.parentId,
                 sectionId : si.section.sectionId,
                 fields : _.keyBy(si.section.fields, function(f){
