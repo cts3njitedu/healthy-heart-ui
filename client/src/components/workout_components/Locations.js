@@ -2,13 +2,17 @@ import React, { Component } from 'react'
 import Location from './Location';
 import { PAGE } from '../../constants/page_constants';
 import { connect } from 'react-redux';
-import {selectLocation} from '../../actions/workoutAction'
+import {selectLocation, sortLocationTableStart, buildWorkoutDayRequest} from '../../actions/workoutAction'
+import TableHeader from '../forms/TableHeader';
+import _ from 'lodash'
+import { withRouter } from 'react-router-dom';
 
 class Locations extends Component {
 
     constructor(props) {
         super(props)
         this.handleLocationSelection = this.handleLocationSelection.bind(this)
+        this.handleSort = this.handleSort.bind(this)
     }
 
     handleLocationSelection(location, event) {
@@ -21,45 +25,40 @@ class Locations extends Component {
         
         this.props.selectLocation(newLocation, PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION)
     }
+
+    handleSort(fieldName) {
+        console.log("Handle Sort:", fieldName, this.props)
+        this.props.sortLocationTableStart(fieldName)
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!_.isEqual(prevProps.heartSort, this.props.heartSort)) {
+            this.props.buildWorkoutDayRequest(this.props.match.url)
+        }
+    }
     
     render() {
-        const {sections,selectedLocation } = this.props;
+        const {sections, heartSort, actionType} = this.props;
+        console.log("Action Type:", actionType)
         let locationSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_SECTION]||[];
         let filterSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION][0]
+        let locationHeaderSection = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION][0]
         let headers = [...filterSections.tableHeaders]
         headers.unshift("_")
-        console.log("Table columns: ",filterSections)
+        console.log("Table columns: ",locationHeaderSection)
+        let tableClass = {
+            columnClass : "locationHeaderSection",
+            filterClass : "filterSection"
+        }
         return (
             <div className="locationsView">
                 <div className="locationTable">
                     <table>
-                        <thead>
-                            <tr className="locationHeaderSection">
-                            <th></th>    
-                            {
-                                filterSections.tableHeaders.map((value,index) => {
-                                    return <th key={value}>{value}</th>
-                                })
-                            }
-                            </tr>
-                            <tr className="filterSection">
-                                <th></th>
-                                {
-                                    filterSections.tableHeaders.map((value, index) => {
-                                        let fieldName = value.charAt(0).toLowerCase() + value.slice(1)
-                                        let field = filterSections.fields[fieldName];
-                                        console.log("Field is", field.name)
-                                        return <th key={value}><input type="text" value={field.name} /></th>
-                                    })
-                                    
-                                }
-                            </tr>
-                            
-                        </thead>
+                        <TableHeader tableClass={tableClass} headerSection={locationHeaderSection} filterSections={filterSections} heartSort={heartSort} handleSort={this.handleSort}/>
                         <tbody>
                             {
                                 locationSections.map((value, index) => {
-                                    return <Location key={value.metaDataId} location={value} header={headers} handleLocationSelection={this.handleLocationSelection} />
+                                    return <Location key={value.metaDataId} headerSection={locationHeaderSection} location={value} header={headers} handleLocationSelection={this.handleLocationSelection} />
                                 })
                             }
                         </tbody>
@@ -85,16 +84,20 @@ function mapStateToProps(state) {
         tempSelectedDate: state.workoutDay.tempSelectedDate,
         isSubmitDate: state.workoutDay.isSubmitDate,
         selectedLocation: state.workoutDay.selectedLocation,
-        isLocationSelected: state.workoutDay.isLocationSelected
+        isLocationSelected: state.workoutDay.isLocationSelected,
+        heartSort : state.workoutDay.heartSort,
+        actionType: state.workoutDay.actionType
     }
         
 }
 
 const mapDispatchToProps = {
 
-    selectLocation
+    selectLocation,
+    sortLocationTableStart,
+    buildWorkoutDayRequest
 
 
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Locations);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Locations));

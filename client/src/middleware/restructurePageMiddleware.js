@@ -1,6 +1,7 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout } from "../actions/workoutAction";
 import _ from 'lodash'
+import { PAGE, SECTION, ACTIVITY } from "../constants/page_constants";
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS
 ];
@@ -56,9 +57,24 @@ export function restructureWorkoutPage(page) {
             return s.id;
         })
         console.log("Restructure:", sections)
+
+        let locationHeaderSection = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION]
+        let heartSort = {};
+        if (locationHeaderSection) {
+            let headerFields = locationHeaderSection[0].fields
+            heartSort = Object.keys(headerFields).filter(key => (headerFields[key].sortOrder != null) && 
+                headerFields[key] !== SECTION.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION.SELECT_LOCATION).reduce(function(result, key) {
+                result[key] = (headerFields[key].sortOrder.toUpperCase() === "ASC" ) ? ACTIVITY.SORT.ASCEND : ACTIVITY.SORT.DESCEND
+                return result
+            }, {})
+        }
+        console.log("Heart Sort Restructure:", heartSort)
         resolve({
             newSections,
-            sections
+            sections,
+            actionType: page.actionType,
+            heartSort
+
         })
     })
 }

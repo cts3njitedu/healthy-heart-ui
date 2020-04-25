@@ -55,7 +55,6 @@ class WorkoutDayHeader extends Component {
         let changeDate = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CHANGE_DATE];
         let dateString = (tempSelectedDate.length != 0) ? tempSelectedDate : workoutDate.value
         let date = parse(dateString,'yyyy-MM-dd', new Date());
-        console.log("Header Change:",changeDate);
         return (
             <div className="workoutHeader">
                 <div className="workoutDate">

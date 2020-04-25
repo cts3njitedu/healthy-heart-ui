@@ -1,4 +1,6 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
+import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay } from "../actions/workoutAction";
+import { ACTIVITY } from "../constants/page_constants";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -20,6 +22,20 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         Promise.all(sectionPromises).then(function(){
             dispatch(postLoginPage(pageTemplate, action.payload.page_url))
         })
+    } else if (action.type === API_GET_WORKOUTDAY_BUILD) {
+        let state = getState()
+        let heartSort = state.workoutDay.heartSort;
+        let request = {
+            actionType: state.workoutDay.actionType,
+            heartSort : Object.keys(heartSort).filter(key => heartSort[key] != ACTIVITY.SORT.FLAT).reduce(function(result, key) {
+                result[key] = {
+                    sortOrder: heartSort[key] === 1 ? "ASC" : "DESC"
+                }
+                return result;
+            }, {})
+        }
+        console.log("Url", action.payload.url)
+        next(getWorkoutDay(action.payload.url, request))
     } else {
         next(action)
     }

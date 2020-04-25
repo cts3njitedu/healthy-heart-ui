@@ -1,4 +1,4 @@
-import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD } from "../actions/workoutAction";
 import {PAGE, SECTION} from '../constants/page_constants'
 const initialState = {
     sections : {},
@@ -10,7 +10,9 @@ const initialState = {
     selectedDate : "",
     tempSelectedDate: "",
     isSubmitDate: false,
-    isGoBackToCalendar: false
+    isGoBackToCalendar: false,
+    heartSort : {},
+    actionType: ""
     
 };
 
@@ -31,7 +33,9 @@ export default function workoutDayReducer(state = initialState, action) {
                 ...state,
                 loading: false,
                 sections: action.payload.page.sections,
-                newSections: action.payload.page.newSections
+                newSections: action.payload.page.newSections,
+                actionType: action.payload.page.actionType,
+                heartSort: action.payload.page.heartSort
 
             }
         }
@@ -183,6 +187,25 @@ export default function workoutDayReducer(state = initialState, action) {
                 }
             }
         }
+        case ACTION_SORT_LOCATION_TABLE_START : {
+            return {
+                ...state
+            }
+        }
+        case ACTION_SORT_LOCATION_TABLE : {
+            return {
+                ...state,
+                heartSort : {
+                    ...state.heartSort,
+                    [action.payload.fieldName] : action.payload.sortOrder
+                }
+            }
+        }
+        case API_GET_WORKOUTDAY_BUILD : {
+            return {
+                ...state
+            }
+        }
         default : {
             return {
                 ...state,
@@ -193,7 +216,8 @@ export default function workoutDayReducer(state = initialState, action) {
                 selectedDate : "",
                 tempSelectedDate: "",
                 isSubmitDate: false,
-                isGoBackToCalendar: false
+                isGoBackToCalendar: false,
+                actionType: ""
 
             }
         }

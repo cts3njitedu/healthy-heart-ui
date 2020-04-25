@@ -1,5 +1,6 @@
 import apiAction from "./apiAction"
 
+export const API_GET_WORKOUTDAY_BUILD = "API_GET_WORKOUTDAY_BUILD"
 export const API_GET_WORKOUTDAY = "API_GET_WORKOUTDAY"
 export const API_GET_WORKOUTDAY_START = "API_GET_WORKOUTDAY_START"
 export const API_GET_WORKOUTDAY_SUCCESS = "API_GET_WORKOUTDAY_SUCCESS"
@@ -15,7 +16,8 @@ export const ACTION_SELECT_LOCATION = "ACTION_SELECT_LOCATION"
 export const API_GET_OTHER_WORKOUTDAY_LOCATIONS = "API_GET_OTHER_WORKOUTDAY_LOCATIONS"
 export const API_GET_OTHER_WORKOUTDAY_LOCATIONS_START = "API_GET_OTHER_WORKOUTDAY_LOCATIONS_START"
 export const API_GET_OTHER_WORKOUTDAY_LOCATIONS_SUCCESS = "API_GET_OTHER_WORKOUTDAY_LOCATIONS_SUCCESS"
-
+export const ACTION_SORT_LOCATION_TABLE_START = "ACTION_SORT_LOCATION_TABLE_START"
+export const ACTION_SORT_LOCATION_TABLE = "ACTION_SORT_LOCATION_TABLE"
 export function getWorkoutDay(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTDAY,
@@ -79,4 +81,19 @@ export const selectLocation = (newLocation, metaData) => ({
 export const selectLocationEnd = (newLocation, activityId, activityFields) => ({
     type: ACTION_SELECT_LOCATION,
     payload: {newLocation, activityId, activityFields}
+})
+
+export const sortLocationTableStart = (fieldName) => ({
+    type: ACTION_SORT_LOCATION_TABLE_START,
+    payload: {fieldName}
+})
+
+export const sortLocationTable = (fieldName, sortOrder) => ({
+    type: ACTION_SORT_LOCATION_TABLE,
+    payload: {fieldName, sortOrder}
+})
+
+export const buildWorkoutDayRequest = (url) => ({
+    type: API_GET_WORKOUTDAY_BUILD,
+    payload : {url}
 })
