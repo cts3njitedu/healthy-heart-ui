@@ -1,27 +1,23 @@
-import React, { Component } from 'react'
-import Select from '../forms/Select';
+import React from 'react'
 import LocationActivityButtons from './LocationActivityButtons';
 import Locations from './Locations';
 import { connect } from 'react-redux';
-class WorkoutDayBody extends Component {
-    constructor(props){
-        super(props);
-    }
-
-    render() {
+function WorkoutDayBody(){
     
-        return (
-            <div className="workoutBody">
-                <div>
-                    <LocationActivityButtons />
-                </div>
-                <div className="workoutBodyLocations">
-                    <Locations />
-                </div>
+
+    
+    return (
+        <div className="workoutBody">
+            <div>
+                <LocationActivityButtons />
             </div>
-        )
+            <div className="workoutBodyLocations">
+                <Locations />
+            </div>
+        </div>
+    )
         
-    }
+
 }
 
 function mapStateToProps(state) {

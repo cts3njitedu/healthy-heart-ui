@@ -1,7 +1,6 @@
 import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutAction";
 import {format} from 'date-fns'
 import { PAGE, ACTIVITY } from "../constants/page_constants";
-import _ from 'lodash'
 const workoutAction = ({getState}) => next => action => {
 
     if (action.type === ACTION_CHANGE_WORKOUT_DATE) {
@@ -28,10 +27,14 @@ const workoutAction = ({getState}) => next => action => {
     } else if (action.type === ACTION_SORT_LOCATION_TABLE_START) {
         let state = getState()
         let fieldName = action.payload.fieldName
-        let heartSort = state.workoutDay.heartSort;
-        console.log("Heart Sort:", heartSort)
-        let sortOrder = heartSort.hasOwnProperty(fieldName) ? 
-           ((heartSort[fieldName] + 1)% ACTIVITY.SORT.TOTAL_OPTIONS) : ACTIVITY.SORT.ASCEND;
+        let locationHeaderSection = state.workoutDay.sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION][0]
+        let currSortOrder = locationHeaderSection.fields[fieldName].sortOrder;
+        let sortOrder = null;
+        if (currSortOrder === null) {
+            sortOrder = ACTIVITY.SORT.ASCEND;
+        } else if (currSortOrder.toUpperCase() === ACTIVITY.SORT.ASCEND) {
+            sortOrder = ACTIVITY.SORT.DESCEND
+        }
         console.log("Sorting", fieldName, sortOrder)
         next(sortLocationTable(fieldName, sortOrder))
 

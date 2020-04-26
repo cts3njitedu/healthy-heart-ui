@@ -37,7 +37,7 @@ class WorkoutDayHeader extends Component {
         this.props.cancelWorkoutDateChange()
     }
     componentDidUpdate(prevProps){
-        if (prevProps.isSubmitDate != this.props.isSubmitDate) {
+        if (prevProps.isSubmitDate !== this.props.isSubmitDate) {
             let dateIdFormatted = parse(prevProps.tempSelectedDate, "yyyy-MM-dd", new Date())
             let year = getYear(dateIdFormatted);
             let month = getMonth(dateIdFormatted)
@@ -53,7 +53,7 @@ class WorkoutDayHeader extends Component {
         let workoutDate = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.WORKOUT_DATE];
         let cancelButton = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CANCEL];
         let changeDate = workoutHeader.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION.CHANGE_DATE];
-        let dateString = (tempSelectedDate.length != 0) ? tempSelectedDate : workoutDate.value
+        let dateString = (tempSelectedDate.length !== 0) ? tempSelectedDate : workoutDate.value
         let date = parse(dateString,'yyyy-MM-dd', new Date());
         return (
             <div className="workoutHeader">

@@ -2,12 +2,13 @@ import { API_GET_LOGIN_PAGE, API_POST_LOGIN_PAGE, API_POST_LOGOUT_PAGE } from ".
 import Axios from "axios";
 import { API_GET_ABOUT_PAGE } from "../actions/aboutAction";
 import { API_GET_CALENDAR } from "../actions/calendarAction";
-import { API_GET_WORKOUTDAY } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY, API_ADD_WORKOUTDAY_LOCATION } from "../actions/workoutAction";
 
 const accessTokenActions = [ 
     API_GET_ABOUT_PAGE, 
     API_GET_CALENDAR, 
-    API_GET_WORKOUTDAY
+    API_GET_WORKOUTDAY,
+    API_ADD_WORKOUTDAY_LOCATION
 ];
 
 const middleWareActions = [
@@ -16,7 +17,8 @@ const middleWareActions = [
     API_GET_ABOUT_PAGE,
     API_POST_LOGOUT_PAGE,
     API_GET_CALENDAR,
-    API_GET_WORKOUTDAY
+    API_GET_WORKOUTDAY,
+    API_ADD_WORKOUTDAY_LOCATION
 ]
 const apiMiddleware = ({dispatch}) => next => action => {
 

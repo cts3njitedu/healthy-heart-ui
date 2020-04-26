@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Loading from './Loading';
 import { Redirect } from 'react-router-dom';
 import WorkoutMonth from './WorkoutMonth';
-import {format, parse, getYear, getMonth, getDate} from 'date-fns'
+import {parse, getYear, getMonth, getDate} from 'date-fns'
 import { PAGE, SECTION } from '../constants/page_constants';
 
 class Calendar extends Component {

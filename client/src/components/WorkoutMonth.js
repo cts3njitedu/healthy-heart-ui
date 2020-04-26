@@ -9,7 +9,6 @@ class WorkoutMonth extends Component {
     constructor(props) {
         super(props);
         console.log("Month:", props);
-        let date = new Date();
         this.state = {
             month : props.date.month,
             monthName: props.date.monthName,

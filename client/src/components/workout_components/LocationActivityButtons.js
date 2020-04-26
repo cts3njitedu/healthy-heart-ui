@@ -3,7 +3,7 @@ import WorkoutButton from '../forms/WorkoutButton';
 import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
-import {goBackToCalendar, getWorkoutDay} from '../../actions/workoutAction'
+import {goBackToCalendar, getWorkoutDay, addWorkoutDayLocationBuild} from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
 
 class LocationActivityButtons extends Component {
@@ -31,13 +31,16 @@ class LocationActivityButtons extends Component {
             this.props.getWorkoutDay(this.props.match.url, {
                 actionType: ACTION.VIEW_WORKOUTDATE_LOCATIONS
             })
+        } else if(SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.ADD_WORKOUTDATE_LOCATION === event.target.name) {
+            console.log("Add Workout Location", this.props.match)
+            this.props.addWorkoutDayLocationBuild(this.props.match.url, ACTION.ADD_WORKOUTDATE_LOCATION)
         }
         
 
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.isGoBackToCalendar != this.props.isGoBackToCalendar) {
+        if (prevProps.isGoBackToCalendar !== this.props.isGoBackToCalendar) {
             this.props.history.push('/calendar') 
         }
     }
@@ -87,7 +90,8 @@ function mapStateToProps(state) {
 const mapDispatchToProps = {
 
     goBackToCalendar,
-    getWorkoutDay
+    getWorkoutDay,
+    addWorkoutDayLocationBuild
 
 }
 

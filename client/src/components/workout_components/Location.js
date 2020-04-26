@@ -14,11 +14,9 @@ class Location extends Component {
     render() {
         console.log("Location:", this.state)
         let location = this.state.location;
-        const headers = this.state.headers;
         const headerSection = this.state.headerSection
         let fields = location.fields;
         console.log("Location:", fields)
-        let locations = [];
         let tableHeadersFields = Object.keys(headerSection.fields).map(function(key){
             return headerSection.fields[key]
         })

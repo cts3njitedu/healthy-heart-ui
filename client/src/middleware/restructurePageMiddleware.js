@@ -1,11 +1,12 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay } from "../actions/workoutAction";
 import _ from 'lodash'
-import { PAGE, SECTION, ACTIVITY } from "../constants/page_constants";
+import { ACTION } from "../constants/page_constants";
+import {format} from 'date-fns'
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS
 ];
-const restructurePageMiddleware = () => (next) => (action) => {
+const restructurePageMiddleware = ({dispatch}) => (next) => (action) => {
     if (action.type === API_GET_LOGIN_PAGE_SUCCESS || action.type === API_POST_LOGIN_PAGE_FAILURE ) {
         restructurePage(action.payload.page).then(function(newPage){
             next(handleRestructurePage(newPage, action.payload.page))
@@ -15,6 +16,18 @@ const restructurePageMiddleware = () => (next) => (action) => {
             next(restructureWorkout(newPage))
         })
         //next(action);
+    } else if (action.type === API_ADD_WORKOUTDAY_LOCATION_SUCCESS) {
+        next(action)
+        let resp = action.payload.data;
+        let year = resp.data.year;
+        let month = resp.data.monthId - 1;
+        let day = resp.data.day;
+        let dateIdFormatted = format(new Date(year, month, day), 'yyyyMMdd')
+        console.log("Get Date:", dateIdFormatted)
+        let url = "/workoutDays/" + dateIdFormatted
+        dispatch(getWorkoutDay(url, {
+            actionType: ACTION.VIEW_WORKOUTDATE_LOCATIONS
+        }))
     } else {
         next(action)
     }
@@ -58,22 +71,10 @@ export function restructureWorkoutPage(page) {
         })
         console.log("Restructure:", sections)
 
-        let locationHeaderSection = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION]
-        let heartSort = {};
-        if (locationHeaderSection) {
-            let headerFields = locationHeaderSection[0].fields
-            heartSort = Object.keys(headerFields).filter(key => (headerFields[key].sortOrder != null) && 
-                headerFields[key] !== SECTION.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION.SELECT_LOCATION).reduce(function(result, key) {
-                result[key] = (headerFields[key].sortOrder.toUpperCase() === "ASC" ) ? ACTIVITY.SORT.ASCEND : ACTIVITY.SORT.DESCEND
-                return result
-            }, {})
-        }
-        console.log("Heart Sort Restructure:", heartSort)
         resolve({
             newSections,
             sections,
-            actionType: page.actionType,
-            heartSort
+            actionType: page.actionType
 
         })
     })

@@ -1,4 +1,4 @@
-import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD, ACTION_FILTER_LOCATION_TABLE, API_ADD_WORKOUTDAY_LOCATION_BUILD, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, API_ADD_WORKOUTDAY_LOCATION_FAILURE } from "../actions/workoutAction";
 import {PAGE, SECTION} from '../constants/page_constants'
 const initialState = {
     sections : {},
@@ -57,18 +57,18 @@ export default function workoutDayReducer(state = initialState, action) {
                 sections: {
                     ...state.sections,
                     [headerSectionId] : state.sections[headerSectionId].map((item, index) => {
-                        if (index == 0) {
+                        if (index === 0) {
                             let section = {
                                 ...item,
                                 fields: {
                                     ...item.fields,
                                     [cancel] : {
                                         ...item.fields[cancel],
-                                        isDisabled: (action.payload.date.length == 0) || (action.payload.date===item.fields[workout].value)
+                                        isDisabled: (action.payload.date.length === 0) || (action.payload.date===item.fields[workout].value)
                                     },
                                     [change] : {
                                         ...item.fields[change],
-                                        isDisabled: (action.payload.date.length == 0) || (action.payload.date===item.fields[workout].value)
+                                        isDisabled: (action.payload.date.length === 0) || (action.payload.date===item.fields[workout].value)
                                     }
 
                                 }
@@ -98,7 +98,7 @@ export default function workoutDayReducer(state = initialState, action) {
                 sections: {
                     ...state.sections,
                     [headerSectionId] : state.sections[headerSectionId].map((item, index) => {
-                        if (index == 0) {
+                        if (index === 0) {
                             let section = {
                                 ...item,
                                 fields: {
@@ -132,7 +132,7 @@ export default function workoutDayReducer(state = initialState, action) {
                 sections: {
                     ...state.sections,
                     [sectionId] : state.sections[sectionId].map((item, index) => {
-                        if (index == 0) {
+                        if (index === 0) {
                           let section = item;
                           section.fields[name].isDisabled = disabled
                           return section
@@ -157,7 +157,7 @@ export default function workoutDayReducer(state = initialState, action) {
             return {
                 ...state,
                 isLocationSelected: isChecked,
-                selectedLocations : location,
+                selectedLocation : location,
                 sections: {
                     ...state.sections,
                     [location.id] : state.sections[location.id].map((item, index) => {
@@ -173,7 +173,7 @@ export default function workoutDayReducer(state = initialState, action) {
                         }
                     }),
                     [activityId] : state.sections[activityId].map((item, index) => {
-                            if (index==0) {
+                            if (index === 0) {
                                 return{
                                     ...item,
                                     fields: activityFields
@@ -193,11 +193,54 @@ export default function workoutDayReducer(state = initialState, action) {
             }
         }
         case ACTION_SORT_LOCATION_TABLE : {
+            let locationHeaderSectionId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION;
+            let fieldName = action.payload.fieldName;
+            let sortOrder = action.payload.sortOrder;
             return {
                 ...state,
-                heartSort : {
-                    ...state.heartSort,
-                    [action.payload.fieldName] : action.payload.sortOrder
+                sections : {
+                    ...state.sections,
+                    [locationHeaderSectionId] : state.sections[locationHeaderSectionId].map((item,index) => {
+                        if (index === 0) {
+                            return {
+                                ...item,
+                                fields : {
+                                    ...item.fields,
+                                    [fieldName] : {
+                                        ...item.fields[fieldName],
+                                        sortOrder: sortOrder
+                                    }
+                                }
+                            }
+                        }
+                        return item;
+                    })
+                }
+            }
+        }
+        case ACTION_FILTER_LOCATION_TABLE : {
+            let filterSection = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION;
+            let fieldName = action.payload.fieldName
+            let value = action.payload.value
+            return {
+                ...state,
+                sections: {
+                    ...state.sections,
+                    [filterSection] : state.sections[filterSection].map((item, index) => {
+                        if (index === 0) {
+                            return {
+                                ...item,
+                                fields: {
+                                    ...item.fields,
+                                    [fieldName] : {
+                                        ...item.fields[fieldName],
+                                        value: value
+                                    }
+                                }
+                            }
+                        }
+                        return item;
+                    })
                 }
             }
         }
@@ -206,7 +249,53 @@ export default function workoutDayReducer(state = initialState, action) {
                 ...state
             }
         }
-        default : {
+        case API_ADD_WORKOUTDAY_LOCATION_BUILD: {
+            let activityId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION;
+            let locationId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_SECTION
+            return {
+                ...state,
+                sections: {
+                    ...state.sections,
+                    [locationId] : state.sections[locationId].map((item, index) => {
+                        let modLocation = {
+                            ...item,
+                            isDisabled: true
+                        }
+                        return modLocation;
+                    
+                    }),
+                    [activityId] : state.sections[activityId].map((item, index) => {
+                            if (index === 0) {
+                                return{
+                                    ...item,
+                                    fields: Object.keys(item.fields).reduce((result, key) => {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: true
+                                        }
+                                        return result
+                                    }, {})
+                                }
+    
+                            } else {
+                                return item;
+                            }
+                    })
+    
+                }
+            }
+        }
+        case API_ADD_WORKOUTDAY_LOCATION_SUCCESS: {
+            return {
+                ...state
+            }
+        }
+        case API_ADD_WORKOUTDAY_LOCATION_FAILURE: {
+            return {
+                error: true
+            }
+        }
+        default: {
             return {
                 ...state,
                 error: false,

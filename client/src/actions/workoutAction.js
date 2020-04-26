@@ -18,6 +18,14 @@ export const API_GET_OTHER_WORKOUTDAY_LOCATIONS_START = "API_GET_OTHER_WORKOUTDA
 export const API_GET_OTHER_WORKOUTDAY_LOCATIONS_SUCCESS = "API_GET_OTHER_WORKOUTDAY_LOCATIONS_SUCCESS"
 export const ACTION_SORT_LOCATION_TABLE_START = "ACTION_SORT_LOCATION_TABLE_START"
 export const ACTION_SORT_LOCATION_TABLE = "ACTION_SORT_LOCATION_TABLE"
+export const ACTION_FILTER_LOCATION_TABLE_START = "ACTION_FILTER_LOCATION_TABLE_START"
+export const ACTION_FILTER_LOCATION_TABLE = "ACTION_FILTER_LOCATION_TABLE"
+export const API_ADD_WORKOUTDAY_LOCATION_START = "API_ADD_WORKOUTDAY_LOCATION_START"
+export const API_ADD_WORKOUTDAY_LOCATION_BUILD = "API_ADD_WORKOUTDAY_LOCATION_BUILD"
+export const API_ADD_WORKOUTDAY_LOCATION = "API_ADD_WORKOUTDAY_LOCATION"
+export const API_ADD_WORKOUTDAY_LOCATION_SUCCESS = "API_ADD_WORKOUTDAY_LOCATION_SUCCESS"
+export const API_ADD_WORKOUTDAY_LOCATION_FAILURE = "API_ADD_WORKOUTDAY_LOCATION_FAILURE"
+
 export function getWorkoutDay(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTDAY,
@@ -30,7 +38,17 @@ export function getWorkoutDay(page_url, data) {
     });
 }
 
-
+export function addWorkoutLocation(page_url, data) {
+    return apiAction({
+        type: API_ADD_WORKOUTDAY_LOCATION,
+        url: "/api" + page_url,
+        method: "POST",
+        data: data,
+        onStart: addWorkoutDayLocationStart,
+        onSuccess: addWorkoutDayLocationSuccess,
+        onFailure: addWorkoutDayLocationFailure
+    })
+}
 
 export const getWorkoutDayStart = () => ({
     type: API_GET_WORKOUTDAY_START
@@ -44,6 +62,20 @@ export const getWorkoutDayFailure = error => ({
     type: API_GET_WORKOUTDAY_FAILURE,
     payload: { error }
 });
+
+export const addWorkoutDayLocationStart = () => ({
+    type: API_ADD_WORKOUTDAY_LOCATION_START
+})
+
+export const addWorkoutDayLocationSuccess = (data, header) => ({
+    type: API_ADD_WORKOUTDAY_LOCATION_SUCCESS,
+    payload: {data, header}
+})
+
+export const addWorkoutDayLocationFailure = error => ({
+    type: API_ADD_WORKOUTDAY_LOCATION_FAILURE,
+    payload: {error}
+})
 
 export const restructureWorkout = (page) => ({
     type: API_RESTRUCTURE_WORKOUTDAY,
@@ -93,7 +125,21 @@ export const sortLocationTable = (fieldName, sortOrder) => ({
     payload: {fieldName, sortOrder}
 })
 
+export const filterLocationTableStart = (fieldName, value) => ({
+    type: ACTION_FILTER_LOCATION_TABLE_START,
+    payload: {fieldName, value}
+})
+
+export const filterLocationTable = (fieldName, value) => ({
+    type: ACTION_FILTER_LOCATION_TABLE,
+    payload: {fieldName, value}
+})
 export const buildWorkoutDayRequest = (url) => ({
     type: API_GET_WORKOUTDAY_BUILD,
     payload : {url}
+})
+
+export const addWorkoutDayLocationBuild = (url, actionType) => ({
+    type: API_ADD_WORKOUTDAY_LOCATION_BUILD,
+    payload: {url, actionType}
 })

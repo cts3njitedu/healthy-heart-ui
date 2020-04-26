@@ -5,7 +5,7 @@ import {getWorkoutDay} from '../../actions/workoutAction'
 import { Redirect } from 'react-router-dom'
 import Loading from '../Loading'
 import WorkoutDayHeader from './WorkoutDayHeader'
-import { PAGE, ACTION } from '../../constants/page_constants'
+import { ACTION } from '../../constants/page_constants'
 import WorkoutDayBody from './WorkoutDayBody'
 import {format} from 'date-fns'
 
@@ -31,7 +31,7 @@ class WorkoutDayPage extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (this.state.isDateChange != prevState.isDateChange) {
+        if (this.state.isDateChange !== prevState.isDateChange) {
             console.log("Hi what is up:", this.state.newDate)
             this.props.history.push('/workoutDays/' + this.state.newDate)
         }
@@ -53,7 +53,7 @@ class WorkoutDayPage extends Component {
         
     }
     render() {
-        const { error, loading, isAccessTokenEnabled, sections, newSections} = this.props;
+        const { error, loading, isAccessTokenEnabled} = this.props;
         if (!isAccessTokenEnabled) {
             return <Redirect to="/login" />
         }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Location from './Location';
 import { PAGE } from '../../constants/page_constants';
 import { connect } from 'react-redux';
-import {selectLocation, sortLocationTableStart, buildWorkoutDayRequest} from '../../actions/workoutAction'
+import {selectLocation, sortLocationTableStart, buildWorkoutDayRequest, filterLocationTable} from '../../actions/workoutAction'
 import TableHeader from '../forms/TableHeader';
 import _ from 'lodash'
 import { withRouter } from 'react-router-dom';
@@ -13,6 +13,8 @@ class Locations extends Component {
         super(props)
         this.handleLocationSelection = this.handleLocationSelection.bind(this)
         this.handleSort = this.handleSort.bind(this)
+        this.handleFilter = this.handleFilter.bind(this)
+        this.handleFilterCall = this.handleFilterCall.bind(this)
     }
 
     handleLocationSelection(location, event) {
@@ -31,14 +33,30 @@ class Locations extends Component {
         this.props.sortLocationTableStart(fieldName)
     }
 
+    handleFilter(event) {
+        const {name, value} = event.target
+        console.log("Handle Filter:", name, value)
+        console.log("Handle Filter Event:",event.target)
+        this.props.filterLocationTable(name, value)
+    }
+
+    handleFilterCall() {
+        this.props.buildWorkoutDayRequest(this.props.match.url)
+    }
+
     componentDidUpdate(prevProps) {
-        if (!_.isEqual(prevProps.heartSort, this.props.heartSort)) {
+        let headerId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION;
+        let sortRequest = !_.isEqual(prevProps.sections[headerId][0], this.props.sections[headerId][0])
+        let filterId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION;
+        let filterRequest = !_.isEqual(prevProps.sections[filterId][0], this.props.sections[filterId][0])
+        console.log("Filter Request", filterRequest)
+        if (sortRequest) {
             this.props.buildWorkoutDayRequest(this.props.match.url)
         }
     }
     
     render() {
-        const {sections, heartSort, actionType} = this.props;
+        const {sections, actionType} = this.props;
         console.log("Action Type:", actionType)
         let locationSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_SECTION]||[];
         let filterSections = sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION][0]
@@ -54,10 +72,10 @@ class Locations extends Component {
             <div className="locationsView">
                 <div className="locationTable">
                     <table>
-                        <TableHeader tableClass={tableClass} headerSection={locationHeaderSection} filterSections={filterSections} heartSort={heartSort} handleSort={this.handleSort}/>
+                        <TableHeader tableClass={tableClass} headerSection={locationHeaderSection} filterSections={filterSections} handleSort={this.handleSort} handleFilter={this.handleFilter} handleFilterCall={this.handleFilterCall}/>
                         <tbody>
                             {
-                                locationSections.map((value, index) => {
+                                locationSections.map((value) => {
                                     return <Location key={value.metaDataId} headerSection={locationHeaderSection} location={value} header={headers} handleLocationSelection={this.handleLocationSelection} />
                                 })
                             }
@@ -95,7 +113,8 @@ const mapDispatchToProps = {
 
     selectLocation,
     sortLocationTableStart,
-    buildWorkoutDayRequest
+    buildWorkoutDayRequest,
+    filterLocationTable
 
 
 }

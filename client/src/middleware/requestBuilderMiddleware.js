@@ -1,6 +1,6 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay } from "../actions/workoutAction";
-import { ACTIVITY } from "../constants/page_constants";
+import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation } from "../actions/workoutAction";
+import { PAGE } from "../constants/page_constants";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -24,18 +24,50 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         })
     } else if (action.type === API_GET_WORKOUTDAY_BUILD) {
         let state = getState()
-        let heartSort = state.workoutDay.heartSort;
+        let locationHeader = state.workoutDay.sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION][0]
+        let fields = locationHeader.fields;
+        let filter = state.workoutDay.sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION][0]
+        let filterfields = filter.fields;
+        // console.log("What is happening", filterfields)
         let request = {
             actionType: state.workoutDay.actionType,
-            heartSort : Object.keys(heartSort).filter(key => heartSort[key] != ACTIVITY.SORT.FLAT).reduce(function(result, key) {
+            heartSort : Object.keys(fields).filter(key => fields[key].sortOrder != null).reduce(function(result, key) {
                 result[key] = {
-                    sortOrder: heartSort[key] === 1 ? "ASC" : "DESC"
+                    sortOrder: fields[key].sortOrder
                 }
                 return result;
-            }, {})
+            }, {}),
+            heartFilter: Object.keys(filterfields).filter(key => filterfields[key].value && (0 !== filterfields[key].value.length)).reduce((result, key) => {
+                result[key] = filterfields[key].value
+                return result;
+            },{})
         }
-        console.log("Url", action.payload.url)
+        console.log("Url", action.payload.url, request)
         next(getWorkoutDay(action.payload.url, request))
+    } else if (action.type === API_ADD_WORKOUTDAY_LOCATION_BUILD) {
+        next(action)
+        let state = getState();
+        let selectedLocation = state.workoutDay.selectedLocation;
+        let request = {
+            actionType: action.payload.actionType,
+            sectionInfo: {
+                sectionMetaData: {
+                    id: selectedLocation.metaDataId,
+                    page: selectedLocation.pageNumber
+                },
+                section: {
+                    id: selectedLocation.id,
+                    parentId: selectedLocation.parentId,
+                    sectionId: selectedLocation.sectionId,
+                    fields: Object.keys(selectedLocation.fields).map((key) => {
+                        return selectedLocation.fields[key]
+                    }),
+                    isHidden: false
+                }
+            }
+        }
+        console.log("Selected Location Request:", request)
+        next(addWorkoutLocation(action.payload.url, request))
     } else {
         next(action)
     }
