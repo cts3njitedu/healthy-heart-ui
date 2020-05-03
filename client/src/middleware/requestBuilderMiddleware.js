@@ -1,7 +1,7 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, actionViewWorkouts } from "../actions/workoutDayAction";
 import { PAGE } from "../constants/page_constants";
-import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState } from "../actions/workoutAction";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -70,15 +70,36 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         console.log("Selected Location Request:", request)
         next(addWorkoutLocation(action.payload.url, request))
     } else if (action.type === API_GET_WORKOUTS_HEADER_BUILD) {
+        let state = getState();
+        console.log("Sections Builder:", state.workout.sections)
+        let headerSection = state.workout.sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION];
+        if (!headerSection) {
+            next(action)
+            let request = {
+                actionType: action.payload.data.actionType,
+                date: action.payload.data.date,
+                locationId: action.payload.data.location
+            }
+            console.log("View Workouts Request:", request)
+            console.log("Url:", action.payload.url)
+            next(getWorkouts(action.payload.url, request))
+        } else {
+            next(keepWorkoutState())
+        }
+        
+    } else if(action.type === API_GET_WORKOUTS_BUILD){
         next(action)
+        let state = getState();
+        let headerSection = state.workout.sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION][0];
+        let url = state.workout.workoutDayUrl;
+        console.log("View Workous Data:",headerSection, url)
         let request = {
             actionType: action.payload.data.actionType,
-            date: action.payload.data.date,
-            locationId: action.payload.data.location
+            workoutDayId: headerSection.metaDataId
         }
         console.log("View Workouts Request:", request)
-        console.log("Url:", action.payload.url)
-        next(getWorkouts(action.payload.url, request))
+        console.log("Url:", url)
+        next(getWorkouts(url, request))
     } else {
         next(action)
     }

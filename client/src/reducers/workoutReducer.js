@@ -1,4 +1,4 @@
-import { API_GET_WORKOUTS_HEADER_BUILD, API_GET_WORKOUTS_START, API_RESTRUCTURE_WORKOUTS } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_HEADER_BUILD, API_GET_WORKOUTS_START, API_RESTRUCTURE_WORKOUTS, API_GET_WORKOUTS_BUILD, API_KEEP_WORKOUTS_STATE } from "../actions/workoutAction";
 import { ACTION } from "../constants/page_constants";
 
 const initialState = {
@@ -15,8 +15,11 @@ const initialState = {
     workoutDayUrl: "",
     metaLoadingState: {
         isHeaderLoading: false,
-        isHeaderError: false
-    } 
+        isHeaderError: false,
+        isWorkoutsLoading: false,
+        isWorkoutsError: false
+    },
+    categorySections: {} 
     
 };
 
@@ -28,12 +31,7 @@ export default function workoutReducer(state = initialState, action) {
             return {
                 ...state,
                 loading: true,
-                error: false,
-                metaLoadingState: {
-                    ...state.metaLoadingState,
-                    isHeaderLoading: true,
-                    isHeaderError: false
-                }
+                error: false
             }
         }
         case API_RESTRUCTURE_WORKOUTS : {
@@ -56,7 +54,8 @@ export default function workoutReducer(state = initialState, action) {
                     ...state.metaLoadingState,
                     [loading]: false,
                     [error]: false
-                }
+                },
+                categorySections: action.payload.page.categorySections
                   
 
             }
@@ -64,7 +63,27 @@ export default function workoutReducer(state = initialState, action) {
         case API_GET_WORKOUTS_HEADER_BUILD: {
             return {
                 ...state,
-                workoutDayUrl: action.payload.url
+                workoutDayUrl: action.payload.url,
+                metaLoadingState: {
+                    ...state.metaLoadingState,
+                    isHeaderLoading: true,
+                    isHeaderError: false,
+                }
+            }
+        }
+        case API_GET_WORKOUTS_BUILD: {
+            return {
+                ...state,
+                metaLoadingState: {
+                    ...state.metaLoadingState,
+                    isWorkoutsLoading: true,
+                    isWorkoutsError: false
+                }
+            }
+        }
+        case API_KEEP_WORKOUTS_STATE: {
+            return {
+                ...state
             }
         }
         default: {

@@ -1,9 +1,9 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay } from "../actions/workoutDayAction";
 import _ from 'lodash'
-import { ACTION } from "../constants/page_constants";
+import { ACTION, PAGE, SECTION } from "../constants/page_constants";
 import {format} from 'date-fns'
-import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD } from "../actions/workoutAction";
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS,
     API_GET_WORKOUTS_SUCCESS
@@ -19,11 +19,24 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
                 console.log("blue green no")
                 next(restructureWorkout(newPage))
             } else if (action.type === API_GET_WORKOUTS_SUCCESS) {
-                console.log("purple pink yeah")
-                next(restructureWorkoutDay(newPage, {
-                    metaLoading: "isHeaderLoading",
-                    metaError: "isHeaderError"
-                }))
+                console.log("purple pink yeah", newPage)
+                if (newPage.actionType === ACTION.VIEW_WORKOUTS_HEADER) {
+                    next(restructureWorkoutDay(newPage, {
+                        metaLoading: "isHeaderLoading",
+                        metaError: "isHeaderError"
+                    }))
+                    let headerSection = newPage.sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION][0];
+                    console.log("Routing:", headerSection)
+                    dispatch(buildWorkoutsRequest("/workoutDays", API_GET_WORKOUTS_BUILD, {
+                        actionType: ACTION.VIEW_WORKOUTS
+                    }))
+                } else {
+                    console.log("View Workouts Restructure")
+                    next(restructureWorkoutDay(newPage, {
+                        metaLoading: "isWorkoutsLoading",
+                        metaError: "isWorkoutsError"
+                    }))
+                }
             } else {
                 next(action)
             }
@@ -82,11 +95,27 @@ export function restructureWorkoutPage(page) {
             return s.id;
         })
         console.log("Restructure:", sections)
-
+        let categorySections = sections[PAGE.WORKOUTS_PAGE.WORKOUT_SECTION];
+        if (page.actionType === ACTION.VIEW_WORKOUTS) {
+            if (categorySections) {
+                categorySections = _.groupBy(categorySections, function(c){
+                    let group = c.fields[SECTION.WORKOUTS_PAGE.WORKOUT_SECTION.CATEGORY_NAME];
+                    console.log("Before:",group)
+                    let value = group.items.filter((item) => {
+                        return group.value = item.id;
+                    })
+                    console.log("After:",value)
+                    return value[0].item;
+                })
+            }
+            console.log("Category Sections:", categorySections)
+        }
+        
         resolve({
             newSections,
             sections,
-            actionType: page.actionType
+            actionType: page.actionType,
+            categorySections
 
         })
     })

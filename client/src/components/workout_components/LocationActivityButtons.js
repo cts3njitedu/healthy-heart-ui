@@ -36,13 +36,18 @@ class LocationActivityButtons extends Component {
             console.log("Add Workout Location", this.props.match)
             this.props.addWorkoutDayLocationBuild(this.props.match.url, ACTION.ADD_WORKOUTDATE_LOCATION)
         } else if(SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTS === event.target.name) {
-            console.log("View Workouts", this.props.match)
-            let viewWorkoutField = {
-                disabled: true,
-                name: event.target.name,
-                sectionId: PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION
-            }
-            this.props.actionViewWorkouts(viewWorkoutField)
+            // console.log("View Workouts", this.props.match)
+            // let viewWorkoutField = {
+            //     disabled: true,
+            //     name: event.target.name,
+            //     sectionId: PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION
+            // }
+            // this.props.actionViewWorkouts(viewWorkoutField)
+            console.log("Going to View Workouts")
+            let selectedLocation = this.props.selectedLocation;
+            let url = this.props.match.url + "/locations" + "/" + selectedLocation.metaDataId + "/workouts"
+            console.log(url)
+            this.props.history.push(url);
         }
         
 
@@ -51,12 +56,6 @@ class LocationActivityButtons extends Component {
     componentDidUpdate(prevProps) {
         if (prevProps.isGoBackToCalendar !== this.props.isGoBackToCalendar) {
             this.props.history.push('/calendar') 
-        } else if(prevProps.isViewWorkouts != this.props.isViewWorkouts) {
-            console.log("Going to View Workouts")
-            let selectedLocation = this.props.selectedLocation;
-            let url = this.props.match.url + "/locations" + "/" + selectedLocation.metaDataId
-            console.log(url)
-            this.props.history.push(url);
         }
     }
     render() {

@@ -19,13 +19,12 @@ class WorkoutDayLocation extends Component {
     }
         
     render(){
-        const { error, loading, sections, isAccessTokenEnabled} = this.props;
+        const { error, loading, sections, isAccessTokenEnabled, newSections} = this.props;
        
-        console.log("Workout Day Location:", sections)
+        console.log("Workout Day Location:", sections, newSections)
         return (
-            <div className="workoutDayLocations">
+            <div>
                <WorkoutDayLocationHeader />
-               <div>Body</div>
             </div>
         )
         

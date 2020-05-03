@@ -51,8 +51,8 @@ class WorkoutDayLocationHeader extends Component {
             }
 
             return (
-                <div>
-                     <Loading />
+                <div style={{backgroundColor:"white", fontSize: "xx-large", padding: "1%"}}>
+                     No Workouts For this Location
                 </div>
                
             )

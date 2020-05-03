@@ -1,6 +1,7 @@
 import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutDayAction";
 import {format} from 'date-fns'
 import { PAGE, ACTIVITY } from "../constants/page_constants";
+import { ACTION_GET_WORKOUTS_BY_CATEGORY } from "../actions/workoutAction";
 const workoutAction = ({getState}) => next => action => {
 
     if (action.type === ACTION_CHANGE_WORKOUT_DATE) {
@@ -38,6 +39,10 @@ const workoutAction = ({getState}) => next => action => {
         console.log("Sorting", fieldName, sortOrder)
         next(sortLocationTable(fieldName, sortOrder))
 
+    } else if (action.type === ACTION_GET_WORKOUTS_BY_CATEGORY) {
+        let state = getState();
+        let workoutSections = state.workout.sections[PAGE.WORKOUTS_PAGE.WORKOUT_SECTION];
+        console.log("Workout Sections Middleware:",workoutSections)
     } else {
         next(action)
     }
