@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Location from './Location';
 import { PAGE } from '../../constants/page_constants';
 import { connect } from 'react-redux';
-import {selectLocation, sortLocationTableStart, buildWorkoutDayRequest, filterLocationTable} from '../../actions/workoutAction'
+import {selectLocation, sortLocationTableStart, buildWorkoutDayRequest, filterLocationTable} from '../../actions/workoutDayAction'
 import TableHeader from '../forms/TableHeader';
 import _ from 'lodash'
 import { withRouter } from 'react-router-dom';

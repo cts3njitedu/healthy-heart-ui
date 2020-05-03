@@ -5,7 +5,7 @@ import {format, parse, getYear, getMonth, getDate} from 'date-fns'
 import 'react-datepicker/dist/react-datepicker.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.css'
 import { connect } from 'react-redux';
-import {changeWorkoutDate, submitWorkoutDate, cancelWorkoutDateChange} from '../../actions/workoutAction'
+import {changeWorkoutDate, submitWorkoutDate, cancelWorkoutDateChange} from '../../actions/workoutDayAction'
 import { withRouter } from 'react-router-dom';
 import WorkoutButton from '../forms/WorkoutButton';
 class WorkoutDayHeader extends Component {

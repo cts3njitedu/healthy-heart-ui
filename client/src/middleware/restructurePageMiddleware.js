@@ -1,21 +1,33 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay } from "../actions/workoutDayAction";
 import _ from 'lodash'
 import { ACTION } from "../constants/page_constants";
 import {format} from 'date-fns'
+import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay } from "../actions/workoutAction";
 const workoutActions = [
-    API_GET_WORKOUTDAY_SUCCESS
+    API_GET_WORKOUTDAY_SUCCESS,
+    API_GET_WORKOUTS_SUCCESS
 ];
-const restructurePageMiddleware = ({dispatch}) => (next) => (action) => {
+const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) => {
     if (action.type === API_GET_LOGIN_PAGE_SUCCESS || action.type === API_POST_LOGIN_PAGE_FAILURE ) {
         restructurePage(action.payload.page).then(function(newPage){
             next(handleRestructurePage(newPage, action.payload.page))
         }) 
     } else if (workoutActions.includes(action.type)){
         restructureWorkoutPage(action.payload.page).then(function(newPage){
-            next(restructureWorkout(newPage))
+            if (action.type === API_GET_WORKOUTDAY_SUCCESS) {
+                console.log("blue green no")
+                next(restructureWorkout(newPage))
+            } else if (action.type === API_GET_WORKOUTS_SUCCESS) {
+                console.log("purple pink yeah")
+                next(restructureWorkoutDay(newPage, {
+                    metaLoading: "isHeaderLoading",
+                    metaError: "isHeaderError"
+                }))
+            } else {
+                next(action)
+            }
         })
-        //next(action);
     } else if (action.type === API_ADD_WORKOUTDAY_LOCATION_SUCCESS) {
         next(action)
         let resp = action.payload.data;

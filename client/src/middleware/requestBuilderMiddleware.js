@@ -1,6 +1,7 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, actionViewWorkouts } from "../actions/workoutDayAction";
 import { PAGE } from "../constants/page_constants";
+import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts } from "../actions/workoutAction";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -68,6 +69,16 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         }
         console.log("Selected Location Request:", request)
         next(addWorkoutLocation(action.payload.url, request))
+    } else if (action.type === API_GET_WORKOUTS_HEADER_BUILD) {
+        next(action)
+        let request = {
+            actionType: action.payload.data.actionType,
+            date: action.payload.data.date,
+            locationId: action.payload.data.location
+        }
+        console.log("View Workouts Request:", request)
+        console.log("Url:", action.payload.url)
+        next(getWorkouts(action.payload.url, request))
     } else {
         next(action)
     }

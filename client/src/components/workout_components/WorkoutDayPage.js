@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { Component } from 'react'
-import {getWorkoutDay} from '../../actions/workoutAction'
+import {getWorkoutDay} from '../../actions/workoutDayAction'
 import { Redirect } from 'react-router-dom'
 import Loading from '../Loading'
 import WorkoutDayHeader from './WorkoutDayHeader'
@@ -58,8 +58,12 @@ class WorkoutDayPage extends Component {
             return <Redirect to="/login" />
         }
         if (loading) {
+            console.log("Loading Here you know")
             return (
-                <Loading />
+                <div>
+                     <Loading />
+                </div>
+               
             )
         }
         else if (error) {

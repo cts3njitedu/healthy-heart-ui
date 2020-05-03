@@ -1,4 +1,4 @@
-import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD, ACTION_FILTER_LOCATION_TABLE, API_ADD_WORKOUTDAY_LOCATION_BUILD, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, API_ADD_WORKOUTDAY_LOCATION_FAILURE } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD, ACTION_FILTER_LOCATION_TABLE, API_ADD_WORKOUTDAY_LOCATION_BUILD, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, API_ADD_WORKOUTDAY_LOCATION_FAILURE, ACTION_VIEW_WORKOUTS } from "../actions/workoutDayAction";
 import {PAGE, SECTION} from '../constants/page_constants'
 const initialState = {
     sections : {},
@@ -12,7 +12,8 @@ const initialState = {
     isSubmitDate: false,
     isGoBackToCalendar: false,
     heartSort : {},
-    actionType: ""
+    actionType: "",
+    isViewWorkouts: false
     
 };
 
@@ -295,6 +296,28 @@ export default function workoutDayReducer(state = initialState, action) {
                 error: true
             }
         }
+        case ACTION_VIEW_WORKOUTS: {
+            let sectionId = action.payload.viewWorkoutField.sectionId;
+            let name = action.payload.viewWorkoutField.name;
+            let disabled = action.payload.viewWorkoutField.disabled;
+            return {
+                ...state,
+                isViewWorkouts: true,
+                sections: {
+                    ...state.sections,
+                    [sectionId] : state.sections[sectionId].map((item, index) => {
+                        if (index === 0) {
+                          let section = item;
+                          section.fields[name].isDisabled = disabled
+                          return section
+
+                        }
+                        return item;
+                    })
+                }
+
+            }
+        }
         default: {
             return {
                 ...state,
@@ -306,7 +329,8 @@ export default function workoutDayReducer(state = initialState, action) {
                 tempSelectedDate: "",
                 isSubmitDate: false,
                 isGoBackToCalendar: false,
-                actionType: ""
+                actionType: "",
+                isViewWorkouts: false
 
             }
         }
