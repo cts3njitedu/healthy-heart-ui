@@ -12,7 +12,7 @@ function WorkoutDayWorkouts(props) {
             <div>
                 <div>View Workouts</div>
                 <div>
-                    <Route path={`${props.match.path}/:category`} component={WorkoutsMain} />
+                    <Route path={`${props.match.path}/category/:category`} component={WorkoutsMain} />
                     {/* <Route path={`${props.match.path}/:category`} component={(props) => <WorkoutsMain {...props} />} /> */}
                 </div>
             </div>

@@ -100,12 +100,12 @@ export function restructureWorkoutPage(page) {
             if (categorySections) {
                 categorySections = _.groupBy(categorySections, function(c){
                     let group = c.fields[SECTION.WORKOUTS_PAGE.WORKOUT_SECTION.CATEGORY_NAME];
-                    console.log("Before:",group)
+                    // console.log("Before:",group)
                     let value = group.items.filter((item) => {
                         return group.value = item.id;
                     })
-                    console.log("After:",value)
-                    return value[0].item;
+                    // console.log("After:",value)
+                    return value[0].item.toLowerCase();
                 })
             }
             console.log("Category Sections:", categorySections)

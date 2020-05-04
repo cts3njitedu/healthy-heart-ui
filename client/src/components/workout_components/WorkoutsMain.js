@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
 import {getWorkoutsByCategory} from '../../actions/workoutAction';
+import WorkoutSummary from './WorkoutSummary';
 
 class WorkoutsMain extends Component {
     
@@ -24,10 +25,31 @@ class WorkoutsMain extends Component {
                 <div>Error getting page...</div>
             )
         } else {
-            console.log("Workouts Main:", categorySections, this.props.match.url)
+            console.log("Workouts Main:", categorySections, this.props.match.params)
+            if (categorySections) {
+                let workouts = categorySections[this.props.match.params.category];
+                console.log("Workouts:", workouts)
+                if (workouts) {
+                    return (
+                        <div className="workoutsMain">
+                            {
+                                workouts.map((workout, index) => {
+                                    let metaDataId = workout.metaDataId;
+                                   return <div key={metaDataId} className="workoutSummaryDiv"><WorkoutSummary workout={workout} /></div>
+                                })
+                                
+                            }
+                        </div>
+                        
+                    )
+                }
+                
+            }
+
             return (
-                <div>Workouts...</div>
+                <div className="noWorkouts">Currently No Workouts for Category</div>
             )
+            
         }
     }
 }

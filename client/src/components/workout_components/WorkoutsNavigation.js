@@ -39,7 +39,7 @@ class WorkoutsNavigation extends Component {
                                     fields && Object.keys(fields).map((f, index) => {
                                         let field = fields[f];
                                         let value = field.value;
-                                        let url = value[0].toLowerCase() + value.substr(1);
+                                        let url = "category/" + value[0].toLowerCase() + value.substr(1);
                                         console.log("Field", url, this.props.match.url)
                                         return <li key={value}><Link to={`${this.props.match.url}/${url}`}>{value}</Link></li>
                                                     
