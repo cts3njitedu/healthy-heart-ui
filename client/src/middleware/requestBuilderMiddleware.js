@@ -73,7 +73,8 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         let state = getState();
         console.log("Sections Builder:", state.workout.sections)
         let headerSection = state.workout.sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION];
-        if (!headerSection) {
+        let workoutDayUrl = state.workout.workoutDayUrl;
+        if (!headerSection || action.payload.url !== workoutDayUrl) {
             next(action)
             let request = {
                 actionType: action.payload.data.actionType,

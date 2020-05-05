@@ -13,11 +13,11 @@
 }
 
 .workoutDayLocationHeader > * {
-    background-color: darkblue;
+    background-color: lightskyblue;
     border: 1px solid black;
     padding: 1%;
     flex: 1 100;
-    color: white;
+    color: black;
     font-size: xx-large;
 }
 
@@ -55,7 +55,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: lightcoral;
+    background-color: darkred;
 
 }
 
@@ -73,7 +73,7 @@
     width: 100%;
     flex-direction: column;
     justify-content: center;
-    background-color: lightcoral;
+    background-color: darkred;
 }
 
 .workoutsNavigation > ul {
@@ -105,6 +105,7 @@
     display: flex;
     flex: 1 100;
     background-color: darkgray;
+    flex-wrap: wrap;
 }
 
 .workoutsMain > div {
@@ -160,12 +161,14 @@
     flex: 1;
     justify-content: space-around;
     background-color: lightgreen;
+    flex-wrap: wrap;
 }
 .workoutSummary > :nth-child(4) > * {
     background-color: purple;
     color: white;
     font-size: xx-large;
     width: 100%;
+    flex: 1 100;
 }
 
 .noWorkouts {
@@ -176,4 +179,12 @@
     justify-content: center;
     align-items: center;
     font-size: xx-large;
+}
+
+.workoutTypeActiveLink {
+    background-color: darkblue;
+    color: white;
+    border-top-right-radius: 25%;
+    border-bottom-right-radius: 25%;
+    
 }

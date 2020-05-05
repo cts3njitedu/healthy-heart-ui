@@ -50,6 +50,10 @@ export const SECTION = {
             VIEW_WORKOUT_DETAILS: "viewWorkoutDetails",
             DELETE_WORKOUT: "deleteWorkout"
 
+        },
+        ACTIVITY_SECTION: {
+            GO_BACK: "goBackToLocations",
+            ADD_WORKOUT: "addWorkout"
         }
     }
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { PAGE } from '../../constants/page_constants';
 import Loading from '../Loading';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, NavLink } from 'react-router-dom';
 import { Navbar, NavItem, Nav } from 'react-bootstrap'
 
 class WorkoutsNavigation extends Component {
@@ -41,7 +41,7 @@ class WorkoutsNavigation extends Component {
                                         let value = field.value;
                                         let url = "category/" + value[0].toLowerCase() + value.substr(1);
                                         console.log("Field", url, this.props.match.url)
-                                        return <li key={value}><Link to={`${this.props.match.url}/${url}`}>{value}</Link></li>
+                                        return <li key={value}><NavLink activeClassName="workoutTypeActiveLink" to={`${this.props.match.url}/${url}`}>{value}</NavLink></li>
                                                     
                                                
                                     })
