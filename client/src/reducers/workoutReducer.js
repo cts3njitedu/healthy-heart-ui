@@ -19,7 +19,9 @@ const initialState = {
         isWorkoutsLoading: false,
         isWorkoutsError: false
     },
-    categorySections: {} 
+    categorySections: {},
+    exactUrl: "",
+    queryParams: {}
     
 };
 
@@ -64,6 +66,10 @@ export default function workoutReducer(state = initialState, action) {
             return {
                 ...state,
                 workoutDayUrl: action.payload.url,
+                exactUrl: action.payload.data.exactUrl,
+                queryParams: {
+                   ...action.payload.data.values
+                },
                 metaLoadingState: {
                     ...state.metaLoadingState,
                     isHeaderLoading: true,
@@ -83,7 +89,11 @@ export default function workoutReducer(state = initialState, action) {
         }
         case API_KEEP_WORKOUTS_STATE: {
             return {
-                ...state
+                ...state,
+                exactUrl: action.payload.data.exactUrl,
+                queryParams: {
+                   ...action.payload.data.values
+                }
             }
         }
         default: {

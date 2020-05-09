@@ -3,18 +3,22 @@ import { connect } from 'react-redux';
 import { ACTION } from '../../constants/page_constants';
 import WorkoutDayLocationHeader from './WorkoutDayLocationHeader';
 import { buildWorkoutsRequest, API_GET_WORKOUTS_HEADER_BUILD } from '../../actions/workoutAction';
-
+import queryString from 'query-string'
 class WorkoutDayLocation extends Component {
     constructor(props){
         super(props)
+        console.log("We are titans:", props)
     }
 
     componentDidMount() {
         console.log("Hi how are dkdk:", this.props)
+        const values = queryString.parse(this.props.location.search)
         this.props.buildWorkoutsRequest(this.props.match.url, API_GET_WORKOUTS_HEADER_BUILD, {
             actionType: ACTION.VIEW_WORKOUTS_HEADER,
             date: this.props.match.params.dateId,
-            location: this.props.match.params.locationId
+            location: this.props.match.params.locationId,
+            exactUrl: this.props.location.pathname,
+            values : values
         })
     }
         

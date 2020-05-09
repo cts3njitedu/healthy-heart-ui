@@ -3,7 +3,7 @@ import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCA
 import _ from 'lodash'
 import { ACTION, PAGE, SECTION } from "../constants/page_constants";
 import {format} from 'date-fns'
-import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD, addNewWorkoutStart } from "../actions/workoutAction";
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS,
     API_GET_WORKOUTS_SUCCESS
@@ -20,6 +20,9 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
                 next(restructureWorkout(newPage))
             } else if (action.type === API_GET_WORKOUTS_SUCCESS) {
                 console.log("purple pink yeah", newPage)
+                let state = getState();
+                let {exactUrl, queryParams} = state.workout;
+                console.log("Exact Url:", exactUrl, queryParams)
                 if (newPage.actionType === ACTION.VIEW_WORKOUTS_HEADER) {
                     next(restructureWorkoutDay(newPage, {
                         metaLoading: "isHeaderLoading",
@@ -36,6 +39,10 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
                         metaLoading: "isWorkoutsLoading",
                         metaError: "isWorkoutsError"
                     }))
+                    if (queryParams.action === "add") {
+                        console.log("Adding New Workout Action Call")
+                        dispatch(addNewWorkoutStart())
+                    }
                 }
             } else {
                 next(action)

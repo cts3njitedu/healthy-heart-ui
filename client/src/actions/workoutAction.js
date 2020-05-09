@@ -11,6 +11,14 @@ export const API_GET_RESTRUCTURE_WORKOUTS = "API_GET_RESTRUCTURE_WORKOUTS"
 export const API_KEEP_WORKOUTS_STATE = "API_KEEP_WORKOUTS_STATE"
 export const ACTION_GET_WORKOUTS_BY_CATEGORY = "ACTION_GET_WORKOUTS_BY_CATEGORY";
 export const ACTION_GO_BACK_TO_WORKOUTDAY_LOCATIONS = "ACTION_GO_BACK_TO_WORKOUTDAY_LOCATIONS"
+export const ACTION_ADD_WORKOUT_START = "ACTION_ADD_WORKOUT_START";
+export const ACTION_ADD_WORKOUT = "ACTION_ADD_WORKOUT";
+export const ACTION_CHANGE_CATEGORY_NAME = "ACTION_CHANGE_CATEGORY_NAME"
+export const ACTION_CHANGE_CATEGORY_CONFIRMATION_YES = "ACTION_CHANGE_CATEGORY_CONFIRMATION_YES"
+export const ACTION_CHANGE_CATEGORY_CONFIRMATION_NO = "ACTION_CHANGE_CATEGORY_CONFIRMATION_NO"
+export const ACTION_CHANGE_WORKOUT_TYPE = "ACTION_CHANGE_WORKOUT_TYPE"
+export const ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES = "ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES"
+export const ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO = "ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO"
 export function getWorkouts(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTS,
@@ -45,11 +53,36 @@ export const restructureWorkoutDay = (page, metaData) => ({
     payload: {page, metaData}
 })
 
-export const keepWorkoutState = () => ({
-    type: API_KEEP_WORKOUTS_STATE
+export const keepWorkoutState = (data) => ({
+    type: API_KEEP_WORKOUTS_STATE,
+    payload: {data}
 })
 
 export const getWorkoutsByCategory = (category) => ({
     type: ACTION_GET_WORKOUTS_BY_CATEGORY,
     payload: {category}
+})
+
+export const addNewWorkoutStart = () => ({
+    type: ACTION_ADD_WORKOUT_START
+})
+
+export const addNewWorkout = (workoutSection) => ({
+    type: ACTION_ADD_WORKOUT,
+    payload: {workoutSection}
+})
+
+export const changeCategoryName = (data) => ({
+    type: ACTION_CHANGE_CATEGORY_NAME,
+    payload: {data}
+})
+
+export const changeWorkoutType = (data) => ({
+    type: ACTION_CHANGE_WORKOUT_TYPE,
+    payload: {data}
+})
+
+export const confirmationAction = (actionType, data) => ({
+    type : actionType,
+    payload: {data}
 })

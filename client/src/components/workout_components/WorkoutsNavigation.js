@@ -4,6 +4,7 @@ import { PAGE } from '../../constants/page_constants';
 import Loading from '../Loading';
 import { Link, withRouter, NavLink } from 'react-router-dom';
 import { Navbar, NavItem, Nav } from 'react-bootstrap'
+import queryString from 'query-string'
 
 class WorkoutsNavigation extends Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class WorkoutsNavigation extends Component {
 
     render() {
         const { sections, loading, error, newSections } = this.props;
+        const values = queryString.parse(this.props.location.search)
         if (loading) {
             return (
                 <div>
@@ -24,9 +26,14 @@ class WorkoutsNavigation extends Component {
             return (
                 <div>Error getting page...</div>
             )
+        } 
+        if (values.action) {
+            return <div className="workoutsNavigation"> </div>;
         } else {
             let navigationSections = sections[PAGE.WORKOUTS_PAGE.NAVIGATION_SECTION];
             console.log("Navigation Workout:", newSections)
+            
+            console.log("Query Params:", values)
             if (navigationSections) {
                 let navigationSection = navigationSections[0]
                 let fields = navigationSection.fields;
@@ -34,7 +41,7 @@ class WorkoutsNavigation extends Component {
                 return (
     
                         <div className="workoutsNavigation">
-                            <ul>
+                           {!values.action && <ul>
                                 {
                                     fields && Object.keys(fields).map((f, index) => {
                                         let field = fields[f];
@@ -46,19 +53,14 @@ class WorkoutsNavigation extends Component {
                                                
                                     })
                                 }
-                            </ul>
+                            </ul>}
                             
                         </div>
                        
 
                 )
             }
-            return (
-                        <div>
-                            <Loading />
-                        </div>
-
-            )
+            return null;
         }
 
     }

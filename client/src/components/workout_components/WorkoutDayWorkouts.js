@@ -3,22 +3,15 @@ import { Route } from 'react-router-dom'
 import WorkoutsNavigation from './WorkoutsNavigation'
 import WorkoutsMain from './WorkoutsMain'
 import WorkoutsActivityButtons from './WorkoutsActivityButtons'
+import WorkoutsView from './WorkoutsView'
 
 
 function WorkoutDayWorkouts(props) {
     return (
         <div className="workoutDayLocationBody">
             <WorkoutsNavigation />
-            <div>
-                <div>View Workouts</div>
-                <div>
-                    <Route path={`${props.match.path}/category/:category`} component={WorkoutsMain} />
-                    {/* <Route path={`${props.match.path}/:category`} component={(props) => <WorkoutsMain {...props} />} /> */}
-                </div>
-            </div>
-            <WorkoutsActivityButtons />
-        
-            
+            <WorkoutsView />
+            <WorkoutsActivityButtons /> 
         </div>
     )
 

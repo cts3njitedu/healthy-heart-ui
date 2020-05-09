@@ -1,7 +1,7 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, actionViewWorkouts } from "../actions/workoutDayAction";
 import { PAGE } from "../constants/page_constants";
-import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart } from "../actions/workoutAction";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -71,7 +71,7 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         next(addWorkoutLocation(action.payload.url, request))
     } else if (action.type === API_GET_WORKOUTS_HEADER_BUILD) {
         let state = getState();
-        console.log("Sections Builder:", state.workout.sections)
+        console.log("Sections Builder:", state.workout.sections, action.payload.data.exactUrl, action.payload.data.values)
         let headerSection = state.workout.sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION];
         let workoutDayUrl = state.workout.workoutDayUrl;
         if (!headerSection || action.payload.url !== workoutDayUrl) {
@@ -84,8 +84,18 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
             console.log("View Workouts Request:", request)
             console.log("Url:", action.payload.url)
             next(getWorkouts(action.payload.url, request))
-        } else {
-            next(keepWorkoutState())
+        } 
+        
+        else {
+            console.log("Keeping....", state.workout.exactUrl, state.workout.queryParams)
+            next(keepWorkoutState({
+                exactUrl: action.payload.data.exactUrl,
+                queryParams: action.payload.data.values
+            }))
+            if (action.payload.data.values.action === "add") {
+                console.log("Let us get the bowl rolling")
+                dispatch(addNewWorkoutStart())
+            }
         }
         
     } else if(action.type === API_GET_WORKOUTS_BUILD){

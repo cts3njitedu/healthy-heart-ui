@@ -6,6 +6,7 @@ import about from './aboutReducer'
 import calendar from './calendarReducer'
 import workoutDay from './workoutDayReducer'
 import workout from './workoutReducer'
+import workoutDetails from './workoutDetailsReducer'
 
 
 export default combineReducers(
@@ -16,7 +17,8 @@ export default combineReducers(
         about,
         calendar,
         workoutDay,
-        workout  
+        workout,
+        workoutDetails
     }
 )
 
