@@ -6,6 +6,7 @@ import { PAGE } from '../../constants/page_constants'
 import Loading from '../Loading'
 import {addNewWorkoutStart} from '../../actions/workoutAction'
 import WorkoutDetailsHeader from './WorkoutDetailsHeader'
+import WorkoutDetailsActivity from './WorkoutDetailsActivity'
 
 class WorkoutDetails extends Component {
     constructor(props) {
@@ -43,6 +44,7 @@ class WorkoutDetails extends Component {
                     return (
                         <div className="workoutDetails">
                             <WorkoutDetailsHeader workoutSection={workoutSection}/>
+                            <WorkoutDetailsActivity />
                             <div></div>
                         </div>
                     )

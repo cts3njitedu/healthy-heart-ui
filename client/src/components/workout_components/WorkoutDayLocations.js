@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 
 import '../../styles/workoutDay.css'
 import WorkoutDayWorkouts from './WorkoutDayWorkouts';
+import WorkoutDetails from './WorkoutDetails';
 
 
 function WorkoutDayLocations(props) {
@@ -12,6 +13,7 @@ function WorkoutDayLocations(props) {
         <div className="workoutDayLocations">
             <Route path={`${props.match.path}/:locationId`} component={(props) =><WorkoutDayLocation {...props}/>}/>
             <Route path={`${props.match.path}/:locationId/workouts`} component={(props) =><WorkoutDayWorkouts {...props}/>}/>
+            {/* <Route path={`${props.match.path}/:locationId/workouts/:workoutId`} component={WorkoutDetails}/> */}
             {/* <Route path={`${props.match.path}/:locationId`} component={WorkoutDayLocation} exact/> */}
         </div>
     )

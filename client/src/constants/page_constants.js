@@ -12,6 +12,11 @@ export const PAGE = {
         ACTIVITY_SECTION: "WORKOUTS_PAGE.ACTIVITY_SECTION",
         WORKOUT_SECTION: "WORKOUTS_PAGE.WORKOUT_SECTION"
 
+    },
+    WORKOUT_DETAILS_PAGE: {
+        WORKOUT_SECTION: "WORKOUT_DETAILS_PAGE.WORKOUT_SECTION",
+        ACTIVITY_SECTION: "WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION",
+        GROUP_SECTION: "WORKOUT_DETAILS_PAGE.GROUP_SECTION"
     }
 };
 
@@ -55,6 +60,33 @@ export const SECTION = {
             GO_BACK: "goBackToLocations",
             ADD_WORKOUT: "addWorkout"
         }
+    },
+    WORKOUT_DETAILS_PAGE: {
+        WORKOUT_SECTION: {
+            CATEGORY_NAME: "categoryName",
+            WORKOUT_TYPE_DESC: "workoutTypeDesc",
+            VIEW_WORKOUT_DETAILS: "viewWorkoutDetails",
+            DELETE_WORKOUT: "deleteWorkout"
+
+        },
+        ACTIVITY_SECTION: {
+            ADD_GROUP: "addGroup",
+            CANCEL_CHANGES: "cancelChanges",
+            CLOSE: "close",
+            SUBMIT_CLOSE: "submitAndClose",
+            SUBMIT_CONTINUE: "submitAndContinue"
+        },
+        GROUP_SECTION: {
+            SETS: "sets",
+            CLOSE: "close",
+            DELETE: "delete",
+            DURATION: "duration",
+            EDIT: "edit",
+            REPETITIONS: "repetitions",
+            SAVE: "save",
+            VARIATION: "variation",
+            WEIGHT: "weight"
+        }
     }
 }
 
@@ -63,7 +95,10 @@ export const ACTION = {
     VIEW_NON_WORKOUTDATE_LOCATIONS: "VIEW_NON_WORKOUTDATE_LOCATIONS",
     ADD_WORKOUTDATE_LOCATION: "ADD_WORKOUTDATE_LOCATION",
     VIEW_WORKOUTS_HEADER : "VIEW_WORKOUTS_HEADER",
-    VIEW_WORKOUTS : "VIEW_WORKOUTS"
+    VIEW_WORKOUTS : "VIEW_WORKOUTS",
+    VIEW_WORKOUT_DETAILS_META_INFO: "VIEW_WORKOUT_DETAILS_META_INFO",
+    VIEW_WORKOUT_DETAILS: "VIEW_WORKOUT_DETAILS"
+
 }
 
 export const ACTIVITY = {

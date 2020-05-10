@@ -4,6 +4,7 @@ import WorkoutsNavigation from './WorkoutsNavigation'
 import WorkoutsMain from './WorkoutsMain'
 import WorkoutsActivityButtons from './WorkoutsActivityButtons'
 import WorkoutsView from './WorkoutsView'
+import WorkoutDetails from './WorkoutDetails'
 
 
 function WorkoutDayWorkouts(props) {
@@ -11,6 +12,7 @@ function WorkoutDayWorkouts(props) {
         <div className="workoutDayLocationBody">
             <WorkoutsNavigation />
             <WorkoutsView />
+
             <WorkoutsActivityButtons /> 
         </div>
     )

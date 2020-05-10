@@ -1,9 +1,9 @@
-import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO } from "../actions/workoutAction";
-import { SECTION } from "../constants/page_constants";
+import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_RESTRUCTURE_WORKOUT_DETAILS } from "../actions/workoutAction";
+import { SECTION , PAGE} from "../constants/page_constants";
 
 const initialState = {
-    sections : { 
-    },
+    sections : {},
+    newSections: {},
     loading: false,
     error: false,
     isViewWorkout: false,
@@ -16,7 +16,11 @@ const initialState = {
         workoutSection: {},
         groupSections: {}
     },
-    confirmationData: {}
+    confirmationData: {},
+    isWorkoutDetailsLoading: false,
+    isWorkoutDetailsError: false,
+    isMetaInfoLoading: false,
+    isMetaInfoError: false
 };
 
 export default function workoutDetailsReducer(state = initialState, action) {
@@ -26,7 +30,11 @@ export default function workoutDetailsReducer(state = initialState, action) {
             return {
                 ...state,
                 loading: true,
-                error: false
+                error: false,
+                isMetaInfoLoading: true,
+                isMetaInfoError: false,
+                isWorkoutDetailsLoading: true,
+                isWorkoutDetailsError: false
             }
             
         }
@@ -41,7 +49,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     workoutSection : {
                         ...action.payload.workoutSection
                     },
-                    groupSections: []
+                    groupSections: {}
                     
                     
                 },
@@ -50,7 +58,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     workoutSection : {
                         ...action.payload.workoutSection
                     },
-                    groupSections: []
+                    groupSections: {}
                 }
             }
         }
@@ -92,7 +100,8 @@ export default function workoutDetailsReducer(state = initialState, action) {
                             }
                         }
                     }
-                }
+                },
+                groupSections: {}
             }
         }
         case ACTION_CHANGE_CATEGORY_CONFIRMATION_NO: {
@@ -132,13 +141,45 @@ export default function workoutDetailsReducer(state = initialState, action) {
                             }
                         }
                     }
-                }
+                },
+                groupSections: {}
             }
         }
         case ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO: {
             return {
                 ...state,
                 confirmationData: {}
+            }
+        }
+        case API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO: {
+            let pageSections = action.payload.page.sections;
+            let pageNewSections = action.payload.page.newSections;
+            return {
+                ...state,
+                sections: {
+                    ...pageSections
+                },
+                newSections: {
+                    ...pageNewSections
+                },
+                isMetaInfoLoading: false,
+                isMetaInfoError: false
+            }
+        }
+        case API_RESTRUCTURE_WORKOUT_DETAILS : {
+            let workoutSection = action.payload.page.sections[PAGE.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION][0];
+            let groupSections = action.payload.page.sections[PAGE.WORKOUT_DETAILS_PAGE.GROUP_SECTION];
+            return {
+                ...state,
+                selectedWorkout: {
+                    ...state.selectedWorkout,
+                    workoutSection: {
+                        ...workoutSection
+                    },
+                    groupSections: {
+                        ...groupSections
+                    }
+                }
             }
         }
         default: {

@@ -7,7 +7,7 @@ import queryString from 'query-string'
 class WorkoutsView extends Component {
     constructor(props) {
         super(props)
-        console.log("Workouts View", props.match.url)
+        console.log("Workouts View", props.match)
     }
 
     render() {
@@ -20,6 +20,7 @@ class WorkoutsView extends Component {
             <div>
                 {values.action && <WorkoutDetails />}
                 <Switch>
+                    {/* <Route path={`${this.props.match.path}/:workoutId`} component={(props) => <WorkoutDetails {...props} />}/> */}
                     {!values.action && <Route path={`${this.props.match.path}/category/:category`} component={WorkoutsMain} exact/>}
                 </Switch>
                 {/* <Route path={`${props.match.path}/:category`} component={(props) => <WorkoutsMain {...props} />} /> */}

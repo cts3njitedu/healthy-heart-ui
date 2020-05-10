@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import Loading from '../Loading';
 import {getWorkoutsByCategory} from '../../actions/workoutAction';
 import WorkoutSummary from './WorkoutSummary';
+import { SECTION } from '../../constants/page_constants';
 
 class WorkoutsMain extends Component {
     
@@ -35,7 +36,7 @@ class WorkoutsMain extends Component {
                             {
                                 workouts.map((workout, index) => {
                                     let metaDataId = workout.metaDataId;
-                                   return <div key={metaDataId} className="workoutSummaryDiv"><WorkoutSummary workout={workout} /></div>
+                                   return <div key={metaDataId} className="workoutSummaryDiv"><WorkoutSummary workout={workout}/></div>
                                 })
                                 
                             }
@@ -61,7 +62,9 @@ function mapStateToProps(state) {
         newSections: state.workout.newSections,
         loading: state.workout.metaLoadingState.isWorkoutsLoading,
         error: state.workout.metaLoadingState.isWorkoutsError,
-        categorySections: state.workout.categorySections
+        categorySections: state.workout.categorySections,
+        workoutDayUrl: state.workout.workoutDayUrl,
+        params: state.workout.params
     }
 
 }

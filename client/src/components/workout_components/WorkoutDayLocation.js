@@ -18,7 +18,8 @@ class WorkoutDayLocation extends Component {
             date: this.props.match.params.dateId,
             location: this.props.match.params.locationId,
             exactUrl: this.props.location.pathname,
-            values : values
+            values : values,
+            params: this.props.match.params
         })
     }
         

@@ -2,10 +2,14 @@ import apiAction from "./apiAction"
 
 export const API_GET_WORKOUTS_HEADER_BUILD = "API_GET_WORKOUTS_HEADER_BUILD"
 export const API_GET_WORKOUTS_BUILD = "API_GET_WORKOUTS_BUILD"
+export const API_GET_WORKOUT_DETAILS_BUILD = "API_GET_WORKOUT_DETAILS_BUILD"
+export const API_GET_WORKOUT_DETAILS_META_INFO_BUILD = "API_GET_WORKOUT_DETAILS_META_INFO_BUILD"
 export const API_GET_WORKOUTS = "API_GET_WORKOUTS"
 export const API_GET_WORKOUTS_START = "API_GET_WORKOUTS_START"
 export const API_GET_WORKOUTS_SUCCESS = "API_GET_WORKOUTS_SUCCESS"
 export const API_RESTRUCTURE_WORKOUTS = "API_RESTRUCTURE_WORKOUTS"
+export const API_RESTRUCTURE_WORKOUT_DETAILS = "API_RESTRUCTURE_WORKOUT_DETAILS"
+export const API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO = "API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO"
 export const API_GET_WORKOUTS_FAILURE = "API_GET_WORKOUTS_FAILURE"
 export const API_GET_RESTRUCTURE_WORKOUTS = "API_GET_RESTRUCTURE_WORKOUTS"
 export const API_KEEP_WORKOUTS_STATE = "API_KEEP_WORKOUTS_STATE"
@@ -19,6 +23,8 @@ export const ACTION_CHANGE_CATEGORY_CONFIRMATION_NO = "ACTION_CHANGE_CATEGORY_CO
 export const ACTION_CHANGE_WORKOUT_TYPE = "ACTION_CHANGE_WORKOUT_TYPE"
 export const ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES = "ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES"
 export const ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO = "ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO"
+export const ACTION_VIEW_WORKOUT_START = "ACTION_VIEW_WORKOUT_START"
+
 export function getWorkouts(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTS,
@@ -85,4 +91,14 @@ export const changeWorkoutType = (data) => ({
 export const confirmationAction = (actionType, data) => ({
     type : actionType,
     payload: {data}
+})
+
+export const restructureWorkoutDetailsMetaInfo = (page, metaData) => ({
+    type: API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO,
+    payload: {page, metaData}
+})
+
+export const restructureWorkoutDetails = (page, metaData) => ({
+    type: API_RESTRUCTURE_WORKOUT_DETAILS,
+    payload: {page, metaData}
 })

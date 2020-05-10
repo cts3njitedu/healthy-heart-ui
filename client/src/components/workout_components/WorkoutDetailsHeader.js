@@ -39,6 +39,7 @@ class WorkoutDetailsHeader extends Component {
                 name: categoryNameField.name,
                 value: categoryNameField.value,
                 label: categoryNameField.title,
+                disabled: categoryNameField.isDisabled,
                 items: categoryNameField.items.map(item => {
                     return {
                         id: item.id,
@@ -51,6 +52,7 @@ class WorkoutDetailsHeader extends Component {
                 name: workoutTypeField.name,
                 value: workoutTypeField.value,
                 label: workoutTypeField.title,
+                disabled: workoutTypeField.isDisabled,
                 items: workoutTypeField.items.map(item => {
                     return {
                         id: item.id,

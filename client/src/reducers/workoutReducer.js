@@ -21,7 +21,8 @@ const initialState = {
     },
     categorySections: {},
     exactUrl: "",
-    queryParams: {}
+    queryParams: {},
+    params: {}
     
 };
 
@@ -67,6 +68,7 @@ export default function workoutReducer(state = initialState, action) {
                 ...state,
                 workoutDayUrl: action.payload.url,
                 exactUrl: action.payload.data.exactUrl,
+                params: action.payload.data.params,
                 queryParams: {
                    ...action.payload.data.values
                 },

@@ -1,7 +1,7 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, actionViewWorkouts } from "../actions/workoutDayAction";
-import { PAGE } from "../constants/page_constants";
-import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart } from "../actions/workoutAction";
+import { PAGE, ACTION } from "../constants/page_constants";
+import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest } from "../actions/workoutAction";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -74,6 +74,8 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         console.log("Sections Builder:", state.workout.sections, action.payload.data.exactUrl, action.payload.data.values)
         let headerSection = state.workout.sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION];
         let workoutDayUrl = state.workout.workoutDayUrl;
+        
+        
         if (!headerSection || action.payload.url !== workoutDayUrl) {
             next(action)
             let request = {
@@ -95,7 +97,12 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
             if (action.payload.data.values.action === "add") {
                 console.log("Let us get the bowl rolling")
                 dispatch(addNewWorkoutStart())
-            }
+            } 
+        
+            dispatch(buildWorkoutsRequest(workoutDayUrl, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, {
+                actionType: ACTION.VIEW_WORKOUT_DETAILS_META_INFO,
+                queryParams: action.payload.data.values
+            }))
         }
         
     } else if(action.type === API_GET_WORKOUTS_BUILD){
@@ -109,6 +116,40 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
             workoutDayId: headerSection.metaDataId
         }
         console.log("View Workouts Request:", request)
+        console.log("Url:", url)
+
+        next(getWorkouts(url, request))
+    } else if (action.type === API_GET_WORKOUT_DETAILS_META_INFO_BUILD) {
+        let state = getState();
+        let url = state.workout.workoutDayUrl;
+        console.log("Meta Info....", state.workout.exactUrl, action.payload.data.queryParams)
+        let queryParams = action.payload.data.queryParams
+        let exactUrl = state.workout.exactUrl;
+        let parseUrl = exactUrl.split("/");
+        console.log("Parsed Url:", parseUrl)
+        let request = {
+            actionType: action.payload.data.actionType,
+            workoutId: ""
+        }
+        console.log("View Workout Details Meta Info Request:", request)
+        console.log("Url:", url)
+        next(getWorkouts(url, request))
+        if (queryParams.action === "view") {
+            console.log("View Workout Details")
+            dispatch(buildWorkoutsRequest("/workoutDays", API_GET_WORKOUT_DETAILS_BUILD, {
+                actionType: ACTION.VIEW_WORKOUT_DETAILS,
+                workoutId: parseUrl[6]
+            }))
+        }
+    } else if (action.type == API_GET_WORKOUT_DETAILS_BUILD) {
+        let state = getState()
+        let url = state.workout.workoutDayUrl;
+        let workoutId = action.payload.data.workoutId
+        let request = {
+            actionType: action.payload.data.actionType,
+            workoutId: workoutId
+        }
+        console.log("View Workout Details Request:", request, state.workout.queryParams)
         console.log("Url:", url)
         next(getWorkouts(url, request))
     } else {

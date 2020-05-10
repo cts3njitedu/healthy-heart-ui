@@ -1,9 +1,9 @@
 import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutDayAction";
-import {format} from 'date-fns'
+import { format } from 'date-fns'
 import { PAGE, ACTIVITY, SECTION } from "../constants/page_constants";
 import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, keepWorkoutState } from "../actions/workoutAction";
-import {isEmpty} from 'lodash'
-const workoutAction = ({getState}) => next => action => {
+import { isEmpty } from 'lodash'
+const workoutAction = ({ getState }) => next => action => {
 
     if (action.type === ACTION_CHANGE_WORKOUT_DATE) {
 
@@ -43,18 +43,18 @@ const workoutAction = ({getState}) => next => action => {
     } else if (action.type === ACTION_GET_WORKOUTS_BY_CATEGORY) {
         let state = getState();
         let workoutSections = state.workout.sections[PAGE.WORKOUTS_PAGE.WORKOUT_SECTION];
-        console.log("Workout Sections Middleware:",workoutSections)
+        console.log("Workout Sections Middleware:", workoutSections)
     } else if (action.type === ACTION_ADD_WORKOUT_START) {
-        
+
         let state = getState();
         let selectedWorkout = state.workoutDetails.selectedWorkout
-  
-            next(action);
-            let workoutSections = state.workout.newSections[PAGE.WORKOUTS_PAGE.WORKOUT_SECTION];
-            console.log("New Workout Section:", workoutSections)
-            next(addNewWorkout(workoutSections[0]))
-       
-        
+
+        next(action);
+        let workoutSections = state.workout.newSections[PAGE.WORKOUTS_PAGE.WORKOUT_SECTION];
+        console.log("New Workout Section:", workoutSections)
+        next(addNewWorkout(workoutSections[0]))
+
+
 
     } else if (action.type === ACTION_CHANGE_CATEGORY_NAME) {
         let state = getState();
@@ -103,7 +103,7 @@ const workoutAction = ({getState}) => next => action => {
         console.log("Data:", data)
         if (workoutTypeField.value === "") {
             next(confirmationAction(ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, data))
-        } else{
+        } else {
             next(changeWorkoutType(data))
         }
 

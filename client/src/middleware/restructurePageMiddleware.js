@@ -3,7 +3,7 @@ import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCA
 import _ from 'lodash'
 import { ACTION, PAGE, SECTION } from "../constants/page_constants";
 import {format} from 'date-fns'
-import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD, addNewWorkoutStart } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, restructureWorkoutDetailsMetaInfo, API_GET_WORKOUT_DETAILS_BUILD, restructureWorkoutDetails } from "../actions/workoutAction";
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS,
     API_GET_WORKOUTS_SUCCESS
@@ -21,8 +21,8 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
             } else if (action.type === API_GET_WORKOUTS_SUCCESS) {
                 console.log("purple pink yeah", newPage)
                 let state = getState();
-                let {exactUrl, queryParams} = state.workout;
-                console.log("Exact Url:", exactUrl, queryParams)
+                let {exactUrl, queryParams, params} = state.workout;
+                console.log("Exact Url:", exactUrl, queryParams, params)
                 if (newPage.actionType === ACTION.VIEW_WORKOUTS_HEADER) {
                     next(restructureWorkoutDay(newPage, {
                         metaLoading: "isHeaderLoading",
@@ -33,7 +33,7 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
                     dispatch(buildWorkoutsRequest("/workoutDays", API_GET_WORKOUTS_BUILD, {
                         actionType: ACTION.VIEW_WORKOUTS
                     }))
-                } else {
+                } else if (newPage.actionType === ACTION.VIEW_WORKOUTS) {
                     console.log("View Workouts Restructure")
                     next(restructureWorkoutDay(newPage, {
                         metaLoading: "isWorkoutsLoading",
@@ -43,6 +43,28 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
                         console.log("Adding New Workout Action Call")
                         dispatch(addNewWorkoutStart())
                     }
+                    if (queryParams.action === "add" || queryParams.action === "view") {
+                        console.log("Getting Meta Info")
+                        dispatch(buildWorkoutsRequest("/workoutDays", API_GET_WORKOUT_DETAILS_META_INFO_BUILD, {
+                            actionType: ACTION.VIEW_WORKOUT_DETAILS_META_INFO,
+                            queryParams: queryParams
+                        }))
+                    }
+                } else if (newPage.actionType === ACTION.VIEW_WORKOUT_DETAILS_META_INFO) {
+                    console.log("Geting view details meta info", newPage)
+                    let parseUrl = exactUrl.split("/");
+                    console.log("Parsed Url:", parseUrl)
+                    next(restructureWorkoutDetailsMetaInfo(newPage))
+                    // if (queryParams.action === "view") {
+                    //     console.log("View Workout Details")
+                    //     dispatch(buildWorkoutsRequest("/workoutDays", API_GET_WORKOUT_DETAILS_BUILD, {
+                    //         actionType: ACTION.VIEW_WORKOUT_DETAILS,
+                    //         workoutId: parseUrl[6]
+                    //     }))
+                    // }
+                } else if (newPage.actionType === ACTION.VIEW_WORKOUT_DETAILS) {
+                    console.log("Getting view details", newPage)
+                    next(restructureWorkoutDetails(newPage))
                 }
             } else {
                 next(action)
