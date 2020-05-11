@@ -225,20 +225,22 @@
     display: flex;
     width: 100%;
     flex: 5 500;
-    border: 1px solid red;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .workoutDetails > :nth-child(2) {
     display: flex;
     width: 100%;
     flex: 1 100;
-    justify-content: space-around;
+    justify-content: flex-start;
 }
 
 .workoutDetails > :nth-child(2) > button {
     background-color: darkblue;
     color: white;
-    width: 15%;
+    width: 20%;
     font-size: x-large;
 
 }
@@ -266,9 +268,75 @@
     width: 40%;
 }
 
+/* Workout Details Groups */
+.workoutDetailsGroups > div {
+    display: flex;
+    width: 60%;
+}
+
+.workoutGroupForm > div {
+    display: flex;
+    width: 80%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: lightblue;
+}
+
+.workoutGroupForm > div > :nth-child(1) {
+    display: flex;
+    flex-direction: column
+
+}
+
+.workoutGroupForm > div > :nth-child(1) > div > label {
+    font-size: xx-large;
+    color: darkblue;
+}
+
+.workoutGroupForm > div > :nth-child(1) > div > input {
+    font-size: x-large;
+    color: darkred;
+    background-color: lightgrey;
+}
+.workoutDetailsGroups > div > :nth-child(2) {
+    display: flex;
+    flex: 1 100;
+    flex-direction: column;
+}
+
+.workoutDetailsGroups > div > :nth-child(2) > * {
+    flex: 1 100;
+    background-color: darkblue;
+    color: white;
+}
+.workoutDetailsGroups > div > :nth-child(1) {
+    display: flex;
+    border: 1px solid black;
+    flex-direction: column;
+    flex: 3 300;
+    
+}
 
 
+.workoutDetailsGroups > div > :nth-child(1) > div {
+    display: flex;
+    background-color: lightblue;
+    
+}
 
+.workoutDetailsGroups > div > :nth-child(1) > div > div {
+    display: flex;
+    margin-right: 1%;
+    font-size: xx-large;
+    color: darkred;
+}
+.workoutDetailsGroups > div > :nth-child(1) > div > label {
+    display: flex;
+    margin-right: 1%;
+    font-size: xx-large;
+    color: darkblue;
+}
 /* Confirmation Modal */
 
 .static-modal {

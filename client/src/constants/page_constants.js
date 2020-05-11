@@ -74,7 +74,9 @@ export const SECTION = {
             CANCEL_CHANGES: "cancelChanges",
             CLOSE: "close",
             SUBMIT_CLOSE: "submitAndClose",
-            SUBMIT_CONTINUE: "submitAndContinue"
+            SUBMIT_CONTINUE: "submitAndContinue",
+            SAVE_GROUP: "saveGroup",
+            CANCEL: "cancel"
         },
         GROUP_SECTION: {
             SETS: "sets",

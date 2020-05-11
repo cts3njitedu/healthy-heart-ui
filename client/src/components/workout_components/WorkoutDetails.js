@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import queryString from 'query-string'
 import { PAGE } from '../../constants/page_constants'
@@ -7,6 +7,7 @@ import Loading from '../Loading'
 import {addNewWorkoutStart} from '../../actions/workoutAction'
 import WorkoutDetailsHeader from './WorkoutDetailsHeader'
 import WorkoutDetailsActivity from './WorkoutDetailsActivity'
+import WorkoutDetailsGroups from './WorkoutDetailsGroups'
 
 class WorkoutDetails extends Component {
     constructor(props) {
@@ -22,7 +23,10 @@ class WorkoutDetails extends Component {
 
     // }
     render() {
-        const { sections, loading, error, newSections, selectedWorkout } = this.props;
+        const { sections, loading, error, newSections, selectedWorkout,isAccessTokenEnabled } = this.props;
+        if (!isAccessTokenEnabled) {
+            return <Redirect to="/login" />
+        }
         if (loading) {
             return (
                 <div>
@@ -45,7 +49,7 @@ class WorkoutDetails extends Component {
                         <div className="workoutDetails">
                             <WorkoutDetailsHeader workoutSection={workoutSection}/>
                             <WorkoutDetailsActivity />
-                            <div></div>
+                            <WorkoutDetailsGroups />
                         </div>
                     )
                 }

@@ -5,6 +5,7 @@ export function tester() {
 }
 export function validate(field, validations) {
     let errorFields = [];
+    console.log("Validation Field:", field, validations)
     let promises = [];
     let newValue = field.value;
     validations.forEach(validation => {

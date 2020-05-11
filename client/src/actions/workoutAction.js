@@ -24,7 +24,14 @@ export const ACTION_CHANGE_WORKOUT_TYPE = "ACTION_CHANGE_WORKOUT_TYPE"
 export const ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES = "ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES"
 export const ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO = "ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO"
 export const ACTION_VIEW_WORKOUT_START = "ACTION_VIEW_WORKOUT_START"
-
+export const ACTION_ADD_EDIT_WORKOUT_GROUP_START = "ACTION_ADD_EDIT_WORKOUT_GROUP_START"
+export const ACTION_CANCEL_WORKOUT_GROUP = "ACTION_CANCEL_WORKOUT_GROUP"
+export const ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES = "ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES"
+export const ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO = "ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO"
+export const ACTION_HANDLE_CHANGE_GROUP = "ACTION_HANDLE_CHANGE_GROUP"
+export const ACTION_HANDLE_BLUR_GROUP = "ACTION_HANDLE_BLUR_GROUP"
+export const ACTION_GROUP_FORM_VALIIDATION_FINISH = "ACTION_GROUP_FORM_VALIIDATION_FINISH"
+export const ACTION_KEEP_STAGE_UNCHANGED = "ACTION_KEEP_STAGE_UNCHANGED"
 export function getWorkouts(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTS,
@@ -101,4 +108,33 @@ export const restructureWorkoutDetailsMetaInfo = (page, metaData) => ({
 export const restructureWorkoutDetails = (page, metaData) => ({
     type: API_RESTRUCTURE_WORKOUT_DETAILS,
     payload: {page, metaData}
+})
+
+export const addOREditWorkoutGroupStart = (isAddGroup, editGroup, data) => ({
+    type: ACTION_ADD_EDIT_WORKOUT_GROUP_START,
+    payload: {isAddGroup, editGroup, data}
+})
+
+export const handleChangeGroup = (field) => ({
+    type: ACTION_HANDLE_CHANGE_GROUP,
+    payload: {field}
+})
+
+export const handleBlurGroup = (field) => ({
+    type: ACTION_HANDLE_BLUR_GROUP,
+    payload: {field}
+})
+
+export const formValidationFinish = (field, errors, isError) => ({
+    type: ACTION_GROUP_FORM_VALIIDATION_FINISH,
+    payload: {field, errors, isError}
+})
+
+export const keepWorkoutDetailsUnchanged = () => ({
+    type: ACTION_KEEP_STAGE_UNCHANGED
+})
+
+export const cancelGroupFrom = (data) => ({
+    type: ACTION_CANCEL_WORKOUT_GROUP,
+    payload: {data}
 })
