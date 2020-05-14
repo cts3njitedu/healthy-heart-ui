@@ -1,8 +1,8 @@
 import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutDayAction";
 import { format } from 'date-fns'
 import { PAGE, ACTIVITY, SECTION } from "../constants/page_constants";
-import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, keepWorkoutState, ACTION_HANDLE_CHANGE_GROUP, handleChangeGroup, ACTION_CANCEL_WORKOUT_GROUP, ACTION_ADD_EDIT_WORKOUT_GROUP_START, addOREditWorkoutGroupStart, cancelGroupFrom, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES } from "../actions/workoutAction";
-import { isEmpty } from 'lodash'
+import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, keepWorkoutState, ACTION_HANDLE_CHANGE_GROUP, handleChangeGroup, ACTION_CANCEL_WORKOUT_GROUP, ACTION_ADD_EDIT_WORKOUT_GROUP_START, addOREditWorkoutGroupStart, cancelGroupFrom, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, addOREditWorkoutGroupSave, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_WORKOUT_CANCEL_CHANGES } from "../actions/workoutAction";
+import { isEqual } from 'lodash'
 const workoutAction = ({ getState }) => next => action => {
 
     if (action.type === ACTION_CHANGE_WORKOUT_DATE) {
@@ -162,7 +162,39 @@ const workoutAction = ({ getState }) => next => action => {
     } else if (action.type === ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES) {
         console.log("Confirm Cancel:", action.payload.data)
         next(action)
-    } else {
+    } else if (action.type === ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE) {
+
+        let state = getState();
+    
+        let newMetaDataId = state.workoutDetails.newGroupMetaDataId;
+        let editGroup = { ...state.workoutDetails.editGroup};
+        let isAddGroup = !editGroup.hasOwnProperty("metaDataId");
+        console.log("Save Group Before:",editGroup)
+        if (isAddGroup) {
+            editGroup.metaDataId = newMetaDataId;
+        }
+      
+
+        let previousActivities = state.workoutDetails.previousActivityButtons;
+        let data = {
+            previousActivities
+        }
+        
+      
+
+        console.log("Save Group After:", editGroup, data);
+        next(addOREditWorkoutGroupSave(ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, editGroup, data));
+        if (isAddGroup) {   
+            next(addOREditWorkoutGroupSave(ACTION_ADD_WORKOUT_GROUP_SAVE, editGroup, data))
+        } else {
+            next(addOREditWorkoutGroupSave(ACTION_EDIT_WORKOUT_GROUP_SAVE, editGroup, data))
+        }
+
+    } else if (action.type === ACTION_WORKOUT_CANCEL_CHANGES) {
+        
+    }
+    
+    else {
         next(action)
     }
 }

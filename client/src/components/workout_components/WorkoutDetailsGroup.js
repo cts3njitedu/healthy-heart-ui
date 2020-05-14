@@ -28,13 +28,13 @@ function WorkoutDetailsGroup(props) {
                 </div>
                 <div>
                     <WorkoutButton field={edit} handleActivity={(evt) => props.handleEdit(evt, groupSection)}/>
-                    <WorkoutButton field={del}/>
+                    <WorkoutButton field={del} handleActivity={(evt) => props.handleDelete(evt, groupSection)}/>
                 </div>
             </div>
         )
     }
     return (
-        <div>Progressing...</div>
+        <div>No Groups Added Yet</div>
     )
 
 }

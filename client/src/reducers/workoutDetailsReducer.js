@@ -1,4 +1,4 @@
-import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO } from "../actions/workoutAction";
+import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP } from "../actions/workoutAction";
 import { SECTION , PAGE} from "../constants/page_constants";
 
 const initialState = {
@@ -10,7 +10,8 @@ const initialState = {
     workoutViews: {},
     selectedWorkout : {
         workoutSection: {},
-        groupSections: {}
+        groupSections: []
+
     },
     sourceSelectedWorkout: {
         workoutSection: {},
@@ -26,7 +27,9 @@ const initialState = {
     editGroup: {},
     sourceEditGroup: {},
     isValidationErrors: false,
-    previousActivityButtons: {}
+    previousActivityButtons: {},
+    newGroupMetaDataId : 0,
+    deletedGroups: []
 };
 
 export default function workoutDetailsReducer(state = initialState, action) {
@@ -107,9 +110,9 @@ export default function workoutDetailsReducer(state = initialState, action) {
                                 value: ""
                             }
                         }
-                    }
-                },
-                groupSections: []
+                    },
+                    groupSections: []
+                }
             }
         }
         case ACTION_CHANGE_CATEGORY_CONFIRMATION_NO: {
@@ -148,9 +151,9 @@ export default function workoutDetailsReducer(state = initialState, action) {
                                 value: workoutTypeDesc.code
                             }
                         }
-                    }
-                },
-                groupSections: []
+                    },
+                    groupSections: []
+                }
             }
         }
         case ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO: {
@@ -187,7 +190,8 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     groupSections: [...newGroupSections]
                 },
                 isWorkoutDetailsLoading: false,
-                isWorkoutDetailsError: false
+                isWorkoutDetailsError: false,
+                newGroupMetaDataId: 0
             }
         }
         case ACTION_ADD_EDIT_WORKOUT_GROUP_START : {
@@ -420,6 +424,158 @@ export default function workoutDetailsReducer(state = initialState, action) {
         case ACTION_KEEP_STAGE_UNCHANGED: {
             return {
                 ...state
+            }
+        }
+        case ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE: {
+            let previousActivities = action.payload.data.previousActivities;
+            let activitySectionId = PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION;
+            let saveGroup = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP;
+            let cancel = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL;
+            let cancelChanges = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL_CHANGES;
+            let submitAndContinue = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CONTINUE;
+            let submitAndClose = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CLOSE
+            return {
+                ...state,
+                isAddGroup: false,
+                isEditGroup: false,
+                editGroup : {},
+                sourceEditGroup: {},
+                previousActivityButtons: {},
+                confirmationData: {},
+                isValidationErrors: false,
+                sections: {
+                    ...state.sections,
+                    [activitySectionId]: state.sections[activitySectionId].map((item, index) => {
+                        if (index === 0) {
+                            return {
+                                ...item,
+                                fields: Object.keys(item.fields).reduce((result, key) => {
+                                    if (key === saveGroup) {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: true,
+                                            isHidden: true
+                                        }
+                                        return result;
+                                    } else if (key === cancel) {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: true,
+                                            isHidden: true
+                                        }
+                                        return result;
+                                    } else if (key === cancelChanges || key === submitAndContinue || key === submitAndClose) {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: false,
+                                            isHidden: false
+                                        }
+                                        return result;
+                                    } else {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: previousActivities[key].isDisabled,
+                                            isHidden: previousActivities[key].isHidden
+
+                                        }
+                                        return result;
+                                    }
+                                    
+                                }, {})
+                            }
+                        }
+                        return item;
+                    })
+                }
+            }
+        }
+        case ACTION_ADD_WORKOUT_GROUP_SAVE: {
+            let newGroup = action.payload.editGroup;
+            let deleteField = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.DELETE;
+            let edit = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.EDIT
+            return {
+                ...state,
+                newGroupMetaDataId: state.newGroupMetaDataId - 1,
+                selectedWorkout: {
+                    ...state.selectedWorkout,
+                    groupSections: [...state.selectedWorkout.groupSections, 
+                        {
+                            ...newGroup,
+                            fields: Object.keys(newGroup.fields).reduce((result, key) => {
+                                if (key === deleteField || key === edit) {
+                                    result[key] = {
+                                        ...newGroup.fields[key],
+                                        isDisabled: false,
+                                        isHidden: false
+                                    }
+                                    return result;
+                                } else {
+                                    result[key] = {
+                                        ...newGroup.fields[key],
+                                        isDisabled: true,
+                                        isHidden: false
+                                    }
+                                    return result;
+                                }
+
+                            },{})
+                        }
+                    ]
+                }
+
+            }
+        }
+        case ACTION_EDIT_WORKOUT_GROUP_SAVE: {
+            let newGroup = action.payload.editGroup;
+            let deleteField = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.DELETE;
+            let edit = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.EDIT
+            return {
+                ...state,
+                selectedWorkout: {
+                    ...state.selectedWorkout,
+                    groupSections: state.selectedWorkout.groupSections.map((item, index) => {
+                        if (item.metaDataId === newGroup.metaDataId) {
+                            return {
+                                ...newGroup,
+                                fields: Object.keys(newGroup.fields).reduce((result, key) => {
+                                    if (key === deleteField || key === edit) {
+                                        result[key] = {
+                                            ...newGroup.fields[key],
+                                            isDisabled: false,
+                                            isHidden: false
+                                        }
+                                        return result;
+                                    } else {
+                                        result[key] = {
+                                            ...newGroup.fields[key],
+                                            isDisabled: true,
+                                            isHidden: false
+                                        }
+                                        return result;
+                                    }
+    
+                                },{})
+                            }
+                        }
+                        return item;
+                    })
+                }
+            }
+        }
+        case ACTION_DELETE_WORKOUT_GROUP: {
+            let deleteGroup = action.payload.editGroup;
+            return {
+                ...state,
+                selectedWorkout: {
+                    ...state.selectedWorkout,
+                    groupSections: state.selectedWorkout.groupSections.filter((item, index) => {
+                        if (item.metaDataId === deleteGroup.metaDataId) {
+                            return false;
+                        }
+                        return true;
+                    })
+                },
+                deletedGroups: [...state.deletedGroups, deleteGroup.metaDataId]
             }
         }
         default: {

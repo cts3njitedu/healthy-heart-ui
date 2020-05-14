@@ -30,8 +30,16 @@ export const ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES = "ACTION_CANCEL_WORKO
 export const ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO = "ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO"
 export const ACTION_HANDLE_CHANGE_GROUP = "ACTION_HANDLE_CHANGE_GROUP"
 export const ACTION_HANDLE_BLUR_GROUP = "ACTION_HANDLE_BLUR_GROUP"
+export const ACTION_HANDLE_SAVE_GROUP = "ACTION_HANDLE_SAVE_GROUP"
 export const ACTION_GROUP_FORM_VALIIDATION_FINISH = "ACTION_GROUP_FORM_VALIIDATION_FINISH"
 export const ACTION_KEEP_STAGE_UNCHANGED = "ACTION_KEEP_STAGE_UNCHANGED"
+export const ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE = "ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE"
+export const ACTION_ADD_WORKOUT_GROUP_SAVE = "ACTION_ADD_WORKOUT_GROUP_SAVE"
+export const ACTION_EDIT_WORKOUT_GROUP_SAVE = "ACTION_EDIT_WORKOUT_GROUP_SAVE"
+export const ACTION_DELETE_WORKOUT_GROUP = "ACTION_DELETE_WORKOUT_GROUP"
+export const ACTION_WORKOUT_CANCEL_CHANGES = "ACTION_WORKOUT_CANCEL_CHANGES"
+export const ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES = "ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES"
+export const ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO = "ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO"
 export function getWorkouts(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTS,
@@ -115,6 +123,21 @@ export const addOREditWorkoutGroupStart = (isAddGroup, editGroup, data) => ({
     payload: {isAddGroup, editGroup, data}
 })
 
+export const addOREditWorkoutGroupSave = (type, editGroup, data) => ({
+    type: type,
+    payload: {editGroup, data}
+})
+
+export const deleteWorkoutGroup = (editGroup, data) => ({
+    type: ACTION_DELETE_WORKOUT_GROUP,
+    payload: {editGroup, data}
+})
+
+export const cancelChanges = (data) => ({
+    type: ACTION_WORKOUT_CANCEL_CHANGES,
+    payload: {data}
+})
+
 export const handleChangeGroup = (field) => ({
     type: ACTION_HANDLE_CHANGE_GROUP,
     payload: {field}
@@ -122,6 +145,11 @@ export const handleChangeGroup = (field) => ({
 
 export const handleBlurGroup = (field) => ({
     type: ACTION_HANDLE_BLUR_GROUP,
+    payload: {field}
+})
+
+export const handleSaveGroup = (field) => ({
+    type: ACTION_HANDLE_SAVE_GROUP,
     payload: {field}
 })
 
@@ -137,4 +165,4 @@ export const keepWorkoutDetailsUnchanged = () => ({
 export const cancelGroupFrom = (data) => ({
     type: ACTION_CANCEL_WORKOUT_GROUP,
     payload: {data}
-})
+}) 

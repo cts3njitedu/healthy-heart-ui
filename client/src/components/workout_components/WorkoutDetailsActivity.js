@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import Loading from '../Loading';
 import { PAGE, SECTION } from '../../constants/page_constants';
 import WorkoutButton from '../forms/WorkoutButton';
-import { addOREditWorkoutGroupStart, cancelGroupFrom} from '../../actions/workoutAction'
+import { addOREditWorkoutGroupStart, cancelGroupFrom, handleSaveGroup} from '../../actions/workoutAction'
 
 
 class WorkoutDetailsActivity extends Component {
@@ -20,9 +20,12 @@ class WorkoutDetailsActivity extends Component {
             let newGroup = this.props.newSections[PAGE.WORKOUT_DETAILS_PAGE.GROUP_SECTION][0];
             console.log("Add Group Clicked", newGroup);
             this.props.addOREditWorkoutGroupStart(true, newGroup)
-        } else if(SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL === event.target.name) {
+        } else if (SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL === event.target.name) {
             console.log("Cancel Clicked")
             this.props.cancelGroupFrom();
+        } else if (SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP === event.target.name) {
+            console.log("Save Group Clicked")
+            this.props.handleSaveGroup();
         }
     }
 
@@ -52,7 +55,7 @@ class WorkoutDetailsActivity extends Component {
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL_CHANGES]} />
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CONTINUE]} />
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CLOSE]} />
-                        <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP]} />
+                        <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP]} handleActivity={this.handleActivity}/>
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL]} handleActivity={this.handleActivity}/>
                     </div>
                 )
@@ -79,7 +82,8 @@ function mapStateToProps(state) {
 
 const mapDispatchToProps = {
     addOREditWorkoutGroupStart,
-    cancelGroupFrom
+    cancelGroupFrom,
+    handleSaveGroup
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WorkoutDetailsActivity));
