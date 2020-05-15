@@ -40,6 +40,9 @@ export const ACTION_DELETE_WORKOUT_GROUP = "ACTION_DELETE_WORKOUT_GROUP"
 export const ACTION_WORKOUT_CANCEL_CHANGES = "ACTION_WORKOUT_CANCEL_CHANGES"
 export const ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES = "ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES"
 export const ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO = "ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO"
+export const ACTION_WORKOUT_CLOSE = "ACTION_WORKOUT_CLOSE";
+export const ACTION_WORKOUT_CLOSE_CONFIRMATION_YES = "ACTION_WORKOUT_CLOSE_CONFIRMATION_YES"
+export const ACTION_WORKOUT_CLOSE_CONFIRMATION_NO = "ACTION_WORKOUT_CLOSE_CONFIRMATION_NO"
 export function getWorkouts(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTS,
@@ -166,3 +169,13 @@ export const cancelGroupFrom = (data) => ({
     type: ACTION_CANCEL_WORKOUT_GROUP,
     payload: {data}
 }) 
+
+export const cancelWorkoutChanges = (data) => ({
+    type: ACTION_WORKOUT_CANCEL_CHANGES,
+    payload: {data}
+})
+
+export const closeWorkoutDetails = (data) => ({
+    type: ACTION_WORKOUT_CLOSE,
+    payload: {data}
+})

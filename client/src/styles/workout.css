@@ -253,6 +253,7 @@
     display: flex;
     width: 100%;
     padding: 1%;
+    flex-wrap: wrap;
 }
 
 .workoutDetails > :nth-child(1) > div > label {
@@ -266,8 +267,15 @@
     color: darkblue;
     font-size: large;
     width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+    word-wrap: break-word ;
 }
-
+.workoutDetails > :nth-child(1) > div > select > option {
+    word-wrap: break-word ;
+    display: flex;
+    flex-wrap: wrap;
+}
 /* Workout Details Groups */
 .workoutDetailsGroups > div {
     display: flex;

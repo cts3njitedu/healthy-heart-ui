@@ -1,5 +1,6 @@
-import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP } from "../actions/workoutAction";
+import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES, ACTION_WORKOUT_CANCEL_CHANGES, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO, ACTION_WORKOUT_CLOSE, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, ACTION_WORKOUT_CLOSE_CONFIRMATION_NO } from "../actions/workoutAction";
 import { SECTION , PAGE} from "../constants/page_constants";
+import { StaticRouter } from "react-router-dom";
 
 const initialState = {
     sections : {},
@@ -17,6 +18,7 @@ const initialState = {
         workoutSection: {},
         groupSections: []
     },
+    sourceSections: {},
     confirmationData: {},
     isWorkoutDetailsLoading: false,
     isWorkoutDetailsError: false,
@@ -29,7 +31,8 @@ const initialState = {
     isValidationErrors: false,
     previousActivityButtons: {},
     newGroupMetaDataId : 0,
-    deletedGroups: []
+    deletedGroups: [],
+    isDirty: false
 };
 
 export default function workoutDetailsReducer(state = initialState, action) {
@@ -48,6 +51,8 @@ export default function workoutDetailsReducer(state = initialState, action) {
             
         }
         case ACTION_ADD_WORKOUT: {
+            let activitySectionId = PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION;
+            let addGroup = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.ADD_GROUP;
             return {
                 ...state,
                 loading: false,
@@ -94,6 +99,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             return {
                 ...state,
                 confirmationData: {},
+                isDirty: true,
                 selectedWorkout: {
                     ...state.selectedWorkout,
                     workoutSection: {
@@ -140,6 +146,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             return {
                 ...state,
                 confirmationData: {},
+                isDirty: true,
                 selectedWorkout: {
                     ...state.selectedWorkout,
                     workoutSection: {
@@ -155,6 +162,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     groupSections: []
                 }
             }
+            
         }
         case ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO: {
             return {
@@ -174,7 +182,9 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     ...pageNewSections
                 },
                 isMetaInfoLoading: false,
-                isMetaInfoError: false
+                isMetaInfoError: false,
+                isDirty: false,
+                isClosing: false
             }
         }
         case API_RESTRUCTURE_WORKOUT_DETAILS : {
@@ -189,9 +199,18 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     },
                     groupSections: [...newGroupSections]
                 },
+                sourceSelectedWorkout: {
+                    ...state.selectedWorkout,
+                    workoutSection: {
+                        ...workoutSection
+                    },
+                    groupSections: [...newGroupSections]
+                },
                 isWorkoutDetailsLoading: false,
                 isWorkoutDetailsError: false,
-                newGroupMetaDataId: 0
+                newGroupMetaDataId: 0,
+                isDirty: false,
+                isClosing: false
             }
         }
         case ACTION_ADD_EDIT_WORKOUT_GROUP_START : {
@@ -279,6 +298,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             let isDirty = action.payload.field.isDirty;
             return {
                 ...state,
+                isDirty: true,
                 editGroup: {
                     ...state.editGroup,
                     fields: {
@@ -316,6 +336,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             let saveGroup = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP;
             return {
                 ...state,
+                isDirty: true,
                 isValidationErrors: action.payload.isError,
                 editGroup: {
                     ...state.editGroup,
@@ -566,6 +587,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             let deleteGroup = action.payload.editGroup;
             return {
                 ...state,
+                isDirty: true,
                 selectedWorkout: {
                     ...state.selectedWorkout,
                     groupSections: state.selectedWorkout.groupSections.filter((item, index) => {
@@ -578,6 +600,75 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 deletedGroups: [...state.deletedGroups, deleteGroup.metaDataId]
             }
         }
+        case ACTION_WORKOUT_CANCEL_CHANGES: {
+            return {
+                ...state,
+                confirmationData: {
+                    ...state.confirmationData,
+                    confirmYes: ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES,
+                    confirmNo: ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO,
+                    data : {
+                        ...action.payload.data
+                    }
+                }
+            }
+        }
+        case ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES: {
+            let newSections = state.newSections;
+            let activitySectionId = PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION;
+            let sourceSelectedWorkout = state.sourceSelectedWorkout;
+            return {
+                ...state,
+                isAddGroup: false,
+                isEditGroup: false,
+                editGroup : {},
+                sourceEditGroup: {},
+                previousActivityButtons: {},
+                confirmationData: {},
+                isValidationErrors: false,
+                isDirty: false,
+                selectedWorkout: {
+                    ...sourceSelectedWorkout
+                },
+                sections: {
+                    ...state.sections,
+                    [activitySectionId] : [...newSections[activitySectionId]]
+                }
+            }
+        }
+        case ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO: {
+            return {
+                ...state,
+                confirmationData: {}
+            }
+        }
+        case ACTION_WORKOUT_CLOSE: {
+            return {
+                ...state,
+                confirmationData: {
+                    ...state.confirmationData,
+                    confirmYes: ACTION_WORKOUT_CLOSE_CONFIRMATION_YES,
+                    confirmNo: ACTION_WORKOUT_CLOSE_CONFIRMATION_NO,
+                    data : {
+                        ...action.payload.data
+                    }
+                }
+            }
+        }
+        case ACTION_WORKOUT_CLOSE_CONFIRMATION_YES: {
+            return {
+                ...state,
+                isClosing: true,
+                isDirty: false,
+                confirmationData: {}
+            }
+        }
+        case ACTION_WORKOUT_CLOSE_CONFIRMATION_NO: {
+            return {
+                ...state,
+                confirmationData: {}
+            }
+        }
         default: {
             return {
                 ...state,
@@ -586,7 +677,9 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 editGroup: {},
                 sourceEditGroup: {},
                 isValidationErrors: false,
-                previousActivityButtons: {}
+                previousActivityButtons: {},
+                isDirty: false,
+                isClosing: false
             }
         }
     }

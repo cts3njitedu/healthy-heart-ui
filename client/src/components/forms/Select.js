@@ -15,6 +15,14 @@ class Select extends Component {
         let label = this.props.select.label;
         let items = this.props.select.items;
         let disabled = this.props.select.disabled;
+        let style = {};
+        if (disabled) {
+            style = {
+                backgroundColor: "gray",
+                color: "darkblue",
+                pointerEvents: "none"
+            }
+        }
         console.log("Value Selected:", value)
         if (value !== "") {
             let item = items.filter(item => value === item.id);
@@ -41,7 +49,7 @@ class Select extends Component {
                 </form> */}
                 
                 <label htmlFor={name}>{label}: </label> 
-                <select id={name} name={name} value={value} onChange={this.props.handleChange} disabled={disabled}>
+                <select id={name} name={name} value={value} onChange={this.props.handleChange} disabled={disabled} style={style}>
                     <option value=""></option>
                     {
                         items.map((item, index) => {

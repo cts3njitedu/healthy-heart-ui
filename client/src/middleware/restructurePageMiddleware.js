@@ -51,7 +51,7 @@ const restructurePageMiddleware = ({dispatch, getState}) => (next) => (action) =
                         }))
                     }
                 } else if (newPage.actionType === ACTION.VIEW_WORKOUT_DETAILS_META_INFO) {
-                    console.log("Geting view details meta info", newPage)
+                    console.log("Geting view details meta info", newPage, queryParams.action)
                     let parseUrl = exactUrl.split("/");
                     console.log("Parsed Url:", parseUrl)
                     next(restructureWorkoutDetailsMetaInfo(newPage))
