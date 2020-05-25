@@ -1,13 +1,10 @@
-import React, { Component } from 'react'
-import { Route } from 'react-router-dom'
+import React from 'react'
 import WorkoutsNavigation from './WorkoutsNavigation'
-import WorkoutsMain from './WorkoutsMain'
 import WorkoutsActivityButtons from './WorkoutsActivityButtons'
 import WorkoutsView from './WorkoutsView'
-import WorkoutDetails from './WorkoutDetails'
 
 
-function WorkoutDayWorkouts(props) {
+function WorkoutDayWorkouts() {
     return (
         <div className="workoutDayLocationBody">
             <WorkoutsNavigation />

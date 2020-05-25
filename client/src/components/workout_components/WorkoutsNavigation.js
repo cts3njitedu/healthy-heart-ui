@@ -2,13 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import { PAGE } from '../../constants/page_constants';
 import Loading from '../Loading';
-import { Link, withRouter, NavLink } from 'react-router-dom';
-import { Navbar, NavItem, Nav } from 'react-bootstrap'
+import { withRouter, NavLink } from 'react-router-dom';
 import queryString from 'query-string'
 
 class WorkoutsNavigation extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+            
+        }
     }
 
     render() {
@@ -43,7 +45,7 @@ class WorkoutsNavigation extends Component {
                         <div className="workoutsNavigation">
                            {!values.action && <ul>
                                 {
-                                    fields && Object.keys(fields).map((f, index) => {
+                                    fields && Object.keys(fields).map((f) => {
                                         let field = fields[f];
                                         let value = field.value;
                                         let url = "category/" + value[0].toLowerCase() + value.substr(1);

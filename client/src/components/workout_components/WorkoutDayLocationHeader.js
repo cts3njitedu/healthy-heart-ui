@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import Loading from '../Loading';
-import {buildWorkoutsRequest, API_GET_WORKOUTS_HEADER_BUILD} from '../../actions/workoutAction'
+import {buildWorkoutsRequest} from '../../actions/workoutAction'
 import { Redirect, withRouter } from 'react-router-dom';
-import { ACTION, PAGE, SECTION } from '../../constants/page_constants';
+import { PAGE } from '../../constants/page_constants';
 
 class WorkoutDayLocationHeader extends Component {
     constructor(props) {
         super(props)
+        this.state = {
+
+        }
     }
-    componentDidMount() {
-        
-    }
+    
     render() {
         const { error, loading, sections, isAccessTokenEnabled} = this.props;
         if (!isAccessTokenEnabled) {
@@ -40,7 +41,7 @@ class WorkoutDayLocationHeader extends Component {
                 return (
                     <div className="workoutDayLocationHeader">
                         {
-                           fields && Object.keys(fields).map((f, index) => {
+                           fields && Object.keys(fields).map((f) => {
                                 let field = fields[f];
                                 return <div key={field.name}>{field.title}: {field.value}</div>
                            }) 

@@ -1,6 +1,6 @@
 import { LOGIN_FORM_VALIDATION, handleFormValidationFinish, LOGIN_FORM_SUBMIT_BEGIN, handleRequestBuilder } from "../actions/loginAction"
 import {validate} from "../utilities/fieldValidations"
-import { ACTION_HANDLE_BLUR_GROUP, formValidationFinish, keepWorkoutDetailsUnchanged, handleChangeGroup, ACTION_HANDLE_SAVE_GROUP, handleSaveGroup, addOREditWorkoutGroupSave, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE } from "../actions/workoutAction";
+import { ACTION_HANDLE_BLUR_GROUP, formValidationFinish, keepWorkoutDetailsUnchanged, handleChangeGroup, ACTION_HANDLE_SAVE_GROUP, addOREditWorkoutGroupSave, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE } from "../actions/workoutAction";
 import {isEmpty} from 'lodash'
 const validateForm = ({dispatch, getState}) => next => action => {
     if (action.type === LOGIN_FORM_SUBMIT_BEGIN) {
@@ -52,7 +52,7 @@ const validateForm = ({dispatch, getState}) => next => action => {
         let currentFields = state.workoutDetails.editGroup.fields;
     
         console.log("Handle Blur Middleware:", currentFields)
-        let errors = Object.keys(currentFields).filter(f => (action.type === ACTION_HANDLE_BLUR_GROUP ? currentFields[f].isDirty : true)).map((f, key) => {
+        let errors = Object.keys(currentFields).filter(f => (action.type === ACTION_HANDLE_BLUR_GROUP ? currentFields[f].isDirty : true)).map((f) => {
                 // let field = groupSectionFields[f];
                 // field.value = currentFields[f].value;
                 let valid = validate(currentFields[f], currentFields[f].validations)
@@ -64,7 +64,7 @@ const validateForm = ({dispatch, getState}) => next => action => {
                 })
         }, {})
         Promise.all(errors).then(function(vErrors){
-            let resultMap = vErrors.filter(vError => vError.errors.length !== 0).reduce((result, vError, key) => {
+            let resultMap = vErrors.filter(vError => vError.errors.length !== 0).reduce((result, vError) => {
                 result[vError.id] = vError.errors;
                 return result;
             }, {})

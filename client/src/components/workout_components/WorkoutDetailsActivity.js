@@ -2,17 +2,18 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux'
 import Loading from '../Loading';
-import { PAGE, SECTION } from '../../constants/page_constants';
+import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import WorkoutButton from '../forms/WorkoutButton';
-import { addOREditWorkoutGroupStart, cancelGroupFrom, handleSaveGroup, cancelWorkoutChanges, closeWorkoutDetails} from '../../actions/workoutAction'
+import { addOREditWorkoutGroupStart, cancelGroupFrom, handleSaveGroup, cancelWorkoutChanges, closeWorkoutDetails, submitAndContinueWorkout, submitWorkout} from '../../actions/workoutAction'
 import {convertWorkoutDetailsActivityFields} from '../../selectors/workoutdetailsActivitySelector'
-
+import {isEmpty} from 'lodash'
 class WorkoutDetailsActivity extends Component {
     constructor(props) {
         super(props)
         this.handleActivity = this.handleActivity.bind(this)
         this.state = {
-            isClosing: false
+            isClosing: false,
+            workoutDayUrl: ""
         }
     }
 
@@ -36,14 +37,42 @@ class WorkoutDetailsActivity extends Component {
         } else if (SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL_CHANGES === event.target.name) {
             console.log("Cancel Changes Clicked")
             this.props.cancelWorkoutChanges();
+        } else if (SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CONTINUE === event.target.name) {
+            console.log("Submit And Continue Changes", this.props.viewType)
+            let action = this.props.viewType.action;
+            this.props.submitWorkout(false, {
+                subActionType: action === "add" ? ACTION.ADD_WORKOUT : ACTION.MODIFY_WORKOUT,
+                viewType: action
+            });
+        } else if (SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CLOSE === event.target.name) {
+            console.log("Submit And Close Changes")
+            let action = this.props.viewType.action;
+            this.setState({
+                workoutDayUrl: this.props.workoutDayUrl
+            })
+            this.props.submitWorkout(true, {
+                subActionType: action === "add" ? ACTION.ADD_WORKOUT : ACTION.MODIFY_WORKOUT,
+                viewType: action
+            });
         }
     }
 
     componentDidUpdate(prevProps, prevState) {
-        console.log("Closing Update:", prevProps.isClosing, this.props.isClosing)
+        console.log("Closing Update:", prevProps.isClosing, this.props.isClosing, this.props.isSubmitting)
         if (prevProps.isClosing !== this.props.isClosing) {
             console.log("Close Did Update")
             this.props.history.goBack();
+        } else if (prevProps.isSubmitting !== this.props.isSubmitting && !this.props.isSubmitting && !isEmpty(this.props.isSubmitted)) {
+            console.log("Submitted successfully!!!!!!!!", this.props.isSubmitted, this.state.workoutDayUrl)
+            if (this.props.isSubmitted.isSubmitAndContinue) {
+                if (this.props.viewType.action === "add") {
+                    this.props.history.replace(this.props.exactUrl+ "/"+this.props.isSubmitted.workoutId+"?action=view");
+                } else {
+                    this.props.history.replace(this.props.exactUrl + "?action=view")
+                }
+            } else {
+                this.props.history.replace(this.state.workoutDayUrl+"/workouts")
+            }
         }
     }
 
@@ -71,8 +100,8 @@ class WorkoutDetailsActivity extends Component {
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.ADD_GROUP]} handleActivity={this.handleActivity}/>
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CLOSE]} handleActivity={this.handleActivity}/>
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL_CHANGES]} handleActivity={this.handleActivity}/>
-                        <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CONTINUE]} />
-                        <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CLOSE]} />
+                        <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CONTINUE]} handleActivity={this.handleActivity}/>
+                        <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SUBMIT_CLOSE]} handleActivity={this.handleActivity}/>
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP]} handleActivity={this.handleActivity}/>
                         <WorkoutButton field={activitySection.fields[SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.CANCEL]} handleActivity={this.handleActivity}/>
                     </div>
@@ -94,7 +123,13 @@ function mapStateToProps(state) {
         error: state.workoutDetails.isMetaInfoError,
         selectedWorkout : state.workoutDetails.selectedWorkout,
         confirmationData: state.workoutDetails.confirmationData,
-        isClosing: state.workoutDetails.isClosing
+        isClosing: state.workoutDetails.isClosing,
+        viewType: state.workout.queryParams,
+        isAddWorkout: state.workout.isAddWorkout,
+        isSubmitted: state.workoutDetails.isSubmitted,
+        isSubmitting: state.workoutDetails.isSubmitting,
+        exactUrl: state.workout.exactUrl,
+        workoutDayUrl: state.workout.workoutDayUrl
     }
 
 }
@@ -104,7 +139,9 @@ const mapDispatchToProps = {
     cancelGroupFrom,
     handleSaveGroup,
     cancelWorkoutChanges,
-    closeWorkoutDetails
+    closeWorkoutDetails,
+    submitAndContinueWorkout,
+    submitWorkout
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WorkoutDetailsActivity));

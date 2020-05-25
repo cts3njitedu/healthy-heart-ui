@@ -5,7 +5,7 @@ import { PAGE, SECTION } from '../../constants/page_constants';
 import WorkoutButton from '../forms/WorkoutButton';
 import Loading from '../Loading';
 import queryString from 'query-string'
-import {addNewWorkoutStart} from '../../actions/workoutAction'
+import {addNewWorkoutStart, keepWorkoutState} from '../../actions/workoutAction'
 
 class WorkoutsActivityButtons extends Component {
     constructor(props) {
@@ -86,7 +86,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-    addNewWorkoutStart
+    addNewWorkoutStart,
+    keepWorkoutState
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WorkoutsActivityButtons));

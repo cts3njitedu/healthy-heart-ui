@@ -1,6 +1,5 @@
-import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES, ACTION_WORKOUT_CANCEL_CHANGES, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO, ACTION_WORKOUT_CLOSE, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, ACTION_WORKOUT_CLOSE_CONFIRMATION_NO } from "../actions/workoutAction";
-import { SECTION , PAGE} from "../constants/page_constants";
-import { StaticRouter } from "react-router-dom";
+import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES, ACTION_WORKOUT_CANCEL_CHANGES, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO, ACTION_WORKOUT_CLOSE, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, ACTION_WORKOUT_CLOSE_CONFIRMATION_NO, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO, ACTION_WORKOUT_SUBMIT, ACTION_WORKOUT_SUBMITTED } from "../actions/workoutAction";
+import { SECTION , PAGE, ACTION_WORKOUT_SUBMIT_CONFIRMATION_MESSAGE} from "../constants/page_constants";
 
 const initialState = {
     sections : {},
@@ -32,7 +31,15 @@ const initialState = {
     previousActivityButtons: {},
     newGroupMetaDataId : 0,
     deletedGroups: [],
-    isDirty: false
+    isDirty: false,
+    isSubmitting: false,
+    isSubmitted: {
+        isSubmitAndClose: false,
+        isSubmitAndContinue: false,
+        workoutId: 0
+    }
+    
+    
 };
 
 export default function workoutDetailsReducer(state = initialState, action) {
@@ -51,8 +58,6 @@ export default function workoutDetailsReducer(state = initialState, action) {
             
         }
         case ACTION_ADD_WORKOUT: {
-            let activitySectionId = PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION;
-            let addGroup = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.ADD_GROUP;
             return {
                 ...state,
                 loading: false,
@@ -184,12 +189,14 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 isMetaInfoLoading: false,
                 isMetaInfoError: false,
                 isDirty: false,
-                isClosing: false
+                isClosing: false,
+                isSubmitting: false,
+                isSubmitted: {}
             }
         }
         case API_RESTRUCTURE_WORKOUT_DETAILS : {
             let workoutSection = action.payload.page.sections[PAGE.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION][0];
-            let newGroupSections = action.payload.page.sections[PAGE.WORKOUT_DETAILS_PAGE.GROUP_SECTION];
+            let newGroupSections = action.payload.page.sections[PAGE.WORKOUT_DETAILS_PAGE.GROUP_SECTION] || [];
             return {
                 ...state,
                 selectedWorkout: {
@@ -210,7 +217,9 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 isWorkoutDetailsError: false,
                 newGroupMetaDataId: 0,
                 isDirty: false,
-                isClosing: false
+                isClosing: false,
+                isSubmitting: false,
+                isSubmitted: {}
             }
         }
         case ACTION_ADD_EDIT_WORKOUT_GROUP_START : {
@@ -554,7 +563,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 ...state,
                 selectedWorkout: {
                     ...state.selectedWorkout,
-                    groupSections: state.selectedWorkout.groupSections.map((item, index) => {
+                    groupSections: state.selectedWorkout.groupSections.map((item) => {
                         if (item.metaDataId === newGroup.metaDataId) {
                             return {
                                 ...newGroup,
@@ -590,14 +599,14 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 isDirty: true,
                 selectedWorkout: {
                     ...state.selectedWorkout,
-                    groupSections: state.selectedWorkout.groupSections.filter((item, index) => {
+                    groupSections: state.selectedWorkout.groupSections.filter((item) => {
                         if (item.metaDataId === deleteGroup.metaDataId) {
                             return false;
                         }
                         return true;
                     })
                 },
-                deletedGroups: [...state.deletedGroups, deleteGroup.metaDataId]
+                deletedGroups: [...state.deletedGroups, deleteGroup]
             }
         }
         case ACTION_WORKOUT_CANCEL_CHANGES: {
@@ -667,6 +676,108 @@ export default function workoutDetailsReducer(state = initialState, action) {
             return {
                 ...state,
                 confirmationData: {}
+            }
+        }
+        case ACTION_WORKOUT_SUBMIT: {
+            let deleteField = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.DELETE;
+            let edit = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.EDIT
+            return {
+                ...state,
+                confirmationData: {
+                    ...state.confirmationData,
+                    confirmYes: ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES,
+                    confirmNo: ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO,
+                    confirmMessage: ACTION_WORKOUT_SUBMIT_CONFIRMATION_MESSAGE,
+                    data : {
+                        ...action.payload.data
+                    }
+                },
+                isSubmitting: true,
+                isSubmitted : {
+                    isSubmitAndContinue: !action.payload.data.isSubmitAndClose,
+                    isSubmitAndClose: action.payload.data.isSubmitAndClose
+                },
+                selectedWorkout: {
+                    ...state.selectedWorkout,
+                    groupSections: state.selectedWorkout.groupSections.map((item) => {
+                   
+                            return {
+                                ...item,
+                                fields: Object.keys(item.fields).reduce((result, key) => {
+                                    if (key === deleteField || key === edit) {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: true,
+                                            isHidden: false
+                                        }
+                                        return result;
+                                    } else {
+                                        result[key] = {
+                                            ...item.fields[key]
+                            
+                                        }
+                                        return result;
+                                    }
+    
+                                },{})
+                            
+                        }
+                    })
+                }
+            }
+        }
+        case ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES: {
+            return {
+                ...state,
+                confirmationData: {},
+
+            }
+        }
+        case ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO: {
+            let deleteField = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.DELETE;
+            let edit = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.EDIT
+            return {
+                ...state,
+                confirmationData: {},
+                isSubmitting: false,
+                isSubmitted: {},
+                selectedWorkout: {
+                    ...state.selectedWorkout,
+                    groupSections: state.selectedWorkout.groupSections.map((item) => {
+                   
+                            return {
+                                ...item,
+                                fields: Object.keys(item.fields).reduce((result, key) => {
+                                    if (key === deleteField || key === edit) {
+                                        result[key] = {
+                                            ...item.fields[key],
+                                            isDisabled: false,
+                                            isHidden: false
+                                        }
+                                        return result;
+                                    } else {
+                                        result[key] = {
+                                            ...item.fields[key]
+                            
+                                        }
+                                        return result;
+                                    }
+    
+                                },{})
+                            
+                        }
+                    })
+                }
+            }
+        }
+        case ACTION_WORKOUT_SUBMITTED: {
+            return {
+                ...state,
+                isSubmitting: false,
+                isSubmitted: {
+                    ...state.isSubmitted,
+                    workoutId: action.payload.data.workoutId
+                }
             }
         }
         default: {

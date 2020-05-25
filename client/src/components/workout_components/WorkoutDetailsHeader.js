@@ -5,7 +5,6 @@ import { changeCategoryName, changeWorkoutType } from '../../actions/workoutActi
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ConfirmationModal from '../forms/ConfirmationModal';
-import { isEmpty } from 'lodash'
 import Loading from '../Loading';
 class WorkoutDetailsHeader extends Component {
     constructor(props) {
@@ -31,7 +30,7 @@ class WorkoutDetailsHeader extends Component {
     }
     render() {
 
-        const { error, loading, selectedWorkout } = this.props;
+        const { error, loading } = this.props;
         if (loading) {
             return (
                 <div>

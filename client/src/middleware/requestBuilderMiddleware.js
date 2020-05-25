@@ -1,7 +1,7 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, actionViewWorkouts } from "../actions/workoutDayAction";
-import { PAGE, ACTION } from "../constants/page_constants";
-import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest } from "../actions/workoutAction";
+import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation } from "../actions/workoutDayAction";
+import { PAGE, ACTION, SECTION } from "../constants/page_constants";
+import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD } from "../actions/workoutAction";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -76,27 +76,30 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         let workoutDayUrl = state.workout.workoutDayUrl;
         
         
-        if (!headerSection || action.payload.url !== workoutDayUrl) {
+        if (!headerSection || action.payload.url !== workoutDayUrl || action.payload.data.isHeader) {
             next(action)
             let request = {
                 actionType: action.payload.data.actionType,
                 date: action.payload.data.date,
                 locationId: action.payload.data.location
             }
-            console.log("View Workouts Request:", request)
+            console.log("View Workouts Header Request:", request)
             console.log("Url:", action.payload.url)
             next(getWorkouts(action.payload.url, request))
         } 
         
         else {
-            console.log("Keeping....", state.workout.exactUrl, state.workout.queryParams)
+            console.log("Keeping....", state.workout.exactUrl, action.payload.data)
             next(keepWorkoutState({
                 exactUrl: action.payload.data.exactUrl,
                 queryParams: action.payload.data.values
             }))
             if (action.payload.data.values.action === "add") {
                 console.log("Let us get the bowl rolling")
-                dispatch(addNewWorkoutStart())
+                dispatch(addNewWorkoutStart({
+                    exactUrl: action.payload.data.exactUrl,
+                    queryParams: action.payload.data.values
+                }))
             } 
         
             dispatch(buildWorkoutsRequest(workoutDayUrl, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, {
@@ -141,7 +144,7 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
                 workoutId: parseUrl[6]
             }))
         }
-    } else if (action.type == API_GET_WORKOUT_DETAILS_BUILD) {
+    } else if (action.type === API_GET_WORKOUT_DETAILS_BUILD) {
         let state = getState()
         let url = state.workout.workoutDayUrl;
         let workoutId = action.payload.data.workoutId
@@ -152,6 +155,80 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         console.log("View Workout Details Request:", request, state.workout.queryParams)
         console.log("Url:", url)
         next(getWorkouts(url, request))
+    } else if (action.type === API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD) {
+        let state = getState()
+        let selectedWorkout = state.workoutDetails.selectedWorkout; 
+        let sections = state.workout.sections;
+        let headerSection = sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION][0];
+        let workoutSection = selectedWorkout.workoutSection;
+        let groupSections = selectedWorkout.groupSections;
+        let categoryName = SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME;
+        let workoutType = SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.WORKOUT_TYPE_DESC;
+        let workoutDate = SECTION.WORKOUTS_PAGE.HEADER_SECTION.WORKOUT_DATE;
+        let location = SECTION.WORKOUTS_PAGE.HEADER_SECTION.LOCATION;
+        let delGroups = state.workoutDetails.deletedGroups;
+        let url = state.workout.workoutDayUrl;
+        let parseUrl = url.split("/");
+        let addedOrModifedGroups = groupSections.map((item) => {
+            let group = {
+                groupId : item.metaDataId > 0 ? item.metaDataId.toString() : "0",
+                versionNb: item.metaDataId > 0 ? item.versionNb.toString() : "0",
+                fields: Object.keys(item.fields).filter(f => item.fields[f].type !== "button").map((key) => {
+                    return  {
+                        name: item.fields[key].name,
+                        value: item.fields[key].value
+                    }
+                })
+
+            }
+            return group;
+        })
+
+        let deletedGroups = delGroups.filter(group => group.metaDataId > 0).map((item) => {
+            let group = {
+                groupId: item.metaDataId,
+                versionNb: item.versionNb.toString(),
+                isDeleted: true
+            }
+            return group;
+        })
+
+        let workout = {
+            workoutId : workoutSection.metaDataId > 0 ? workoutSection.metaDataId.toString() : "0",
+            versionNb : workoutSection.metaDataId > 0  ? workoutSection.versionNb.toString() : "0",
+            fields : Object.keys(workoutSection.fields).filter(f => (workoutSection.fields[f].name === categoryName 
+                || workoutSection.fields[f].name === workoutType)).map((key) => {
+                    return {
+                        name: workoutSection.fields[key].name,
+                        value: workoutSection.fields[key].value
+                    }
+            }),
+            groups: [...addedOrModifedGroups, ...deletedGroups]
+        }
+
+        let workoutDay = {
+            workoutDayId : headerSection.metaDataId > 0 ? headerSection.metaDataId.toString() : "0",
+            versionNb: headerSection.metaDataId > 0 ? headerSection.versionNb.toString() : "0",
+            workouts: [workout], 
+            fields: [
+                {
+                    name: workoutDate,
+                    value: parseUrl[2]
+                },
+                {
+                    name: location,
+                    value: parseUrl[4]
+                }
+            ]
+        }
+
+        let request = {
+            actionType: ACTION.WORKOUTS_ACTION,
+            subActionType: action.payload.data.subActionType,
+            workoutDays: [workoutDay]
+        }
+        console.log("Selected Workout Submit:", request, url, state.workoutDay)
+        dispatch(getWorkouts("/workoutDays", request))
     } else {
         next(action)
     }

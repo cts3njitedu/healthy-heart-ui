@@ -1,5 +1,4 @@
-import { API_GET_WORKOUTS_HEADER_BUILD, API_GET_WORKOUTS_START, API_RESTRUCTURE_WORKOUTS, API_GET_WORKOUTS_BUILD, API_KEEP_WORKOUTS_STATE } from "../actions/workoutAction";
-import { ACTION } from "../constants/page_constants";
+import { API_GET_WORKOUTS_HEADER_BUILD, API_GET_WORKOUTS_START, API_RESTRUCTURE_WORKOUTS, API_GET_WORKOUTS_BUILD, API_KEEP_WORKOUTS_STATE, ACTION_ADD_WORKOUT_START, ACTION_WORKOUT_SUBMITTED } from "../actions/workoutAction";
 
 const initialState = {
     sections : { 
@@ -8,6 +7,7 @@ const initialState = {
     loading: false,
     error: false,
     isViewWorkout: false,
+    isAddWorkout: true,
     workoutViews: {},
     selectedWorkout : {},
     editedWorkout : {},
@@ -22,7 +22,8 @@ const initialState = {
     categorySections: {},
     exactUrl: "",
     queryParams: {},
-    params: {}
+    params: {},
+    tempParams: {}
     
 };
 
@@ -94,8 +95,24 @@ export default function workoutReducer(state = initialState, action) {
                 ...state,
                 exactUrl: action.payload.data.exactUrl,
                 queryParams: {
-                   ...action.payload.data.values
+                   ...action.payload.data.queryParams
                 }
+            }
+        }
+        case ACTION_ADD_WORKOUT_START: {
+            return {
+                ...state,
+                isAddWorkout: true,
+                exactUrl: action.payload.data.exactUrl,
+                queryParams: {
+                   ...action.payload.data.queryParams
+                }
+            }
+        }
+        case ACTION_WORKOUT_SUBMITTED: {
+            return {
+                ...state,
+                workoutDayUrl: ""
             }
         }
         default: {
@@ -108,6 +125,7 @@ export default function workoutReducer(state = initialState, action) {
                 selectedWorkout : {},
                 editedWorkout : {},
                 isEditWorkout: false,
+                isAddWorkout: true
             }
         }
     }

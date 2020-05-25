@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withRouter, Route, Switch, useLocation } from 'react-router-dom';
+import { withRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import WorkoutsMain from './WorkoutsMain';
 import WorkoutDetails from './WorkoutDetails';

@@ -4,6 +4,7 @@ export const API_GET_WORKOUTS_HEADER_BUILD = "API_GET_WORKOUTS_HEADER_BUILD"
 export const API_GET_WORKOUTS_BUILD = "API_GET_WORKOUTS_BUILD"
 export const API_GET_WORKOUT_DETAILS_BUILD = "API_GET_WORKOUT_DETAILS_BUILD"
 export const API_GET_WORKOUT_DETAILS_META_INFO_BUILD = "API_GET_WORKOUT_DETAILS_META_INFO_BUILD"
+export const API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD = "API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD"
 export const API_GET_WORKOUTS = "API_GET_WORKOUTS"
 export const API_GET_WORKOUTS_START = "API_GET_WORKOUTS_START"
 export const API_GET_WORKOUTS_SUCCESS = "API_GET_WORKOUTS_SUCCESS"
@@ -43,6 +44,13 @@ export const ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO = "ACTION_WORKOUT_CAN
 export const ACTION_WORKOUT_CLOSE = "ACTION_WORKOUT_CLOSE";
 export const ACTION_WORKOUT_CLOSE_CONFIRMATION_YES = "ACTION_WORKOUT_CLOSE_CONFIRMATION_YES"
 export const ACTION_WORKOUT_CLOSE_CONFIRMATION_NO = "ACTION_WORKOUT_CLOSE_CONFIRMATION_NO"
+export const ACTION_WORKOUT_SUBMIT_CONTINUE = "ACTION_WORKOUT_SUBMIT_CONTINUE"
+export const ACTION_WORKOUT_SUBMIT_CONTINUE_CONFIRMATION_YES = "ACTION_WORKOUT_SUBMIT_CONTINUE_CONFIRMATION_YES"
+export const ACTION_WORKOUT_SUBMIT_CONTINUE_CONFIRMATION_NO = "ACTION_WORKOUT_SUBMIT_CONTINUE_CONFIRMATION_NO"
+export const ACTION_WORKOUT_SUBMIT = "ACTION_WORKOUT_SUBMIT"
+export const ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES = "ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES"
+export const ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO = "ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO"
+export const ACTION_WORKOUT_SUBMITTED = "ACTION_WORKOUT_SUBMITTED"
 export function getWorkouts(page_url, data) {
     return apiAction({
         type: API_GET_WORKOUTS,
@@ -87,14 +95,16 @@ export const getWorkoutsByCategory = (category) => ({
     payload: {category}
 })
 
-export const addNewWorkoutStart = () => ({
-    type: ACTION_ADD_WORKOUT_START
+export const addNewWorkoutStart = (data) => ({
+    type: ACTION_ADD_WORKOUT_START,
+    payload: {data}
 })
 
 export const addNewWorkout = (workoutSection) => ({
     type: ACTION_ADD_WORKOUT,
     payload: {workoutSection}
 })
+
 
 export const changeCategoryName = (data) => ({
     type: ACTION_CHANGE_CATEGORY_NAME,
@@ -177,5 +187,20 @@ export const cancelWorkoutChanges = (data) => ({
 
 export const closeWorkoutDetails = (data) => ({
     type: ACTION_WORKOUT_CLOSE,
+    payload: {data}
+})
+
+export const submitAndContinueWorkout = (data) => ({
+    type: ACTION_WORKOUT_SUBMIT_CONTINUE,
+    payload: {data}
+})
+
+export const submitWorkout = (isSubmitAndClose, data) => ({
+    type: ACTION_WORKOUT_SUBMIT,
+    payload: {isSubmitAndClose, data}
+})
+
+export const submitWorkoutFinish = (data) => ({
+    type: ACTION_WORKOUT_SUBMITTED,
     payload: {data}
 })

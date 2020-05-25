@@ -4,7 +4,6 @@ import { Route } from 'react-router-dom';
 
 import '../../styles/workoutDay.css'
 import WorkoutDayWorkouts from './WorkoutDayWorkouts';
-import WorkoutDetails from './WorkoutDetails';
 
 
 function WorkoutDayLocations(props) {

@@ -4,15 +4,17 @@ import { connect } from 'react-redux';
 import Loading from '../Loading';
 import {getWorkoutsByCategory} from '../../actions/workoutAction';
 import WorkoutSummary from './WorkoutSummary';
-import { SECTION } from '../../constants/page_constants';
 
 class WorkoutsMain extends Component {
     
     constructor(props) {
         super(props)
+        this.state = {
+            
+        }
     }
     render() {
-        const { sections, loading, error, categorySections } = this.props;
+        const { loading, error, categorySections } = this.props;
         if (loading) {
             return (
                 <div>
@@ -34,7 +36,7 @@ class WorkoutsMain extends Component {
                     return (
                         <div className="workoutsMain">
                             {
-                                workouts.map((workout, index) => {
+                                workouts.map((workout) => {
                                     let metaDataId = workout.metaDataId;
                                    return <div key={metaDataId} className="workoutSummaryDiv"><WorkoutSummary workout={workout}/></div>
                                 })

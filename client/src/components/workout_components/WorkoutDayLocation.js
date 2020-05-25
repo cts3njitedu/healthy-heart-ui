@@ -8,6 +8,9 @@ class WorkoutDayLocation extends Component {
     constructor(props){
         super(props)
         console.log("We are titans:", props)
+        this.state = {
+            
+        }
     }
 
     componentDidMount() {
@@ -24,7 +27,7 @@ class WorkoutDayLocation extends Component {
     }
         
     render(){
-        const { error, loading, sections, isAccessTokenEnabled, newSections} = this.props;
+        const { sections, newSections} = this.props;
        
         console.log("Workout Day Location:", sections, newSections)
         return (

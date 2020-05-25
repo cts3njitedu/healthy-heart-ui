@@ -4,7 +4,7 @@ import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
 import {goBackToCalendar, getWorkoutDay, addWorkoutDayLocationBuild, actionViewWorkouts} from '../../actions/workoutDayAction'
-import {buildWorkoutsRequest, API_GET_WORKOUTS_HEADER_BUILD} from '../../actions/workoutAction'
+import {buildWorkoutsRequest} from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
 
 class LocationActivityButtons extends Component {
@@ -45,7 +45,7 @@ class LocationActivityButtons extends Component {
             // this.props.actionViewWorkouts(viewWorkoutField)
             console.log("Going to View Workouts")
             let selectedLocation = this.props.selectedLocation;
-            let url = this.props.match.url + "/locations" + "/" + selectedLocation.metaDataId + "/workouts"
+            let url = this.props.match.url + "/locations/" + selectedLocation.metaDataId + "/workouts"
             console.log(url)
             this.props.history.push(url);
         }

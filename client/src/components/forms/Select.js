@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
-import {FormGroup, ControlLabel, FormControl} from 'react-bootstrap'
 import {isEmpty} from 'lodash'
 class Select extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            
+        }
     } 
-
-
-
     render() {
         let name = this.props.select.name;
         let value = this.props.select.value;

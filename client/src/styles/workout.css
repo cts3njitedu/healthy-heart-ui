@@ -224,10 +224,11 @@
 .workoutDetails > :nth-child(3) {
     display: flex;
     width: 100%;
-    flex: 5 500;
+    flex: 5 600;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+    overflow: auto;
 }
 
 .workoutDetails > :nth-child(2) {
@@ -247,7 +248,7 @@
 .workoutDetails > :nth-child(1) {
     display: flex;
     width: 100%;
-    flex: 1 100;
+    flex: 1 50;
 }
 .workoutDetails > :nth-child(1) > div {
     display: flex;
@@ -267,6 +268,7 @@
     color: darkblue;
     font-size: large;
     width: 40%;
+    height: 50%;
     display: flex;
     flex-wrap: wrap;
     word-wrap: break-word ;
@@ -282,6 +284,9 @@
     width: 60%;
 }
 
+.workoutGroupForm {
+    overflow: auto;
+}
 .workoutGroupForm > div {
     display: flex;
     width: 80%;
@@ -289,6 +294,7 @@
     justify-content: center;
     align-items: center;
     background-color: lightblue;
+    /* overflow: auto; */
 }
 
 .workoutGroupForm > div > :nth-child(1) {

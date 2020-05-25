@@ -2,7 +2,6 @@ import { SECTION, PAGE } from "../constants/page_constants";
 
 export function convertWorkoutDetailsActivityFields(state) {
     let sections = state.workoutDetails.sections;
-    let newSections = state.workoutDetails.newSections;
     let selectedWorkout = state.workoutDetails.selectedWorkout;
     let activitySectionId = PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION;
     let addGroup = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.ADD_GROUP;
@@ -17,7 +16,6 @@ export function convertWorkoutDetailsActivityFields(state) {
         let workoutType = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.WORKOUT_TYPE_DESC]; 
         let isDisabled = categoryName.value.length === 0 || workoutType.value.length === 0;
         console.log("Workout Detail Activity Selector:", categoryName, workoutType, isDisabled)
-
         return {
             ...sections,
             [activitySectionId] : sections[activitySectionId].map((item, index) => {
@@ -25,21 +23,28 @@ export function convertWorkoutDetailsActivityFields(state) {
                     return {
                         ...item,
                         fields: Object.keys(item.fields).reduce((result, key) => {
-                            if (key === addGroup || key === submitAndContinue || key === submitAndClose) {
+                            if (key === addGroup) {
                                 result[key] = {
                                     ...item.fields[key],
-                                    isDisabled: isDisabled
+                                    isDisabled: state.workoutDetails.isSubmitting || isDisabled
+                                }
+                                return result;
+                            } else if (key === submitAndContinue || key === submitAndClose) {
+                                result[key] = {
+                                    ...item.fields[key],
+                                    isDisabled: state.workoutDetails.isSubmitting || isDisabled || !state.workoutDetails.isDirty
                                 }
                                 return result;
                             } else if (key === cancelChanges) {
                                 result[key] ={
                                     ...item.fields[key],
-                                    isDisabled: !state.workoutDetails.isDirty
+                                    isDisabled: !state.workoutDetails.isDirty || state.workoutDetails.isSubmitting
                                 }
                                 return result;
                             } else {
                                 result[key] = {
-                                    ...item.fields[key]
+                                    ...item.fields[key],
+                                    isDisabled : state.workoutDetails.isSubmitting
                                 }
                                 return result;
                             }

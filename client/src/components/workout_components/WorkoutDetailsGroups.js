@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import Loading from '../Loading';
 import { isEmpty } from 'lodash'
 import WorkoutDetailsGroup from './WorkoutDetailsGroup';
-import { SECTION, PAGE } from '../../constants/page_constants';
 import { handleChangeGroup, handleBlurGroup, addOREditWorkoutGroupStart, deleteWorkoutGroup } from '../../actions/workoutAction'
 
 class WorkoutDetailsGroups extends Component {

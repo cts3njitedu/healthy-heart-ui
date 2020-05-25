@@ -1,10 +1,8 @@
 import React, { Component } from 'react'
 import { withRouter, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import queryString from 'query-string'
-import { PAGE } from '../../constants/page_constants'
 import Loading from '../Loading'
-import {addNewWorkoutStart} from '../../actions/workoutAction'
+import {addNewWorkoutStart, keepWorkoutState} from '../../actions/workoutAction'
 import WorkoutDetailsHeader from './WorkoutDetailsHeader'
 import WorkoutDetailsActivity from './WorkoutDetailsActivity'
 import WorkoutDetailsGroups from './WorkoutDetailsGroups'
@@ -15,15 +13,19 @@ class WorkoutDetails extends Component {
         console.log("Details:", props)
     }
 
-    componentDidMount() {
-        // this.props.addNewWorkoutStart()
-    }
+    // componentDidMount() {
+    //     const values = queryString.parse(this.props.location.search)
+    //     this.props.keepWorkoutState({
+    //         exactUrl: this.props.location.pathname,
+    //         queryParams: values
+    //     })
+    // }
 
     // shouldComponentUpdate(nextProps, nextState) {
 
     // }
     render() {
-        const { sections, loading, error, newSections, selectedWorkout,isAccessTokenEnabled } = this.props;
+        const { loading, error, selectedWorkout,isAccessTokenEnabled } = this.props;
         if (!isAccessTokenEnabled) {
             return <Redirect to="/login" />
         }
@@ -76,7 +78,8 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-    addNewWorkoutStart
+    addNewWorkoutStart,
+    keepWorkoutState
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WorkoutDetails));
