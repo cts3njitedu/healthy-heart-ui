@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {isEmpty} from 'lodash'
+import { isStringEmpty } from '../../utilities/stringUtility';
 class Select extends Component {
 
     constructor(props) {
@@ -23,7 +24,7 @@ class Select extends Component {
             }
         }
         console.log("Value Selected:", value)
-        if (value !== "") {
+        if (!isStringEmpty(value)) {
             let item = items.filter(item => value === item.id);
             if (!isEmpty(item)) {
                 console.log("Value searched")

@@ -8,7 +8,7 @@ function Textbox(props) {
             {!props.field.isDisabled && <input type={props.field.type}
                 id={props.field.id} 
                 name={props.field.name} 
-                value={props.field.value} 
+                value={props.field.value || ''} 
                 placeholder={props.field.placeholder}
                 onChange={props.handleChange} 
                 onBlur={props.handleBlur}

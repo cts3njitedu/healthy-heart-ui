@@ -204,3 +204,8 @@ export const submitWorkoutFinish = (data) => ({
     type: ACTION_WORKOUT_SUBMITTED,
     payload: {data}
 })
+
+export const goBackToWorkoutDayLocations = (data) => ({
+    type: ACTION_GO_BACK_TO_WORKOUTDAY_LOCATIONS,
+    payload: {data}
+})

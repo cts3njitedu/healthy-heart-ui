@@ -1,7 +1,9 @@
 import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutDayAction";
 import { format } from 'date-fns'
-import { PAGE, ACTIVITY, SECTION } from "../constants/page_constants";
+import { PAGE, ACTIVITY, SECTION, ROUTETYPE } from "../constants/page_constants";
 import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, ACTION_HANDLE_CHANGE_GROUP, handleChangeGroup, ACTION_CANCEL_WORKOUT_GROUP, ACTION_ADD_EDIT_WORKOUT_GROUP_START, addOREditWorkoutGroupStart, cancelGroupFrom, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, addOREditWorkoutGroupSave, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_WORKOUT_CANCEL_CHANGES, cancelWorkoutChanges, ACTION_WORKOUT_CLOSE, closeWorkoutDetails, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, buildWorkoutsRequest, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, ACTION_WORKOUT_SUBMIT, submitWorkout } from "../actions/workoutAction";
+import { isStringEmpty } from "../utilities/stringUtility";
+import { reRoutePage } from "../actions/commonAction";
 const workoutAction = ({ dispatch, getState }) => next => action => {
 
     if (action.type === ACTION_CHANGE_WORKOUT_DATE) {
@@ -76,7 +78,7 @@ const workoutAction = ({ dispatch, getState }) => next => action => {
 
         }
         console.log("Data:", data)
-        if (categoryField.value === "") {
+        if (isStringEmpty(categoryField.value)) {
             next(confirmationAction(ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, data))
         } else {
             next(changeCategoryName(data))
@@ -99,7 +101,7 @@ const workoutAction = ({ dispatch, getState }) => next => action => {
 
         }
         console.log("Data:", data)
-        if (workoutTypeField.value === "") {
+        if (isStringEmpty(workoutTypeField.value)) {
             next(confirmationAction(ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, data))
         } else {
             next(changeWorkoutType(data))
@@ -199,8 +201,32 @@ const workoutAction = ({ dispatch, getState }) => next => action => {
             next(closeWorkoutDetails())
         } else {
             console.log("No Confirmation Screen")
-            next(confirmationAction(ACTION_WORKOUT_CLOSE_CONFIRMATION_YES))
+            dispatch(confirmationAction(ACTION_WORKOUT_CLOSE_CONFIRMATION_YES))
         }
+
+    } else if (action.type === ACTION_WORKOUT_CLOSE_CONFIRMATION_YES) {
+        let state = getState();
+        console.log("Close confirmation", state.workout.workoutDayUrl)
+        let url = state.workout.workoutDayUrl + "/workouts"
+        let workoutSection = state.workoutDetails.selectedWorkout.workoutSection;
+        let categoryName = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME]
+        let items = categoryName.items;
+        console.log("Category Field:", categoryName)
+        let catValue = (categoryName.value !== null && categoryName.value.length !== 0) ?
+                        items.filter(i => i.id === categoryName.value) : [];
+        if (catValue.length > 0) {
+            catValue = catValue[0].item;
+        } else {
+            catValue = "";
+        }
+        if (catValue.length !== 0) {
+            url = url + "/category/" + catValue.toLowerCase()
+        }
+        next(action)
+        next(reRoutePage({
+            url: url,
+            routeType: ROUTETYPE.PUSH
+        }))
 
     } else if (action.type === ACTION_WORKOUT_SUBMIT) {
         let isSubmitAndClose = action.payload.isSubmitAndClose

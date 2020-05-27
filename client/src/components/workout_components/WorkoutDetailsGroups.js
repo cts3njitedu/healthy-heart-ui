@@ -25,7 +25,7 @@ class WorkoutDetailsGroups extends Component {
     }
 
     handleBlur(event) {
-        console.log("Handle Change:", event.target);
+        console.log("Handle Blur:", event.target);
         let field = {
             name: event.target.name,
             value: event.target.value

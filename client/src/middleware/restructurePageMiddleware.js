@@ -1,9 +1,10 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay } from "../actions/workoutDayAction";
 import _ from 'lodash'
-import { ACTION, PAGE, SECTION } from "../constants/page_constants";
+import { ACTION, PAGE, SECTION, ROUTETYPE } from "../constants/page_constants";
 import { format } from 'date-fns'
 import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, restructureWorkoutDetailsMetaInfo, restructureWorkoutDetails, submitWorkoutFinish } from "../actions/workoutAction";
+import { reRoutePage } from "../actions/commonAction";
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS,
     API_GET_WORKOUTS_SUCCESS
@@ -79,11 +80,42 @@ const restructurePageMiddleware = ({ dispatch, getState }) => (next) => (action)
                         workoutId = modified[0]
                     }
                     console.log("I know how to respond:", workoutId, newPage)
-
+                    let isSubmitted = state.workoutDetails.isSubmitted;
+                    let workoutDayUrl = state.workout.workoutDayUrl;
+                    let workoutSection = state.workoutDetails.selectedWorkout.workoutSection;
+                    let categoryName = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME]
+                    let items = categoryName.items;
+                    console.log("Category Field:", categoryName)
+                    let catValue = (categoryName.value !== null && categoryName.value.length !== 0) ?
+                                    items.filter(i => i.id === categoryName.value) : [];
+                    if (catValue.length > 0) {
+                        catValue = catValue[0].item;
+                    } else {
+                        catValue = "";
+                    }
                     next(submitWorkoutFinish({
                         workoutId: workoutId
                     
                     }))
+                    if (isSubmitted.isSubmitAndContinue) {
+                        let url = workoutDayUrl + "/workouts/" + workoutId + "?action=view"
+                        console.log("Submitted and Continue Finish:", url)
+                        dispatch(reRoutePage({
+                            url: url,
+                            routeType: ROUTETYPE.REPLACE
+                        }))
+                    } else {
+                        let url = workoutDayUrl + "/workouts/"
+                        if (catValue.length !== 0) {
+                            url = url + "category/" + catValue.toLowerCase()
+                        }
+                        console.log("Submit and Close Finish:", url)
+                        dispatch(reRoutePage({
+                            url: url,
+                            routeType: ROUTETYPE.REPLACE
+                        }))
+                    }
+                    
 
                 }
             } else {

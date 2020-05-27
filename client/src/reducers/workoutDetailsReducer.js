@@ -669,7 +669,16 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 ...state,
                 isClosing: true,
                 isDirty: false,
-                confirmationData: {}
+                confirmationData: {},
+                selectedWorkout : {
+                    workoutSection: {},
+                    groupSections: []
+            
+                },
+                sourceSelectedWorkout: {
+                    workoutSection: {},
+                    groupSections: []
+                }
             }
         }
         case ACTION_WORKOUT_CLOSE_CONFIRMATION_NO: {
@@ -729,7 +738,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
         case ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES: {
             return {
                 ...state,
-                confirmationData: {},
+                confirmationData: {}
 
             }
         }
@@ -777,6 +786,15 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 isSubmitted: {
                     ...state.isSubmitted,
                     workoutId: action.payload.data.workoutId
+                },
+                selectedWorkout : {
+                    workoutSection: {},
+                    groupSections: []
+            
+                },
+                sourceSelectedWorkout: {
+                    workoutSection: {},
+                    groupSections: []
                 }
             }
         }

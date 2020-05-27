@@ -1,4 +1,5 @@
 import { MANDATORY, LENGTH, REGEX } from "../constants/validations_constants";
+import { isStringEmpty } from "./stringUtility";
 
 export function tester() {
     console.log("In tester");
@@ -7,11 +8,11 @@ export function validate(field, validations) {
     let errorFields = [];
     console.log("Validation Field:", field, validations)
     let promises = [];
-    let newValue = field.value;
+    let newValue = field.value || "";
     validations.forEach(validation => {
         promises.push(new Promise(function (resolve) {
             if (validation.validationName === MANDATORY && validation.isEnabled) {
-                if (newValue === null || newValue === undefined || newValue.trim().length === 0) {
+                if (isStringEmpty(newValue)) {
                     const error = {
                         message: validation.message,
                         parentId: validation.parentId
@@ -20,7 +21,7 @@ export function validate(field, validations) {
                 }
             }
             if (validation.validationName === LENGTH && validation.isEnabled) {
-                if (newValue === null || newValue === undefined || newValue.length < field.minLength || newValue.length > field.maxLength) {
+                if ((field.minLength !== 0 && isStringEmpty(newValue)) || newValue.length < field.minLength || newValue.length > field.maxLength) {
                     const error = {
                         message: validation.message,
                         parentId: validation.parentId

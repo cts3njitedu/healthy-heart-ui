@@ -26,11 +26,13 @@ class ConfirmationModal extends Component {
     render() {
         let confirmationData = this.props.confirmationData;
         if (!isEmpty(confirmationData)) {
+            console.log("Confirmation Modal Message", confirmationData.confirmMessage)
             return (
                 <div className="static-modal">
                     <Modal.Dialog>
                         <Modal.Header>
-                            <Modal.Title>Confirmation Data Will Be Lost Without Saving</Modal.Title>
+                            {confirmationData.confirmMessage && <Modal.Title>{confirmationData.confirmMessage}</Modal.Title>}
+                            {!confirmationData.confirmMessage &&<Modal.Title>Confirmation Data Will Be Lost Without Saving</Modal.Title>}
                         </Modal.Header>
                         <Modal.Body>Do you wish to continue?</Modal.Body>
                         <Modal.Footer>

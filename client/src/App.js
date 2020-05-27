@@ -12,6 +12,7 @@ import PublicRoute from './components/PublicRoute'
 import Locations from './components/Locations'
 import Calendar from './components/Calendar'
 import WorkoutDaysPage from './components/workout_components/WorkoutDaysPage'
+import PageRouter from './components/utility_components/PageRouter'
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
         
         <BrowserRouter>
             <Provider store={store}>
+                <PageRouter />
                 <Header />
                 {/* <MainContent /> */}
                 <Switch>

@@ -120,4 +120,8 @@ export const ACTIVITY = {
     }
 }
 
+export const ROUTETYPE = {
+    PUSH: "PUSH",
+    REPLACE: "REPLACE"
+}
 export const ACTION_WORKOUT_SUBMIT_CONFIRMATION_MESSAGE = "You Will Be Unable to Change Category Name and Workout Type Once You Submit"

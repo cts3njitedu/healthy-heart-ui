@@ -51,8 +51,12 @@ const validateForm = ({dispatch, getState}) => next => action => {
         let blurField = action.payload.field;
         let currentFields = state.workoutDetails.editGroup.fields;
     
-        console.log("Handle Blur Middleware:", currentFields)
-        let errors = Object.keys(currentFields).filter(f => (action.type === ACTION_HANDLE_BLUR_GROUP ? currentFields[f].isDirty : true)).map((f) => {
+        console.log("Handle Blur Middleware:", currentFields, blurField)
+        
+        let errors = Object.keys(currentFields).filter(f => 
+            (action.type === ACTION_HANDLE_BLUR_GROUP ? 
+                (currentFields[f].isDirty 
+                || (blurField.name === f && blurField.value !== currentFields[f].value)): true)).map((f) => {
                 // let field = groupSectionFields[f];
                 // field.value = currentFields[f].value;
                 let valid = validate(currentFields[f], currentFields[f].validations)

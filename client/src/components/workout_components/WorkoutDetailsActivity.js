@@ -6,7 +6,6 @@ import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import WorkoutButton from '../forms/WorkoutButton';
 import { addOREditWorkoutGroupStart, cancelGroupFrom, handleSaveGroup, cancelWorkoutChanges, closeWorkoutDetails, submitAndContinueWorkout, submitWorkout} from '../../actions/workoutAction'
 import {convertWorkoutDetailsActivityFields} from '../../selectors/workoutdetailsActivitySelector'
-import {isEmpty} from 'lodash'
 class WorkoutDetailsActivity extends Component {
     constructor(props) {
         super(props)
@@ -54,25 +53,6 @@ class WorkoutDetailsActivity extends Component {
                 subActionType: action === "add" ? ACTION.ADD_WORKOUT : ACTION.MODIFY_WORKOUT,
                 viewType: action
             });
-        }
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        console.log("Closing Update:", prevProps.isClosing, this.props.isClosing, this.props.isSubmitting)
-        if (prevProps.isClosing !== this.props.isClosing) {
-            console.log("Close Did Update")
-            this.props.history.goBack();
-        } else if (prevProps.isSubmitting !== this.props.isSubmitting && !this.props.isSubmitting && !isEmpty(this.props.isSubmitted)) {
-            console.log("Submitted successfully!!!!!!!!", this.props.isSubmitted, this.state.workoutDayUrl)
-            if (this.props.isSubmitted.isSubmitAndContinue) {
-                if (this.props.viewType.action === "add") {
-                    this.props.history.replace(this.props.exactUrl+ "/"+this.props.isSubmitted.workoutId+"?action=view");
-                } else {
-                    this.props.history.replace(this.props.exactUrl + "?action=view")
-                }
-            } else {
-                this.props.history.replace(this.state.workoutDayUrl+"/workouts")
-            }
         }
     }
 
