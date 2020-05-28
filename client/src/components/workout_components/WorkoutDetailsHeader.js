@@ -4,7 +4,6 @@ import Select from '../forms/Select';
 import { changeCategoryName, changeWorkoutType } from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import ConfirmationModal from '../forms/ConfirmationModal';
 import Loading from '../Loading';
 class WorkoutDetailsHeader extends Component {
     constructor(props) {
@@ -81,7 +80,6 @@ class WorkoutDetailsHeader extends Component {
                     <div>
                         <Select select={select} handleChange={this.handleChange} />
                         <Select select={workoutTypeSelect} handleChange={this.handleChange} />
-                        <ConfirmationModal />
                     </div>
 
                 )

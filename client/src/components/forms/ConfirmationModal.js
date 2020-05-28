@@ -52,7 +52,7 @@ class ConfirmationModal extends Component {
 
 function mapStateToProps(state) {
     return {
-        confirmationData: state.workoutDetails.confirmationData
+        confirmationData: state.common.confirmationData
     }
 
 }

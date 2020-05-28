@@ -1,4 +1,4 @@
-import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_NAME, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_CONFIRMATION_NO, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES, ACTION_WORKOUT_CANCEL_CHANGES, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO, ACTION_WORKOUT_CLOSE, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, ACTION_WORKOUT_CLOSE_CONFIRMATION_NO, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO, ACTION_WORKOUT_SUBMIT, ACTION_WORKOUT_SUBMITTED } from "../actions/workoutAction";
+import { ACTION_ADD_WORKOUT_START, ACTION_ADD_WORKOUT, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO, API_RESTRUCTURE_WORKOUT_DETAILS, ACTION_ADD_EDIT_WORKOUT_GROUP_START, ACTION_HANDLE_CHANGE_GROUP, ACTION_GROUP_FORM_VALIIDATION_FINISH, ACTION_KEEP_STAGE_UNCHANGED, ACTION_CANCEL_WORKOUT_GROUP, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_DELETE_WORKOUT_GROUP, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES, ACTION_WORKOUT_CANCEL_CHANGES, ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, ACTION_WORKOUT_SUBMIT_CONFIRMATION_NO, ACTION_WORKOUT_SUBMIT, ACTION_WORKOUT_SUBMITTED } from "../actions/workoutAction";
 import { SECTION , PAGE, ACTION_WORKOUT_SUBMIT_CONFIRMATION_MESSAGE} from "../constants/page_constants";
 
 const initialState = {
@@ -33,11 +33,7 @@ const initialState = {
     deletedGroups: [],
     isDirty: false,
     isSubmitting: false,
-    isSubmitted: {
-        isSubmitAndClose: false,
-        isSubmitAndContinue: false,
-        workoutId: 0
-    }
+    isSubmitted: {}
     
     
 };
@@ -83,19 +79,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 isWorkoutDetailsError: false
             }
         }
-        case ACTION_CHANGE_CATEGORY_NAME : {
-            return {
-                ...state,
-                confirmationData: {
-                    ...state.confirmationData,
-                    confirmYes: ACTION_CHANGE_CATEGORY_CONFIRMATION_YES,
-                    confirmNo: ACTION_CHANGE_CATEGORY_CONFIRMATION_NO,
-                    data : {
-                        ...action.payload.data
-                    }
-                }
-            }
-        }
+        
         case ACTION_CHANGE_CATEGORY_CONFIRMATION_YES: {
             let categoryName = SECTION.WORKOUTS_PAGE.WORKOUT_SECTION.CATEGORY_NAME;
             let category = action.payload.data.category
@@ -103,7 +87,6 @@ export default function workoutDetailsReducer(state = initialState, action) {
             let workoutTypeItems = action.payload.data.workoutTypeItems;
             return {
                 ...state,
-                confirmationData: {},
                 isDirty: true,
                 selectedWorkout: {
                     ...state.selectedWorkout,
@@ -126,31 +109,13 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 }
             }
         }
-        case ACTION_CHANGE_CATEGORY_CONFIRMATION_NO: {
-            return {
-                ...state,
-                confirmationData: {}
-            }
-        }
-        case ACTION_CHANGE_WORKOUT_TYPE: {
-            return {
-                ...state,
-                confirmationData: {
-                    ...state.confirmationData,
-                    confirmYes: ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES,
-                    confirmNo: ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO,
-                    data : {
-                        ...action.payload.data
-                    }
-                }
-            }
-        }
+
+        
         case ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES : {
             let workoutType = SECTION.WORKOUTS_PAGE.WORKOUT_SECTION.WORKOUT_TYPE_DESC;
             let workoutTypeDesc = action.payload.data.workoutTypeDesc;
             return {
                 ...state,
-                confirmationData: {},
                 isDirty: true,
                 selectedWorkout: {
                     ...state.selectedWorkout,
@@ -169,12 +134,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             }
             
         }
-        case ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_NO: {
-            return {
-                ...state,
-                confirmationData: {}
-            }
-        }
+        
         case API_RESTRUCTURE_WORKOUT_DETAILS_META_INFO: {
             let pageSections = action.payload.page.sections;
             let pageNewSections = action.payload.page.newSections;
@@ -379,19 +339,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 }
             }
         }
-        case ACTION_CANCEL_WORKOUT_GROUP: {
-            return {
-                ...state,
-                confirmationData: {
-                    ...state.confirmationData,
-                    confirmYes: ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES,
-                    confirmNo: ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO,
-                    data : {
-                        ...action.payload.data
-                    }
-                }
-            }
-        }
+    
         case ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES: {
             let activitySectionId = PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION;
             let saveGroup = SECTION.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION.SAVE_GROUP;
@@ -445,10 +393,10 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 }
             }
         }
+
         case ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_NO: {
             return {
-                ...state,
-                confirmationData: {}
+                ...state
             }
         }
         case ACTION_KEEP_STAGE_UNCHANGED: {
@@ -543,7 +491,8 @@ export default function workoutDetailsReducer(state = initialState, action) {
                                     result[key] = {
                                         ...newGroup.fields[key],
                                         isDisabled: true,
-                                        isHidden: false
+                                        isHidden: false,
+                                        isDirty: false
                                     }
                                     return result;
                                 }
@@ -579,7 +528,8 @@ export default function workoutDetailsReducer(state = initialState, action) {
                                         result[key] = {
                                             ...newGroup.fields[key],
                                             isDisabled: true,
-                                            isHidden: false
+                                            isHidden: false,
+                                            isDirty: false
                                         }
                                         return result;
                                     }
@@ -611,15 +561,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
         }
         case ACTION_WORKOUT_CANCEL_CHANGES: {
             return {
-                ...state,
-                confirmationData: {
-                    ...state.confirmationData,
-                    confirmYes: ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES,
-                    confirmNo: ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO,
-                    data : {
-                        ...action.payload.data
-                    }
-                }
+                ...state
             }
         }
         case ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_YES: {
@@ -647,21 +589,13 @@ export default function workoutDetailsReducer(state = initialState, action) {
         }
         case ACTION_WORKOUT_CANCEL_CHANGES_CONFIRMATION_NO: {
             return {
-                ...state,
-                confirmationData: {}
+                ...state
             }
         }
-        case ACTION_WORKOUT_CLOSE: {
+        
+        case ACTION_CANCEL_WORKOUT_GROUP: {
             return {
-                ...state,
-                confirmationData: {
-                    ...state.confirmationData,
-                    confirmYes: ACTION_WORKOUT_CLOSE_CONFIRMATION_YES,
-                    confirmNo: ACTION_WORKOUT_CLOSE_CONFIRMATION_NO,
-                    data : {
-                        ...action.payload.data
-                    }
-                }
+                ...state
             }
         }
         case ACTION_WORKOUT_CLOSE_CONFIRMATION_YES: {
@@ -669,7 +603,6 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 ...state,
                 isClosing: true,
                 isDirty: false,
-                confirmationData: {},
                 selectedWorkout : {
                     workoutSection: {},
                     groupSections: []
@@ -679,12 +612,6 @@ export default function workoutDetailsReducer(state = initialState, action) {
                     workoutSection: {},
                     groupSections: []
                 }
-            }
-        }
-        case ACTION_WORKOUT_CLOSE_CONFIRMATION_NO: {
-            return {
-                ...state,
-                confirmationData: {}
             }
         }
         case ACTION_WORKOUT_SUBMIT: {
@@ -737,8 +664,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
         }
         case ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES: {
             return {
-                ...state,
-                confirmationData: {}
+                ...state
 
             }
         }
@@ -747,7 +673,6 @@ export default function workoutDetailsReducer(state = initialState, action) {
             let edit = SECTION.WORKOUT_DETAILS_PAGE.GROUP_SECTION.EDIT
             return {
                 ...state,
-                confirmationData: {},
                 isSubmitting: false,
                 isSubmitted: {},
                 selectedWorkout: {
@@ -783,10 +708,7 @@ export default function workoutDetailsReducer(state = initialState, action) {
             return {
                 ...state,
                 isSubmitting: false,
-                isSubmitted: {
-                    ...state.isSubmitted,
-                    workoutId: action.payload.data.workoutId
-                },
+                isSubmitted: {},
                 selectedWorkout : {
                     workoutSection: {},
                     groupSections: []
@@ -807,7 +729,6 @@ export default function workoutDetailsReducer(state = initialState, action) {
                 sourceEditGroup: {},
                 isValidationErrors: false,
                 previousActivityButtons: {},
-                isDirty: false,
                 isClosing: false
             }
         }

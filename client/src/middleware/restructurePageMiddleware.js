@@ -3,8 +3,9 @@ import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCA
 import _ from 'lodash'
 import { ACTION, PAGE, SECTION, ROUTETYPE } from "../constants/page_constants";
 import { format } from 'date-fns'
-import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, restructureWorkoutDetailsMetaInfo, restructureWorkoutDetails, submitWorkoutFinish } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_SUCCESS, restructureWorkoutDay, buildWorkoutsRequest, API_GET_WORKOUTS_BUILD, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, restructureWorkoutDetailsMetaInfo, restructureWorkoutDetails, submitWorkoutFinish, deleteWorkoutFinish } from "../actions/workoutAction";
 import { reRoutePage } from "../actions/commonAction";
+
 const workoutActions = [
     API_GET_WORKOUTDAY_SUCCESS,
     API_GET_WORKOUTS_SUCCESS
@@ -73,49 +74,65 @@ const restructurePageMiddleware = ({ dispatch, getState }) => (next) => (action)
                     console.log("Workout Action Response:", newPage)
                     let added = newPage.actionInfo.Added.Workout;
                     let modified = newPage.actionInfo.Modified.Workout;
+                    let deleted = newPage.actionInfo.Deleted.Workout;
+                    let parseUrl = exactUrl.split("/");
                     let workoutId = null;
                     if (newPage.subActionType === ACTION.ADD_WORKOUT && added) {
                         workoutId = added[0];
                     } else if (newPage.subActionType === ACTION.MODIFY_WORKOUT && modified) {
                         workoutId = modified[0]
+                    } else if (newPage.subActionType === ACTION.DELETE_WORKOUT && deleted) {
+                        workoutId = deleted[0]
                     }
-                    console.log("I know how to respond:", workoutId, newPage)
+                    
                     let isSubmitted = state.workoutDetails.isSubmitted;
                     let workoutDayUrl = state.workout.workoutDayUrl;
-                    let workoutSection = state.workoutDetails.selectedWorkout.workoutSection;
-                    let categoryName = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME]
-                    let items = categoryName.items;
-                    console.log("Category Field:", categoryName)
-                    let catValue = (categoryName.value !== null && categoryName.value.length !== 0) ?
-                                    items.filter(i => i.id === categoryName.value) : [];
-                    if (catValue.length > 0) {
-                        catValue = catValue[0].item;
-                    } else {
-                        catValue = "";
-                    }
-                    next(submitWorkoutFinish({
-                        workoutId: workoutId
-                    
-                    }))
-                    if (isSubmitted.isSubmitAndContinue) {
-                        let url = workoutDayUrl + "/workouts/" + workoutId + "?action=view"
-                        console.log("Submitted and Continue Finish:", url)
-                        dispatch(reRoutePage({
-                            url: url,
-                            routeType: ROUTETYPE.REPLACE
-                        }))
-                    } else {
-                        let url = workoutDayUrl + "/workouts/"
-                        if (catValue.length !== 0) {
-                            url = url + "category/" + catValue.toLowerCase()
+                    let isDeleted = state.workout.isDeleted
+                    console.log("I know how to respond:", workoutId, newPage, isDeleted, isSubmitted)
+                    if (!_.isEmpty(isSubmitted)) {
+                        let workoutSection = state.workoutDetails.selectedWorkout.workoutSection;
+                        let categoryName = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME]
+                        let items = categoryName.items;
+                        console.log("Category Field:", categoryName)
+                        let catValue = (categoryName.value !== null && categoryName.value.length !== 0) ?
+                            items.filter(i => i.id === categoryName.value) : [];
+                        if (catValue.length > 0) {
+                            catValue = catValue[0].item;
+                        } else {
+                            catValue = "";
                         }
-                        console.log("Submit and Close Finish:", url)
+                        next(submitWorkoutFinish({
+                            workoutId: workoutId
+
+                        }))
+                        if (isSubmitted.isSubmitAndContinue) {
+                            workoutId = workoutId || parseUrl[6]
+                            let url = workoutDayUrl + "/workouts/" + workoutId + "?action=view"
+                            console.log("Submitted and Continue Finish:", url)
+                            dispatch(reRoutePage({
+                                url: url,
+                                routeType: ROUTETYPE.REPLACE
+                            }))
+                        } else {
+                            let url = workoutDayUrl + "/workouts/"
+                            if (catValue.length !== 0) {
+                                url = url + "category/" + catValue.toLowerCase()
+                            }
+                            console.log("Submit and Close Finish:", url)
+                            dispatch(reRoutePage({
+                                url: url,
+                                routeType: ROUTETYPE.REPLACE
+                            }))
+                        }
+
+                    } else if (isDeleted) {
+                        console.log("Workout Deleted:", workoutId)
+                        next(deleteWorkoutFinish())
                         dispatch(reRoutePage({
-                            url: url,
+                            url: exactUrl,
                             routeType: ROUTETYPE.REPLACE
                         }))
                     }
-                    
 
                 }
             } else {

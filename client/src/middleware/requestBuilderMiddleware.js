@@ -1,7 +1,7 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
 import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation } from "../actions/workoutDayAction";
 import { PAGE, ACTION, SECTION } from "../constants/page_constants";
-import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
 
 export const buildRequest = ({dispatch, getState}) => next => action => {
     console.log("Did you come here")
@@ -229,6 +229,44 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         }
         console.log("Selected Workout Submit:", request, url, state.workoutDay)
         dispatch(getWorkouts("/workoutDays", request))
+    } else if (action.type === API_ACTION_WORKOUT_DELETE_BUILD) {
+        let state = getState()
+        let sections = state.workout.sections;
+        let headerSection = sections[PAGE.WORKOUTS_PAGE.HEADER_SECTION][0];
+        let workoutDate = SECTION.WORKOUTS_PAGE.HEADER_SECTION.WORKOUT_DATE;
+        let location = SECTION.WORKOUTS_PAGE.HEADER_SECTION.LOCATION;
+        let workout = {
+            workoutId: action.payload.data.workoutId.toString(),
+            versionNb: action.payload.data.versionNb.toString(),
+            isDeleted: true
+        }
+        let url = state.workout.workoutDayUrl;
+        let parseUrl = url.split("/");
+        let workoutDay = {
+            workoutDayId : headerSection.metaDataId > 0 ? headerSection.metaDataId.toString() : "0",
+            versionNb: headerSection.metaDataId > 0 ? headerSection.versionNb.toString() : "0",
+            workouts: [workout], 
+            fields: [
+                {
+                    name: workoutDate,
+                    value: parseUrl[2]
+                },
+                {
+                    name: location,
+                    value: parseUrl[4]
+                }
+            ]
+        }
+
+        let request = {
+            actionType: ACTION.WORKOUTS_ACTION,
+            subActionType: action.payload.data.subActionType,
+            workoutDays: [workoutDay]
+        }
+        console.log("Selected Workout Delete:", request, url, state.workoutDay)
+        dispatch(getWorkouts("/workoutDays", request))
+
+
     } else {
         next(action)
     }

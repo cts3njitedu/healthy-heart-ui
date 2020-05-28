@@ -1,7 +1,7 @@
 import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutDayAction";
 import { format } from 'date-fns'
 import { PAGE, ACTIVITY, SECTION, ROUTETYPE } from "../constants/page_constants";
-import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, ACTION_HANDLE_CHANGE_GROUP, handleChangeGroup, ACTION_CANCEL_WORKOUT_GROUP, ACTION_ADD_EDIT_WORKOUT_GROUP_START, addOREditWorkoutGroupStart, cancelGroupFrom, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, addOREditWorkoutGroupSave, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_WORKOUT_CANCEL_CHANGES, cancelWorkoutChanges, ACTION_WORKOUT_CLOSE, closeWorkoutDetails, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, buildWorkoutsRequest, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, ACTION_WORKOUT_SUBMIT, submitWorkout } from "../actions/workoutAction";
+import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, ACTION_HANDLE_CHANGE_GROUP, handleChangeGroup, ACTION_CANCEL_WORKOUT_GROUP, ACTION_ADD_EDIT_WORKOUT_GROUP_START, addOREditWorkoutGroupStart, cancelGroupFrom, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, addOREditWorkoutGroupSave, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_WORKOUT_CANCEL_CHANGES, cancelWorkoutChanges, ACTION_WORKOUT_CLOSE, closeWorkoutDetails, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, buildWorkoutsRequest, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, ACTION_WORKOUT_SUBMIT, submitWorkout, ACTION_WORKOUT_DELETE_CONFIRMATION_YES, API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
 import { isStringEmpty } from "../utilities/stringUtility";
 import { reRoutePage } from "../actions/commonAction";
 const workoutAction = ({ dispatch, getState }) => next => action => {
@@ -129,6 +129,7 @@ const workoutAction = ({ dispatch, getState }) => next => action => {
         let state = getState();
         let activitySection = state.workoutDetails.sections[PAGE.WORKOUT_DETAILS_PAGE.ACTIVITY_SECTION][0];
         let fields = activitySection.fields;
+        console.log("Edit Group Fields: ", fields)
         let currentActivityFields = Object.keys(fields).reduce((result, key) => {
             result[key] = {
               ...fields[key]  
@@ -239,6 +240,10 @@ const workoutAction = ({ dispatch, getState }) => next => action => {
         next(action)
         console.log("Confirmation is Great")
         dispatch(buildWorkoutsRequest("/workoutDays", API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, action.payload.data))
+    } else if (action.type === ACTION_WORKOUT_DELETE_CONFIRMATION_YES) {
+        console.log("Delete Confirmation:", action.payload.data)
+        next(action)
+        dispatch(buildWorkoutsRequest("", API_ACTION_WORKOUT_DELETE_BUILD, action.payload.data))
     } else {
         next(action)
     }

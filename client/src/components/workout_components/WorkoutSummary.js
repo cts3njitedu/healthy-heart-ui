@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { SECTION } from '../../constants/page_constants';
+import { SECTION, ACTION } from '../../constants/page_constants';
 import WorkoutButton from '../forms/WorkoutButton'
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import {deleteWorkout} from '../../actions/workoutAction'
 class WorkoutSummary extends Component {
 
     constructor(props) {
@@ -15,6 +16,13 @@ class WorkoutSummary extends Component {
         if (SECTION.WORKOUTS_PAGE.WORKOUT_SECTION.VIEW_WORKOUT_DETAILS === event.target.name) {
             console.log("View Workout Details Button Clicked", this.props.params, this.props.workoutDayUrl, this.props.workout.metaDataId)
             this.props.history.push(this.props.workoutDayUrl+ "/workouts/" + this.props.workout.metaDataId + "?action=view");
+        } else if (SECTION.WORKOUTS_PAGE.WORKOUT_SECTION.DELETE_WORKOUT === event.target.name) {
+            console.log("Deleting Workout", this.props.workout.metaDataId)
+            this.props.deleteWorkout({
+                workoutId: this.props.workout.metaDataId,
+                versionNb: this.props.workout.versionNb,
+                subActionType: ACTION.DELETE_WORKOUT
+            })
         }
     }
     render() {
@@ -42,7 +50,7 @@ class WorkoutSummary extends Component {
                 <div>{workoutTypeValue}</div>
                 <div>
                     <WorkoutButton field={viewButton} handleActivity={this.handleActivity}/>
-                    <WorkoutButton field={deleteButton}/>
+                    <WorkoutButton field={deleteButton} handleActivity={this.handleActivity}/>
                 </div>
             </div>
         )
@@ -67,7 +75,7 @@ function mapStateToProps(state) {
 }
 
 const mapDispatchToProps = {
-    
+    deleteWorkout
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(WorkoutSummary));

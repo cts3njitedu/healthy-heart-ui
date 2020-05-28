@@ -125,3 +125,4 @@ export const ROUTETYPE = {
     REPLACE: "REPLACE"
 }
 export const ACTION_WORKOUT_SUBMIT_CONFIRMATION_MESSAGE = "You Will Be Unable to Change Category Name and Workout Type Once You Submit"
+export const ACTION_WORKOUT_DELETE_CONFIRMATION_MESSAGE = "You Are About To Delete A Workout"

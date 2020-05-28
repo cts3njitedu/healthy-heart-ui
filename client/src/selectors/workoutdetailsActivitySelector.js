@@ -15,7 +15,7 @@ export function convertWorkoutDetailsActivityFields(state) {
         let categoryName = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME];
         let workoutType = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.WORKOUT_TYPE_DESC]; 
         let isDisabled = categoryName.value.length === 0 || workoutType.value.length === 0;
-        console.log("Workout Detail Activity Selector:", categoryName, workoutType, isDisabled)
+        console.log("Workout Detail Activity Selector:", categoryName, workoutType, isDisabled, state.workoutDetails.isDirty)
         return {
             ...sections,
             [activitySectionId] : sections[activitySectionId].map((item, index) => {

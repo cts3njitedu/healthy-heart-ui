@@ -1,4 +1,4 @@
-import { API_GET_WORKOUTS_HEADER_BUILD, API_GET_WORKOUTS_START, API_RESTRUCTURE_WORKOUTS, API_GET_WORKOUTS_BUILD, API_KEEP_WORKOUTS_STATE, ACTION_ADD_WORKOUT_START, ACTION_WORKOUT_SUBMITTED } from "../actions/workoutAction";
+import { API_GET_WORKOUTS_HEADER_BUILD, API_GET_WORKOUTS_START, API_RESTRUCTURE_WORKOUTS, API_GET_WORKOUTS_BUILD, API_KEEP_WORKOUTS_STATE, ACTION_ADD_WORKOUT_START, ACTION_WORKOUT_SUBMITTED, ACTION_WORKOUT_DELETE, ACTION_WORKOUT_DELETE_CONFIRMATION_YES, ACTION_WORKOUT_DELETE_CONFIRMATION_NO, ACTION_WORKOUT_DELETED } from "../actions/workoutAction";
 
 const initialState = {
     sections : { 
@@ -23,7 +23,9 @@ const initialState = {
     exactUrl: "",
     queryParams: {},
     params: {},
-    tempParams: {}
+    tempParams: {},
+    isDeleting: false,
+    isDeleted: false
     
 };
 
@@ -59,7 +61,9 @@ export default function workoutReducer(state = initialState, action) {
                     [loading]: false,
                     [error]: false
                 },
-                categorySections: action.payload.page.categorySections
+                categorySections: action.payload.page.categorySections,
+                isDeleting: false,
+                isDeleted: false
                   
 
             }
@@ -112,6 +116,32 @@ export default function workoutReducer(state = initialState, action) {
         case ACTION_WORKOUT_SUBMITTED: {
             return {
                 ...state,
+                workoutDayUrl: ""
+            }
+        }
+        case ACTION_WORKOUT_DELETE: {
+            return {
+                ...state,
+                isDeleting: true
+            }
+        }
+        case ACTION_WORKOUT_DELETE_CONFIRMATION_YES: {
+            return {
+                ...state,
+                isDeleted: true
+            }
+        }
+        case ACTION_WORKOUT_DELETE_CONFIRMATION_NO: {
+            return {
+                ...state,
+                isDeleting: false
+            }
+        }
+        case ACTION_WORKOUT_DELETED: {
+            return {
+                ...state,
+                isDeleting: false,
+                isDeleted: false,
                 workoutDayUrl: ""
             }
         }
