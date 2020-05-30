@@ -299,20 +299,27 @@
 
 .workoutGroupForm > div > :nth-child(1) {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
+    width: 90%;
+    
 
 }
-
+.workoutGroupForm > div > :nth-child(1) > div {
+    margin-bottom: 1%;
+}
 .workoutGroupForm > div > :nth-child(1) > div > label {
     font-size: xx-large;
     color: darkblue;
+    margin-right: 0.5%;
 }
 
 .workoutGroupForm > div > :nth-child(1) > div > input {
     font-size: x-large;
     color: darkred;
     background-color: lightgrey;
+    
 }
+
 .workoutDetailsGroups > div > :nth-child(2) {
     display: flex;
     flex: 1 100;

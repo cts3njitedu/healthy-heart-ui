@@ -1,4 +1,4 @@
-import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable } from "../actions/workoutDayAction";
+import { ACTION_CHANGE_WORKOUT_DATE, changeWorkoutDate, ACTION_SELECT_LOCATION_START, selectLocationEnd, ACTION_SORT_LOCATION_TABLE_START, sortLocationTable, API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_NO, API_DELETE_WORKOUTDAY_LOCATION, API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_YES, deleteWorkoutDayLocation, API_DELETE_WORKOUTDAY_LOCATION_BUILD } from "../actions/workoutDayAction";
 import { format } from 'date-fns'
 import { PAGE, ACTIVITY, SECTION, ROUTETYPE } from "../constants/page_constants";
 import { ACTION_GET_WORKOUTS_BY_CATEGORY, addNewWorkout, ACTION_ADD_WORKOUT_START, ACTION_CHANGE_CATEGORY_CONFIRMATION_YES, ACTION_CHANGE_CATEGORY_NAME, confirmationAction, changeCategoryName, ACTION_CHANGE_WORKOUT_TYPE, ACTION_CHANGE_WORKOUT_TYPE_CONFIRMATION_YES, changeWorkoutType, ACTION_HANDLE_CHANGE_GROUP, handleChangeGroup, ACTION_CANCEL_WORKOUT_GROUP, ACTION_ADD_EDIT_WORKOUT_GROUP_START, addOREditWorkoutGroupStart, cancelGroupFrom, ACTION_CANCEL_WORKOUT_GROUP_CONFIRMATION_YES, ACTION_ADD_EDIT_WORKOUT_GROUP_SAVE, addOREditWorkoutGroupSave, ACTION_ADD_WORKOUT_GROUP_SAVE, ACTION_EDIT_WORKOUT_GROUP_SAVE, ACTION_WORKOUT_CANCEL_CHANGES, cancelWorkoutChanges, ACTION_WORKOUT_CLOSE, closeWorkoutDetails, ACTION_WORKOUT_CLOSE_CONFIRMATION_YES, buildWorkoutsRequest, ACTION_WORKOUT_SUBMIT_CONFIRMATION_YES, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, ACTION_WORKOUT_SUBMIT, submitWorkout, ACTION_WORKOUT_DELETE_CONFIRMATION_YES, API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
@@ -244,7 +244,20 @@ const workoutAction = ({ dispatch, getState }) => next => action => {
         console.log("Delete Confirmation:", action.payload.data)
         next(action)
         dispatch(buildWorkoutsRequest("", API_ACTION_WORKOUT_DELETE_BUILD, action.payload.data))
-    } else {
+    } else if (action.type === API_DELETE_WORKOUTDAY_LOCATION) {
+        let state = getState()
+        let selectedLocation = state.workoutDay.selectedLocation;
+        let data = {
+            selectedLocation: selectedLocation
+        }
+        console.log("Deleted Location Here", data)
+        next(deleteWorkoutDayLocation(data))
+    } else if (action.type === API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_YES) {
+        console.log("Confirmation Location Delete:", action.payload.data.selectedLocation)
+        next(action)
+        dispatch(buildWorkoutsRequest("", API_DELETE_WORKOUTDAY_LOCATION_BUILD, action.payload.data))
+    }
+    else {
         next(action)
     }
 }

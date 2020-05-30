@@ -1,5 +1,5 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation } from "../actions/workoutDayAction";
+import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, API_DELETE_WORKOUTDAY_LOCATION, API_DELETE_WORKOUTDAY_LOCATION_BUILD } from "../actions/workoutDayAction";
 import { PAGE, ACTION, SECTION } from "../constants/page_constants";
 import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
 
@@ -267,6 +267,20 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         dispatch(getWorkouts("/workoutDays", request))
 
 
+    } else if (action.type === API_DELETE_WORKOUTDAY_LOCATION_BUILD) {
+        console.log("Delete Building", action.payload.data)
+        let workoutDay = {
+            workoutDayId: action.payload.data.selectedLocation.associatedIds.workoutDayId.toString(),
+            versionNb: action.payload.data.selectedLocation.versionNb.toString(),
+            isDeleted: true
+        }
+        let request = {
+            actionType: ACTION.WORKOUTS_ACTION,
+            subActionType: ACTION.DELETE_WORKOUTDAY_LOCATION,
+            workoutDays: [workoutDay]
+        }
+        console.log("Selected Workout Day Delete:", request)
+        dispatch(getWorkouts("/workoutDays", request))
     } else {
         next(action)
     }

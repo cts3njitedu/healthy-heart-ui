@@ -57,7 +57,7 @@ const apiMiddleware = ({dispatch}) => next => action => {
             [dataOrParams]: data,
             headers
         }).then(res => {
-            // console.log("Succesfully completed", res)
+            console.log("Succesfully completed", res)
             next(onSuccess(res.data, res.headers));
         }).catch(error => {
             let response = error.response

@@ -1,5 +1,5 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay } from "../actions/workoutDayAction";
+import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay, deleteWorkoutDayLocation, workoutDayLocationDeleteFinish } from "../actions/workoutDayAction";
 import _ from 'lodash'
 import { ACTION, PAGE, SECTION, ROUTETYPE } from "../constants/page_constants";
 import { format } from 'date-fns'
@@ -84,12 +84,19 @@ const restructurePageMiddleware = ({ dispatch, getState }) => (next) => (action)
                     } else if (newPage.subActionType === ACTION.DELETE_WORKOUT && deleted) {
                         workoutId = deleted[0]
                     }
+
+                    let deletedWorkoutDay = newPage.actionInfo.Deleted.WorkoutDay;
+                    let workoutDayId = null;
+                    if ((newPage.subActionType === ACTION.DELETE_WORKOUTDAY_LOCATION) && deletedWorkoutDay) {
+                        workoutDayId = deletedWorkoutDay[0]
+                    }
                     
                     let isSubmitted = state.workoutDetails.isSubmitted;
                     let workoutDayUrl = state.workout.workoutDayUrl;
                     let isDeleted = state.workout.isDeleted
-                    console.log("I know how to respond:", workoutId, newPage, isDeleted, isSubmitted)
-                    if (!_.isEmpty(isSubmitted)) {
+                    let isWorkoutDayDeleting = state.workoutDay.isDeleting;
+                    console.log("I know how to respond:", workoutId, newPage, isDeleted, isSubmitted, isWorkoutDayDeleting, workoutDayId)
+                    if (!_.isEmpty(isSubmitted) && (newPage.subActionType === ACTION.ADD_WORKOUT || newPage.subActionType === ACTION.MODIFY_WORKOUT)) {
                         let workoutSection = state.workoutDetails.selectedWorkout.workoutSection;
                         let categoryName = workoutSection.fields[SECTION.WORKOUT_DETAILS_PAGE.WORKOUT_SECTION.CATEGORY_NAME]
                         let items = categoryName.items;
@@ -125,11 +132,22 @@ const restructurePageMiddleware = ({ dispatch, getState }) => (next) => (action)
                             }))
                         }
 
-                    } else if (isDeleted) {
+                    } else if (isDeleted && (newPage.subActionType === ACTION.DELETE_WORKOUT)) {
                         console.log("Workout Deleted:", workoutId)
                         next(deleteWorkoutFinish())
                         dispatch(reRoutePage({
                             url: exactUrl,
+                            routeType: ROUTETYPE.REPLACE
+                        }))
+                    } else if (isWorkoutDayDeleting && (newPage.subActionType === ACTION.DELETE_WORKOUTDAY_LOCATION)) {
+                        let selectedLocation = state.workoutDay.selectedLocation
+                        let headerSection = state.workoutDay.sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.HEADER_SECTION][0];
+                        let url = "/workoutDays/" + headerSection.metaDataId
+                        console.log("Workout Day Deleted:", workoutDayId, selectedLocation, url)
+                        next(workoutDayLocationDeleteFinish())
+                        
+                        dispatch(reRoutePage({
+                            url: url,
                             routeType: ROUTETYPE.REPLACE
                         }))
                     }
@@ -169,6 +187,7 @@ export function restructureWorkoutPage(page) {
                 return {
                     metaDataId: si.sectionMetaData.id,
                     versionNb: si.sectionMetaData.versionNb,
+                    associatedIds: si.sectionMetaData.associatedIds,
                     isChecked: false,
                     isDisabled: false,
                     id: si.section.id,

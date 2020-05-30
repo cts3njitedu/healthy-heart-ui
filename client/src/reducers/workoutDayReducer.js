@@ -1,5 +1,6 @@
-import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD, ACTION_FILTER_LOCATION_TABLE, API_ADD_WORKOUTDAY_LOCATION_BUILD, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, API_ADD_WORKOUTDAY_LOCATION_FAILURE, ACTION_VIEW_WORKOUTS } from "../actions/workoutDayAction";
+import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD, ACTION_FILTER_LOCATION_TABLE, API_ADD_WORKOUTDAY_LOCATION_BUILD, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, API_ADD_WORKOUTDAY_LOCATION_FAILURE, ACTION_VIEW_WORKOUTS, API_DELETE_WORKOUTDAY_LOCATION, API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_YES, API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_NO, API_WORKOUTDAY_LOCATION_DELETED } from "../actions/workoutDayAction";
 import {PAGE, SECTION} from '../constants/page_constants'
+import { API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
 const initialState = {
     sections : {},
     newSections: {},
@@ -13,7 +14,9 @@ const initialState = {
     isGoBackToCalendar: false,
     heartSort : {},
     actionType: "",
-    isViewWorkouts: false
+    isViewWorkouts: false,
+    isDeleting: false,
+    isDeleted: false
     
 };
 
@@ -36,7 +39,11 @@ export default function workoutDayReducer(state = initialState, action) {
                 sections: action.payload.page.sections,
                 newSections: action.payload.page.newSections,
                 actionType: action.payload.page.actionType,
-                heartSort: action.payload.page.heartSort
+                heartSort: action.payload.page.heartSort,
+                isDeleting: false,
+                isDeleted: false,
+                isLocationSelected: false,
+                selectedLocation: {}
 
             }
         }
@@ -158,7 +165,7 @@ export default function workoutDayReducer(state = initialState, action) {
             return {
                 ...state,
                 isLocationSelected: isChecked,
-                selectedLocation : location,
+                selectedLocation : isChecked ? location : {},
                 sections: {
                     ...state.sections,
                     [location.id] : state.sections[location.id].map((item, index) => {
@@ -172,19 +179,7 @@ export default function workoutDayReducer(state = initialState, action) {
                             modLocation.isDisabled = isChecked
                             return modLocation
                         }
-                    }),
-                    [activityId] : state.sections[activityId].map((item, index) => {
-                            if (index === 0) {
-                                return{
-                                    ...item,
-                                    fields: activityFields
-                                }
-    
-                            } else {
-                                return item;
-                            }
                     })
-    
                 }
             }
         }
@@ -318,13 +313,36 @@ export default function workoutDayReducer(state = initialState, action) {
 
             }
         }
+        case API_DELETE_WORKOUTDAY_LOCATION: {
+            return {
+                ...state,
+                isDeleting: true
+            }
+        }
+        case API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_YES: {
+            return {
+                ...state
+            }
+        }
+        case API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_NO: {
+            return {
+                ...state,
+                isDeleting: false
+            }
+        }
+        case API_WORKOUTDAY_LOCATION_DELETED: {
+            return {
+                ...state,
+                isDeleting: false,
+                selectedLocation: {},
+                isLocationSelected: false
+            }
+        }
         default: {
             return {
                 ...state,
                 error: false,
                 loading: true,
-                isLocationSelected: false,
-                selectedLocation : {},
                 selectedDate : "",
                 tempSelectedDate: "",
                 isSubmitDate: false,

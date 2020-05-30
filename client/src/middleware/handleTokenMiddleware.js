@@ -24,14 +24,18 @@ const failureActions = [
     API_GET_WORKOUTS_FAILURE
 ]
 export const handleToken = ({dispatch}) => next => action => {
+    
     if (middleWareActions.includes(action.type)) {
-        // console.log("Handle Token: ", action)
+        console.log("Handle Token:", action.type, action.payload)
         dispatch(storeUserInfo({
             accessToken: action.payload.header.token
         }))
         next(action)
     } else if (failureActions.includes(action.type)) {
-        dispatch(removeUserInfo())
+        console.log("Handle Token:", action.type, action.payload)
+        if (action.payload.error.status === 401) {
+            dispatch(removeUserInfo())
+        } 
         next(action)
 
     } else {

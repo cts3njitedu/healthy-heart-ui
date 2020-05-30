@@ -3,10 +3,10 @@ import WorkoutButton from '../forms/WorkoutButton';
 import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
-import {goBackToCalendar, getWorkoutDay, addWorkoutDayLocationBuild, actionViewWorkouts} from '../../actions/workoutDayAction'
+import {goBackToCalendar, getWorkoutDay, addWorkoutDayLocationBuild, actionViewWorkouts, deleteWorkoutDayLocation} from '../../actions/workoutDayAction'
 import {buildWorkoutsRequest} from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
-
+import {convertLocationActivityFields} from '../../selectors/locationActivitySelector'
 class LocationActivityButtons extends Component {
     constructor(props) {
         super(props)
@@ -32,10 +32,10 @@ class LocationActivityButtons extends Component {
             this.props.getWorkoutDay(this.props.match.url, {
                 actionType: ACTION.VIEW_WORKOUTDATE_LOCATIONS
             })
-        } else if(SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.ADD_WORKOUTDATE_LOCATION === event.target.name) {
+        } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.ADD_WORKOUTDATE_LOCATION === event.target.name) {
             console.log("Add Workout Location", this.props.match)
             this.props.addWorkoutDayLocationBuild(this.props.match.url, ACTION.ADD_WORKOUTDATE_LOCATION)
-        } else if(SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTS === event.target.name) {
+        } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTS === event.target.name) {
             // console.log("View Workouts", this.props.match)
             // let viewWorkoutField = {
             //     disabled: true,
@@ -48,6 +48,9 @@ class LocationActivityButtons extends Component {
             let url = this.props.match.url + "/locations/" + selectedLocation.metaDataId + "/workouts"
             console.log(url)
             this.props.history.push(url);
+        } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION === event.target.name) {
+            console.log("Delete Location", this.props.selectedLocation)
+            this.props.deleteWorkoutDayLocation()
         }
         
 
@@ -78,7 +81,7 @@ class LocationActivityButtons extends Component {
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.ADD_WORKOUTDATE_LOCATION]} handleActivity={this.handleActivity} />
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_OTHER_LOCATIONS]} handleActivity={this.handleActivity} />
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTS]} handleActivity={this.handleActivity}/>
-                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION]} />
+                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION]} handleActivity={this.handleActivity}/>
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.CANCEL]} handleActivity={this.handleActivity}/>
                 </div>
             )
@@ -92,13 +95,14 @@ class LocationActivityButtons extends Component {
 function mapStateToProps(state) {
     return {
         isAccessTokenEnabled: state.user.isAccessTokenEnabled,
-        sections: state.workoutDay.sections, 
+        sections: convertLocationActivityFields(state.workoutDay.sections, state.workoutDay.isLocationSelected, state.workoutDay.actionType, state.workoutDay), 
         newSections: state.workoutDay.newSections,
         error: state.workoutDay.error,
         loading: state.workoutDay.loading,
         isGoBackToCalendar: state.workoutDay.isGoBackToCalendar,
         isViewWorkouts: state.workoutDay.isViewWorkouts,
-        selectedLocation: state.workoutDay.selectedLocation
+        selectedLocation: state.workoutDay.selectedLocation,
+        actionType: state.workoutDay.actionType
         
     }
         
@@ -110,7 +114,8 @@ const mapDispatchToProps = {
     getWorkoutDay,
     addWorkoutDayLocationBuild,
     buildWorkoutsRequest,
-    actionViewWorkouts
+    actionViewWorkouts,
+    deleteWorkoutDayLocation
 
 }
 

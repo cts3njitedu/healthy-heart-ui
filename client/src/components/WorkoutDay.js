@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import {isEmpty} from 'lodash'
 class WorkoutDay extends Component {
     constructor(props) {
         super(props)
@@ -20,7 +20,7 @@ class WorkoutDay extends Component {
 
                         <div onClick={this.handleChildClick}>{this.props.date}</div>
                         {this.props.workout &&
-                            <div className="monthMeta" onClick={this.handleChildClick}>{this.props.workout.location.zipCode} - {this.props.workout.location.gymName}</div>
+                            <div className="monthMeta" onClick={this.handleChildClick}>{!isEmpty(this.props.workout.location) && "View Locations"}</div>
                         }
 
                     </div>
