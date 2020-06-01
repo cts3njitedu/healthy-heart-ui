@@ -41,6 +41,7 @@ class Locations extends Component {
     }
 
     handleFilterCall() {
+        console.log("Handle Filter Called:", this.props.match.url)
         this.props.buildWorkoutDayRequest(this.props.match.url)
     }
 

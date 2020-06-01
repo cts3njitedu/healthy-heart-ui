@@ -20,6 +20,7 @@ export const ACTION_SORT_LOCATION_TABLE_START = "ACTION_SORT_LOCATION_TABLE_STAR
 export const ACTION_SORT_LOCATION_TABLE = "ACTION_SORT_LOCATION_TABLE"
 export const ACTION_FILTER_LOCATION_TABLE_START = "ACTION_FILTER_LOCATION_TABLE_START"
 export const ACTION_FILTER_LOCATION_TABLE = "ACTION_FILTER_LOCATION_TABLE"
+export const ACTION_RESET_FILTER_LOCATION = "ACTION_RESET_FILTER_LOCATION"
 export const API_ADD_WORKOUTDAY_LOCATION_START = "API_ADD_WORKOUTDAY_LOCATION_START"
 export const API_ADD_WORKOUTDAY_LOCATION_BUILD = "API_ADD_WORKOUTDAY_LOCATION_BUILD"
 export const API_ADD_WORKOUTDAY_LOCATION = "API_ADD_WORKOUTDAY_LOCATION"
@@ -140,9 +141,9 @@ export const filterLocationTable = (fieldName, value) => ({
     type: ACTION_FILTER_LOCATION_TABLE,
     payload: {fieldName, value}
 })
-export const buildWorkoutDayRequest = (url) => ({
+export const buildWorkoutDayRequest = (url, isResetFilter) => ({
     type: API_GET_WORKOUTDAY_BUILD,
-    payload : {url}
+    payload : {url, isResetFilter}
 })
 
 export const addWorkoutDayLocationBuild = (url, actionType) => ({
@@ -162,5 +163,10 @@ export const deleteWorkoutDayLocation = (data) => ({
 
 export const workoutDayLocationDeleteFinish = (data) => ({
     type: API_WORKOUTDAY_LOCATION_DELETED,
+    payload: {data}
+})
+
+export const resetWorkoutDayLocationFilter = (data) => ({
+    type: ACTION_RESET_FILTER_LOCATION,
     payload: {data}
 })

@@ -1,5 +1,5 @@
 import { LOGIN_FORM_BUILD_REQUEST, postLoginPage } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, API_DELETE_WORKOUTDAY_LOCATION, API_DELETE_WORKOUTDAY_LOCATION_BUILD } from "../actions/workoutDayAction";
+import { API_GET_WORKOUTDAY_BUILD, getWorkoutDay, API_ADD_WORKOUTDAY_LOCATION_BUILD, addWorkoutLocation, API_DELETE_WORKOUTDAY_LOCATION_BUILD } from "../actions/workoutDayAction";
 import { PAGE, ACTION, SECTION } from "../constants/page_constants";
 import { API_GET_WORKOUTS_HEADER_BUILD,getWorkouts, API_GET_WORKOUTS_BUILD, keepWorkoutState, addNewWorkoutStart, API_GET_WORKOUT_DETAILS_META_INFO_BUILD, API_GET_WORKOUT_DETAILS_BUILD, buildWorkoutsRequest, API_ACTION_WORKOUT_DETAILS_SUBMIT_BUILD, API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
 
@@ -29,7 +29,7 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
         let fields = locationHeader.fields;
         let filter = state.workoutDay.sections[PAGE.WORKOUT_DAY_LOCATIONS_PAGE.FILTER_SECTION][0]
         let filterfields = filter.fields;
-        // console.log("What is happening", filterfields)
+        console.log("What is happening filter", action.payload.isResetFilter)
         let request = {
             actionType: state.workoutDay.actionType,
             heartSort : Object.keys(fields).filter(key => fields[key].sortOrder != null).reduce(function(result, key) {
@@ -39,7 +39,7 @@ export const buildRequest = ({dispatch, getState}) => next => action => {
                 return result;
             }, {}),
             heartFilter: Object.keys(filterfields).filter(key => filterfields[key].value && (0 !== filterfields[key].value.length)).reduce((result, key) => {
-                result[key] = filterfields[key].value
+                result[key] = !action.payload.isResetFilter ? filterfields[key].value : ""
                 return result;
             },{})
         }

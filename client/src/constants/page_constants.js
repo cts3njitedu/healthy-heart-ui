@@ -37,7 +37,8 @@ export const SECTION = {
             DELETE_LOCATION: "deleteLocation",
             VIEW_OTHER_LOCATIONS: "viewOtherLocations",
             VIEW_WORKOUTS : "viewWorkouts",
-            VIEW_WORKOUTDAY_LOCATIONS: "viewWorkoutDayLocations"
+            VIEW_WORKOUTDAY_LOCATIONS: "viewWorkoutDayLocations",
+            RESET_FILTER: "resetFilter"
         },
         LOCATION_HEADER_SECTION: {
             SELECT_LOCATION: "selectLocation"

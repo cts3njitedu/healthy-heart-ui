@@ -3,7 +3,7 @@ import WorkoutButton from '../forms/WorkoutButton';
 import { PAGE, SECTION, ACTION } from '../../constants/page_constants';
 import { connect } from 'react-redux';
 import Loading from '../Loading';
-import {goBackToCalendar, getWorkoutDay, addWorkoutDayLocationBuild, actionViewWorkouts, deleteWorkoutDayLocation} from '../../actions/workoutDayAction'
+import {goBackToCalendar, getWorkoutDay, addWorkoutDayLocationBuild, actionViewWorkouts, deleteWorkoutDayLocation, buildWorkoutDayRequest} from '../../actions/workoutDayAction'
 import {buildWorkoutsRequest} from '../../actions/workoutAction'
 import { withRouter } from 'react-router-dom';
 import {convertLocationActivityFields} from '../../selectors/locationActivitySelector'
@@ -51,6 +51,9 @@ class LocationActivityButtons extends Component {
         } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION === event.target.name) {
             console.log("Delete Location", this.props.selectedLocation)
             this.props.deleteWorkoutDayLocation()
+        } else if (SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.RESET_FILTER === event.target.name) {
+            console.log("Reset Filter Clicked", this.props.match.url)
+            this.props.buildWorkoutDayRequest(this.props.match.url, true)
         }
         
 
@@ -83,6 +86,7 @@ class LocationActivityButtons extends Component {
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTS]} handleActivity={this.handleActivity}/>
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION]} handleActivity={this.handleActivity}/>
                     <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.CANCEL]} handleActivity={this.handleActivity}/>
+                    <WorkoutButton field={activitySections.fields[SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.RESET_FILTER]} handleActivity={this.handleActivity}/>
                 </div>
             )
         }
@@ -115,7 +119,8 @@ const mapDispatchToProps = {
     addWorkoutDayLocationBuild,
     buildWorkoutsRequest,
     actionViewWorkouts,
-    deleteWorkoutDayLocation
+    deleteWorkoutDayLocation,
+    buildWorkoutDayRequest
 
 }
 

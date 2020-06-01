@@ -4,7 +4,6 @@ export function convertLocationActivityFields(sections, isLocationSelected, acti
     let activityId = PAGE.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION;
     if (sections[activityId]) {
         let isWorkoutLocation = (actionType === ACTION.VIEW_WORKOUTDATE_LOCATIONS);
-        let cancel = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.CANCEL
         let deleteLocation = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.DELETE_LOCATION
         let viewOtherLocations = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_OTHER_LOCATIONS
         let viewLocations = SECTION.WORKOUT_DAY_LOCATIONS_PAGE.ACTIVITY_SECTION.VIEW_WORKOUTDAY_LOCATIONS

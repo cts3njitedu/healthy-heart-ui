@@ -1,6 +1,5 @@
 import { API_GET_WORKOUTDAY, API_RESTRUCTURE_WORKOUTDAY, API_GET_WORKOUTDAY_FAILURE, ACTION_CHANGE_WORKOUT_DATE, ACTION_SUBMIT_WORKOUT_DATE, ACTION_CANCEL_CHANGE_WORKOUT_DATE, ACTION_GO_BACK_TO_CALENDER, ACTION_SELECT_LOCATION, ACTION_SELECT_LOCATION_START, ACTION_SORT_LOCATION_TABLE_START, ACTION_SORT_LOCATION_TABLE, API_GET_WORKOUTDAY_BUILD, ACTION_FILTER_LOCATION_TABLE, API_ADD_WORKOUTDAY_LOCATION_BUILD, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, API_ADD_WORKOUTDAY_LOCATION_FAILURE, ACTION_VIEW_WORKOUTS, API_DELETE_WORKOUTDAY_LOCATION, API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_YES, API_DELETE_WORKOUTDAY_LOCATION_CONFIRMATION_NO, API_WORKOUTDAY_LOCATION_DELETED } from "../actions/workoutDayAction";
 import {PAGE, SECTION} from '../constants/page_constants'
-import { API_ACTION_WORKOUT_DELETE_BUILD } from "../actions/workoutAction";
 const initialState = {
     sections : {},
     newSections: {},
@@ -160,15 +159,13 @@ export default function workoutDayReducer(state = initialState, action) {
         case ACTION_SELECT_LOCATION: {
             let isChecked = action.payload.newLocation.isChecked;
             let location = action.payload.newLocation;
-            let activityId = action.payload.activityId;
-            let activityFields = action.payload.activityFields
             return {
                 ...state,
                 isLocationSelected: isChecked,
                 selectedLocation : isChecked ? location : {},
                 sections: {
                     ...state.sections,
-                    [location.id] : state.sections[location.id].map((item, index) => {
+                    [location.id] : state.sections[location.id].map((item) => {
                         let modLocation = item;
                         if (item.metaDataId === location.metaDataId) {
                             modLocation.isChecked = isChecked;
@@ -240,6 +237,7 @@ export default function workoutDayReducer(state = initialState, action) {
                 }
             }
         }
+    
         case API_GET_WORKOUTDAY_BUILD : {
             return {
                 ...state
@@ -252,7 +250,7 @@ export default function workoutDayReducer(state = initialState, action) {
                 ...state,
                 sections: {
                     ...state.sections,
-                    [locationId] : state.sections[locationId].map((item, index) => {
+                    [locationId] : state.sections[locationId].map((item) => {
                         let modLocation = {
                             ...item,
                             isDisabled: true

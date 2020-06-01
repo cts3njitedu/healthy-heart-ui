@@ -1,5 +1,5 @@
 import { API_GET_LOGIN_PAGE_SUCCESS, handleRestructurePage, API_POST_LOGIN_PAGE_FAILURE } from "../actions/loginAction";
-import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay, deleteWorkoutDayLocation, workoutDayLocationDeleteFinish } from "../actions/workoutDayAction";
+import { API_GET_WORKOUTDAY_SUCCESS, restructureWorkout, API_ADD_WORKOUTDAY_LOCATION_SUCCESS, getWorkoutDay, workoutDayLocationDeleteFinish } from "../actions/workoutDayAction";
 import _ from 'lodash'
 import { ACTION, PAGE, SECTION, ROUTETYPE } from "../constants/page_constants";
 import { format } from 'date-fns'

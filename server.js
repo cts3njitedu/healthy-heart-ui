@@ -76,25 +76,30 @@ app.post('/api/*', (req, res) => {
             request.post(options, function (error, response, body) {
                 console.log('error:', error); // Print the error if one occurred
                 console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-                let cookies = response.headers['set-cookie']
+                let cookies = response.headers['set-cookie'] || []
                 let promises = [];
-                cookies.forEach(cookie => {
-                    promises.push(new Promise(function(resolve) {
-                        let splitCookie = cookie.split(";");
-                        let token = splitCookie[0]
-                        let key = token.substr(0, token.indexOf("="));
-                        let value = token.substr(token.indexOf("=")+1);
-                        cache.set(key,value).then(function(r){
-                            console.log(r)
-                            resolve()
-                        });
-                        
-                    }))
-                })
-                Promise.all(promises).then(function(){
-                    res.setHeader('token', response.headers.token);
+                if (response.statusCode === 200) {
+                    cookies.forEach(cookie => {
+                        promises.push(new Promise(function(resolve) {
+                            let splitCookie = cookie.split(";");
+                            let token = splitCookie[0]
+                            let key = token.substr(0, token.indexOf("="));
+                            let value = token.substr(token.indexOf("=")+1);
+                            cache.set(key,value).then(function(r){
+                                console.log(r)
+                                resolve()
+                            });
+                            
+                        }))
+                    })
+                    Promise.all(promises).then(function(){
+                        res.setHeader('token', response.headers.token);
+                        res.status(response.statusCode).json(JSON.parse(body))
+                    })
+                } else {
                     res.status(response.statusCode).json(JSON.parse(body))
-                })
+                }
+                
             })
 
         } else {

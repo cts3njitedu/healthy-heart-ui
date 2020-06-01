@@ -36,8 +36,8 @@ function TableHeader(props) {
                 }
             </tr>
             <tr className={tableClass.filterClass}>
-                <th style={{color: "darkblue", cursor: "pointer"}} onClick={props.handleFilterCall}>
-                    <AiFillFilter/>
+                <th onClick={props.handleFilterCall}>
+                    <AiFillFilter size={"32"}/>
                 </th>
                 {
                     tableHeadersFields.filter(field => field.name !== SECTION.WORKOUT_DAY_LOCATIONS_PAGE.LOCATION_HEADER_SECTION.SELECT_LOCATION).map((field) => {
